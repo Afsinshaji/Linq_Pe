@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 
 import 'package:linq_pe/utilities/colors.dart';
 
-class AddTextField extends StatelessWidget {
+class AddTextField extends ConsumerWidget {
   const AddTextField({
     super.key,
     required this.controller,
     required this.isTextNumberType,
     required this.text,
-    required this.fieldColor,  
+    required this.fieldColor,
+    this.prefix,
+    this.fontSize,
+    this.textFieldType = TextFieldType.none,
   });
 
   final TextEditingController controller;
@@ -17,10 +22,12 @@ class AddTextField extends StatelessWidget {
   final String text;
 
   final Color fieldColor;
-
+  final Widget? prefix;
+  final double? fontSize;
+  final TextFieldType textFieldType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -30,15 +37,28 @@ class AddTextField extends StatelessWidget {
         elevation: 2,
         borderRadius: BorderRadius.circular(5),
         child: TextFormField(
+          onChanged: (value) {
+            if (textFieldType == TextFieldType.amount) {
+              addAmount(double.parse(value), ref);
+            } else if (textFieldType == TextFieldType.details) {
+              addTransactionDetails(value, ref);
+            } else if (textFieldType == TextFieldType.transactionId) {
+              addTransactionId(value, ref);
+            }
+          },
           controller: controller,
           enableSuggestions: !isTextNumberType,
           autocorrect: !isTextNumberType,
           cursorColor: fieldColor,
-          style: TextStyle(color: LinqPeColors.kBlackColor.withOpacity(0.9)),
+          style: TextStyle(
+              color: LinqPeColors.kBlackColor.withOpacity(0.9),
+              fontSize: fontSize),
           decoration: InputDecoration(
+              prefixIcon: prefix,
               labelText: text,
               labelStyle: TextStyle(
                 color: fieldColor.withOpacity(0.9),
+                fontSize: fontSize != null ? fontSize! * 0.6 : null,
               ),
               filled: true,
               // floatingLabelBehavior: widget.floatingLabelBehavior,
@@ -56,7 +76,7 @@ class AddTextField extends StatelessWidget {
                 borderSide: const BorderSide(width: 0, style: BorderStyle.none),
               )),
           keyboardType: isTextNumberType
-              ? TextInputType.visiblePassword
+              ? TextInputType.number
               : TextInputType.emailAddress,
           validator: (text) {
             if (text == null || text.isEmpty) {
@@ -74,3 +94,5 @@ class AddTextField extends StatelessWidget {
     );
   }
 }
+
+enum TextFieldType { details, transactionId, amount, none }

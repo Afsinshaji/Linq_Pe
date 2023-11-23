@@ -3,16 +3,16 @@ import 'package:linq_pe/domain/models/transactions/secondary_transactions.dart';
 
 part 'transactions.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 4)
 class TransactionsModel {
   @HiveField(0)
   final String contactId;
   @HiveField(1)
-  final int recievedAmt;
+  final double recievedAmt;
   @HiveField(2)
-  final int payedAmt;
+  final double payedAmt;
   @HiveField(3)
-  final int balanceAmt;
+  final double balanceAmt;
   @HiveField(4)
   final List<SecondaryTransactionsModel>? secondaryTransaction;
 

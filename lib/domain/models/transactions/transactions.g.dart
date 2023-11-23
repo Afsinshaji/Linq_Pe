@@ -8,7 +8,7 @@ part of 'transactions.dart';
 
 class TransactionsModelAdapter extends TypeAdapter<TransactionsModel> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
   TransactionsModel read(BinaryReader reader) {
@@ -18,9 +18,9 @@ class TransactionsModelAdapter extends TypeAdapter<TransactionsModel> {
     };
     return TransactionsModel(
       contactId: fields[0] as String,
-      recievedAmt: fields[1] as int,
-      payedAmt: fields[2] as int,
-      balanceAmt: fields[3] as int,
+      recievedAmt: fields[1] as double,
+      payedAmt: fields[2] as double,
+      balanceAmt: fields[3] as double,
       secondaryTransaction:
           (fields[4] as List?)?.cast<SecondaryTransactionsModel>(),
     );

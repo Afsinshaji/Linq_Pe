@@ -11,7 +11,7 @@ import 'package:linq_pe/presentation/screens/view_party/screen_view_party.dart';
 import 'package:linq_pe/utilities/colors.dart';
 
 class AddPartyScreen extends StatefulWidget {
-  AddPartyScreen({
+  const AddPartyScreen({
     super.key,
     required this.partyType,
     required this.partyColor,

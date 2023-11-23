@@ -13,4 +13,5 @@ class LinqPeColors {
   static const kredColor = Colors.red;
   static const kPinkColor = Colors.pink;
   static const kGreenColor = Colors.green;
+  static const kLightBluwWhite = Color.fromARGB(255, 205, 238, 255);
 }

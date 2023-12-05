@@ -12,7 +12,7 @@ class TransactionsEvent with _$TransactionsEvent {
       required DateTime timeOfTrans,
       required File? billImage,
       required String? transactionId}) = addGetTransctions;
-  const factory TransactionsEvent.addGiveTransctions(
+  const factory TransactionsEvent.addBalanceTransctions(
       {required String? transactionDetails,
       required String fromContactId,
       required String toContactId,
@@ -20,10 +20,13 @@ class TransactionsEvent with _$TransactionsEvent {
       required TransactionTypes transactionType,
       required DateTime timeOfTrans,
       required File? billImage,
-      required String? transactionId}) = addGiveTransctions;
+      required String? transactionId}) = addBalanceTransctions;
   const factory TransactionsEvent.getTransactionsList(
       {required String contactId}) = getTransactionsList;
   const factory TransactionsEvent.addSecondaryPartyPayment({
+    required bool isSplittedPrimaryTransaction,
+    required String transactionRealId,
+    required String splittedTransactionId,
     required String primaryContactId,
     required String secondaryContactId,
     required String payedToId,
@@ -34,4 +37,52 @@ class TransactionsEvent with _$TransactionsEvent {
     required String? transactionId,
     required String? transactionDetails,
   }) = addSecondaryPartyPayment;
+  const factory TransactionsEvent.splitAmounts({
+    required String primaryContactId,
+    required String toContactId,
+    required String transactionId,
+    required double splitAmount,
+    required TransactionTypes transactionType,
+    required DateTime timeOfTrans,
+    required File? billImage,
+    required String? userTransactionId,
+    required String? transactionDetails,
+    required String id,
+  }) = splitAmounts;
+
+  const factory TransactionsEvent.addGiveTransactions(
+      {required String fromContactId,
+      required String toContactId,
+      required double amount,
+      required TransactionTypes transactionType,
+      required DateTime timeOfTrans,
+      required String? transactionDetails,
+      required File? billImage,
+      required String? transactionId}) = addGiveTransactions;
+
+  const factory TransactionsEvent.splittingBalanceAmount(
+      {required String primaryContactId,
+      required String toContactId,
+      required double splitAmount,
+      required TransactionTypes transactionType,
+      required DateTime timeOfTrans,
+      required File? billImage,
+      required String? userTransactionId,
+      required String? transactionDetails}) = splittingBalanceAmount;
+  const factory TransactionsEvent.editTransactions(
+      {required String transactionRealId,
+      required String toId,
+      required double amount,
+      required TransactionTypes transactionType,
+      required DateTime timeOfTrans,
+      required File? billImage,
+      required String? transactionId,
+      required String? transactionDetails,
+      required String primaryContactId,
+      }) = editTransactions;
+
+  const factory TransactionsEvent.deleteTransactions({
+    required String transactionRealId,
+       required String primaryContactId,
+  }) = deleteTransactions;
 }

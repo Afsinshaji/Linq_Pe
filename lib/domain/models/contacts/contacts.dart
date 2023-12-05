@@ -14,12 +14,24 @@ class ContactsModel {
   final Uint8List? avatar;
   @HiveField(3)
   final String initails;
-@HiveField(4)
+  @HiveField(4)
   final String contactId;
-
-  ContactsModel( {required this.contactId,
+  @HiveField(5)
+  final double? blanceAmount;
+  @HiveField(6)
+  final double? payedAmount;
+  @HiveField(7)
+  final double? receivedAmount;
+  @HiveField(8)
+  final DateTime? lastTimeOfTransfer;
+  ContactsModel({
+    this.lastTimeOfTransfer,
+    required this.contactId,
     required this.displayName,
     required this.contactNumber,
+    this.blanceAmount,
+    this.payedAmount,
+    this.receivedAmount,
     this.avatar,
     required this.initails,
   });

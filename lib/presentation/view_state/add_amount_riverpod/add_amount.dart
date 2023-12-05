@@ -34,7 +34,7 @@ addfromContactId(String id, WidgetRef ref) {
 
 final toContactIdProvider = StateProvider(
   (ref) {
-    return 'You';
+    return '';
   },
 );
 

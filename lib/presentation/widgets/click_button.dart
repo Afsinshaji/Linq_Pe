@@ -27,10 +27,11 @@ class ClickButton extends ConsumerWidget {
   final double radius;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Size size = MediaQuery.of(context).size; 
     return Container(
       width: width,
       height: height,
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      margin:  const EdgeInsets.fromLTRB(0, 10, 0, 10),
       decoration: BoxDecoration(
           boxShadow: boxShadow, borderRadius: BorderRadius.circular(radius)),
       child: ElevatedButton(
@@ -53,7 +54,8 @@ class ClickButton extends ConsumerWidget {
           style: TextStyle(
             color: textColor,
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: size.width*0.04,
+            overflow: TextOverflow.ellipsis
           ),
         ),
       ),

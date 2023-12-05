@@ -18,26 +18,31 @@ class SecondaryTransactionsModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SecondaryTransactionsModel(
-      transactionDetails: fields[11] as String?,
-      transactionId: fields[10] as String?,
-      transactionType: fields[8] as TransactionType,
-      timeOfTrans: fields[7] as DateTime,
+      isSecondaryPay: fields[17] as bool,
+      primaryAccountId: fields[16] as String,
+      isGive: fields[15] as bool,
+      isGet: fields[14] as bool,
+      isAddBalance: fields[13] as bool,
+      isSplit: fields[12] as bool,
+      id: fields[11] as String,
+      transactionDetails: fields[10] as String?,
+      transactionId: fields[9] as String?,
+      transactionType: fields[7] as TransactionType,
+      timeOfTrans: fields[6] as DateTime,
       toContactId: fields[0] as String,
       payedAmt: fields[4] as double,
       balanceAmt: fields[3] as double,
       isPayed: fields[2] as bool,
       givenAmt: fields[1] as double,
-      secondaryTransaction:
-          (fields[5] as List?)?.cast<SecondaryTransactionsModel>(),
-      fromContactId: fields[6] as String,
-      billImage: fields[9] as File?,
+      fromContactId: fields[5] as String,
+      billImage: fields[8] as Uint8List?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SecondaryTransactionsModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.toContactId)
       ..writeByte(1)
@@ -49,19 +54,31 @@ class SecondaryTransactionsModelAdapter
       ..writeByte(4)
       ..write(obj.payedAmt)
       ..writeByte(5)
-      ..write(obj.secondaryTransaction)
-      ..writeByte(6)
       ..write(obj.fromContactId)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.timeOfTrans)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.transactionType)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.billImage)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.transactionId)
+      ..writeByte(10)
+      ..write(obj.transactionDetails)
       ..writeByte(11)
-      ..write(obj.transactionDetails);
+      ..write(obj.id)
+      ..writeByte(12)
+      ..write(obj.isSplit)
+      ..writeByte(13)
+      ..write(obj.isAddBalance)
+      ..writeByte(14)
+      ..write(obj.isGet)
+      ..writeByte(15)
+      ..write(obj.isGive)
+      ..writeByte(16)
+      ..write(obj.primaryAccountId)
+      ..writeByte(17)
+      ..write(obj.isSecondaryPay);
   }
 
   @override

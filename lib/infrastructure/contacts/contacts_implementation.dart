@@ -74,4 +74,34 @@ class ContactsImplementation extends ContactsRepository {
       await contactsBox.add(contact);
     }
   }
+ @override
+  Future<void> updateContactAmounts({
+    required double balanceAmount,
+    required double receivedAmount,
+    required double payedAmount,
+    required String contactId,
+  }) async {
+    final contactList = contactsBox.values.toList();
+    if (contactList
+        .where((element) => element.contactId == contactId)
+        .isEmpty) {
+      return;
+    } else {
+      int index =
+          contactList.indexWhere((element) => element.contactId == contactId);
+      final contact = contactList[index];
+      await contactsBox.putAt(index,ContactsModel(contactId: contact.contactId,
+       displayName: contact.displayName, 
+       contactNumber: contact.contactNumber,
+        initails: contact.initails,
+        avatar: contact.avatar,
+        blanceAmount: balanceAmount,
+        payedAmount: payedAmount,
+        receivedAmount: receivedAmount,
+        lastTimeOfTransfer: DateTime.now(),
+        
+        
+        ));
+    }
+  }
 }

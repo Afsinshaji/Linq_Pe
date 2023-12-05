@@ -39,7 +39,7 @@ class AddTextField extends ConsumerWidget {
         child: TextFormField(
           onChanged: (value) {
             if (textFieldType == TextFieldType.amount) {
-              addAmount(double.parse(value), ref);
+           if(value.isNotEmpty) {  addAmount(double.parse(value), ref);}
             } else if (textFieldType == TextFieldType.details) {
               addTransactionDetails(value, ref);
             } else if (textFieldType == TextFieldType.transactionId) {

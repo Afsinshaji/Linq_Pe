@@ -20,18 +20,21 @@ mixin _$CustomerEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String contactId) addCustomers,
     required TResult Function() getCustomerList,
+    required TResult Function(String contactId) deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String contactId)? addCustomers,
     TResult? Function()? getCustomerList,
+    TResult? Function(String contactId)? deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String contactId)? addCustomers,
     TResult Function()? getCustomerList,
+    TResult Function(String contactId)? deleteCustomers,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$CustomerEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(addCustomers value) addCustomers,
     required TResult Function(getCustomerList value) getCustomerList,
+    required TResult Function(deleteCustomers value) deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(addCustomers value)? addCustomers,
     TResult? Function(getCustomerList value)? getCustomerList,
+    TResult? Function(deleteCustomers value)? deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(addCustomers value)? addCustomers,
     TResult Function(getCustomerList value)? getCustomerList,
+    TResult Function(deleteCustomers value)? deleteCustomers,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -141,6 +147,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult when<TResult extends Object?>({
     required TResult Function(String contactId) addCustomers,
     required TResult Function() getCustomerList,
+    required TResult Function(String contactId) deleteCustomers,
   }) {
     return addCustomers(contactId);
   }
@@ -150,6 +157,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String contactId)? addCustomers,
     TResult? Function()? getCustomerList,
+    TResult? Function(String contactId)? deleteCustomers,
   }) {
     return addCustomers?.call(contactId);
   }
@@ -159,6 +167,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String contactId)? addCustomers,
     TResult Function()? getCustomerList,
+    TResult Function(String contactId)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (addCustomers != null) {
@@ -172,6 +181,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult map<TResult extends Object?>({
     required TResult Function(addCustomers value) addCustomers,
     required TResult Function(getCustomerList value) getCustomerList,
+    required TResult Function(deleteCustomers value) deleteCustomers,
   }) {
     return addCustomers(this);
   }
@@ -181,6 +191,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(addCustomers value)? addCustomers,
     TResult? Function(getCustomerList value)? getCustomerList,
+    TResult? Function(deleteCustomers value)? deleteCustomers,
   }) {
     return addCustomers?.call(this);
   }
@@ -190,6 +201,7 @@ class _$addCustomersImpl implements addCustomers {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(addCustomers value)? addCustomers,
     TResult Function(getCustomerList value)? getCustomerList,
+    TResult Function(deleteCustomers value)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (addCustomers != null) {
@@ -249,6 +261,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult when<TResult extends Object?>({
     required TResult Function(String contactId) addCustomers,
     required TResult Function() getCustomerList,
+    required TResult Function(String contactId) deleteCustomers,
   }) {
     return getCustomerList();
   }
@@ -258,6 +271,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String contactId)? addCustomers,
     TResult? Function()? getCustomerList,
+    TResult? Function(String contactId)? deleteCustomers,
   }) {
     return getCustomerList?.call();
   }
@@ -267,6 +281,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String contactId)? addCustomers,
     TResult Function()? getCustomerList,
+    TResult Function(String contactId)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (getCustomerList != null) {
@@ -280,6 +295,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult map<TResult extends Object?>({
     required TResult Function(addCustomers value) addCustomers,
     required TResult Function(getCustomerList value) getCustomerList,
+    required TResult Function(deleteCustomers value) deleteCustomers,
   }) {
     return getCustomerList(this);
   }
@@ -289,6 +305,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(addCustomers value)? addCustomers,
     TResult? Function(getCustomerList value)? getCustomerList,
+    TResult? Function(deleteCustomers value)? deleteCustomers,
   }) {
     return getCustomerList?.call(this);
   }
@@ -298,6 +315,7 @@ class _$getCustomerListImpl implements getCustomerList {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(addCustomers value)? addCustomers,
     TResult Function(getCustomerList value)? getCustomerList,
+    TResult Function(deleteCustomers value)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (getCustomerList != null) {
@@ -309,6 +327,148 @@ class _$getCustomerListImpl implements getCustomerList {
 
 abstract class getCustomerList implements CustomerEvent {
   const factory getCustomerList() = _$getCustomerListImpl;
+}
+
+/// @nodoc
+abstract class _$$deleteCustomersImplCopyWith<$Res> {
+  factory _$$deleteCustomersImplCopyWith(_$deleteCustomersImpl value,
+          $Res Function(_$deleteCustomersImpl) then) =
+      __$$deleteCustomersImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String contactId});
+}
+
+/// @nodoc
+class __$$deleteCustomersImplCopyWithImpl<$Res>
+    extends _$CustomerEventCopyWithImpl<$Res, _$deleteCustomersImpl>
+    implements _$$deleteCustomersImplCopyWith<$Res> {
+  __$$deleteCustomersImplCopyWithImpl(
+      _$deleteCustomersImpl _value, $Res Function(_$deleteCustomersImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? contactId = null,
+  }) {
+    return _then(_$deleteCustomersImpl(
+      contactId: null == contactId
+          ? _value.contactId
+          : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$deleteCustomersImpl implements deleteCustomers {
+  const _$deleteCustomersImpl({required this.contactId});
+
+  @override
+  final String contactId;
+
+  @override
+  String toString() {
+    return 'CustomerEvent.deleteCustomers(contactId: $contactId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$deleteCustomersImpl &&
+            (identical(other.contactId, contactId) ||
+                other.contactId == contactId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, contactId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$deleteCustomersImplCopyWith<_$deleteCustomersImpl> get copyWith =>
+      __$$deleteCustomersImplCopyWithImpl<_$deleteCustomersImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String contactId) addCustomers,
+    required TResult Function() getCustomerList,
+    required TResult Function(String contactId) deleteCustomers,
+  }) {
+    return deleteCustomers(contactId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String contactId)? addCustomers,
+    TResult? Function()? getCustomerList,
+    TResult? Function(String contactId)? deleteCustomers,
+  }) {
+    return deleteCustomers?.call(contactId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String contactId)? addCustomers,
+    TResult Function()? getCustomerList,
+    TResult Function(String contactId)? deleteCustomers,
+    required TResult orElse(),
+  }) {
+    if (deleteCustomers != null) {
+      return deleteCustomers(contactId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addCustomers value) addCustomers,
+    required TResult Function(getCustomerList value) getCustomerList,
+    required TResult Function(deleteCustomers value) deleteCustomers,
+  }) {
+    return deleteCustomers(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addCustomers value)? addCustomers,
+    TResult? Function(getCustomerList value)? getCustomerList,
+    TResult? Function(deleteCustomers value)? deleteCustomers,
+  }) {
+    return deleteCustomers?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addCustomers value)? addCustomers,
+    TResult Function(getCustomerList value)? getCustomerList,
+    TResult Function(deleteCustomers value)? deleteCustomers,
+    required TResult orElse(),
+  }) {
+    if (deleteCustomers != null) {
+      return deleteCustomers(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class deleteCustomers implements CustomerEvent {
+  const factory deleteCustomers({required final String contactId}) =
+      _$deleteCustomersImpl;
+
+  String get contactId;
+  @JsonKey(ignore: true)
+  _$$deleteCustomersImplCopyWith<_$deleteCustomersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

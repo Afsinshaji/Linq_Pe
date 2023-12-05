@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
@@ -8,9 +9,10 @@ import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 
 import 'package:linq_pe/presentation/screens/add_party/widgets/add_textfield.dart';
 import 'package:linq_pe/presentation/screens/view_party/screen_view_party.dart';
+import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 import 'package:linq_pe/utilities/colors.dart';
 
-class AddPartyScreen extends StatefulWidget {
+class AddPartyScreen extends ConsumerStatefulWidget {
   const AddPartyScreen({
     super.key,
     required this.partyType,
@@ -22,20 +24,19 @@ class AddPartyScreen extends StatefulWidget {
   final ContactsDTO? contact;
 
   @override
-  State<AddPartyScreen> createState() => _AddPartyScreenState();
+  AddPartyScreenState createState() => AddPartyScreenState();
 }
 
-class _AddPartyScreenState extends State<AddPartyScreen> {
+class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
   final TextEditingController nameController = TextEditingController();
 
   final TextEditingController nationalCodeController = TextEditingController();
 
   final TextEditingController numberController = TextEditingController();
 
-final formKey = GlobalKey<FormState>();
-@override
+  final formKey = GlobalKey<FormState>();
+  @override
   void initState() {
-    
     super.initState();
     if (widget.contact != null) {
       nameController.text = widget.contact!.displayName;
@@ -46,10 +47,10 @@ final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    
+
     nationalCodeController.text = '+91';
     return Form(
-      key:formKey ,
+      key: formKey,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -75,52 +76,55 @@ final formKey = GlobalKey<FormState>();
         ),
         bottomSheet: InkWell(
           onTap: () {
-       if (formKey.currentState!.validate()) 
-        {    if (nameController.text.isNotEmpty &&
-                numberController.text.isNotEmpty) {
-              dynamic contacts;
-              if (widget.contact != null) {
-                contacts = ContactsDTO(
-                  contactId: widget.contact!.contactId,
-                  displayName: nameController.text,
-                  contactNumber: numberController.text,
-                  avatar: widget.contact!.avatar,
-                  initails: nameController.text == widget.contact!.displayName
-                      ? widget.contact!.initails
-                      : extractInitials(nameController.text),
-                );
-    
-                if (contacts.displayName != widget.contact!.displayName ||
-                    widget.contact!.contactNumber != contacts.contactNumber) {
+            if (formKey.currentState!.validate()) {
+              if (nameController.text.isNotEmpty &&
+                  numberController.text.isNotEmpty) {
+                dynamic contacts;
+                if (widget.contact != null) {
+                  contacts = ContactsDTO(
+                    contactId: widget.contact!.contactId,
+                    displayName: nameController.text,
+                    contactNumber: numberController.text,
+                    avatar: widget.contact!.avatar,
+                    initails: nameController.text == widget.contact!.displayName
+                        ? widget.contact!.initails
+                        : extractInitials(nameController.text),
+                  );
+
+                  if (contacts.displayName != widget.contact!.displayName ||
+                      widget.contact!.contactNumber != contacts.contactNumber) {
+                    BlocProvider.of<ContactsBloc>(context)
+                        .add(ContactsEvent.addContact(contact: contacts));
+                  }
+                } else {
+                  String time = DateTime.now().toIso8601String();
+                  contacts = ContactsDTO(
+                    contactId: '$time-${numberController.text}',
+                    displayName: nameController.text,
+                    contactNumber: numberController.text,
+                    avatar: null,
+                    initails: extractInitials(nameController.text),
+                  );
                   BlocProvider.of<ContactsBloc>(context)
                       .add(ContactsEvent.addContact(contact: contacts));
                 }
-              } else {
-                String time = DateTime.now().toIso8601String();
-                contacts = ContactsDTO(
-                  contactId: '$time-${numberController.text}',
-                  displayName: nameController.text,
-                  contactNumber: numberController.text,
-                  avatar: null,
-                  initails: extractInitials(nameController.text),
-                );
-                BlocProvider.of<ContactsBloc>(context)
-                    .add(ContactsEvent.addContact(contact: contacts));
-              }
-    
-              if (widget.partyType == 'Customer') {
-                BlocProvider.of<CustomerBloc>(context).add(
-                    CustomerEvent.addCustomers(contactId: widget.contact!.contactId));
-              }
-    
-              Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => ViewPartyScreen(contact: contacts),
-                  ));
-            }else{
-              
-            }}
+
+                if (widget.partyType == 'Customer') {
+                  BlocProvider.of<CustomerBloc>(context).add(
+                      CustomerEvent.addCustomers(
+                          contactId: widget.contact!.contactId));
+                }
+
+                ref.read(fromContactIdProvider.notifier).state =
+                    contacts.contactId;
+
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ViewPartyScreen(contact: contacts),
+                    ));
+              } else {}
+            }
           },
           child: Container(
             margin: EdgeInsets.all(size.width * 0.05),

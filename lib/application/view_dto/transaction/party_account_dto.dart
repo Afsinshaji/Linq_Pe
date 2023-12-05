@@ -1,7 +1,7 @@
-import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
-import 'package:linq_pe/domain/models/transactions/transactions.dart';
+import 'package:linq_pe/application/view_dto/transaction/transaction_model_dto.dart';
+import 'package:linq_pe/domain/models/transactions/party_account_model.dart';
 
-class TransactionsDTO {
+class PartyAccountDTO {
   final String contactId;
 
   final double recievedAmt;
@@ -10,9 +10,9 @@ class TransactionsDTO {
 
   final double balanceAmt;
 
-  final List<SecondaryTransactionsDTO>? secondaryTransaction;
+  final List<TransactionModelDTO>? secondaryTransaction;
 
-  TransactionsDTO({
+  PartyAccountDTO({
     required this.contactId,
     required this.recievedAmt,
     required this.payedAmt,
@@ -21,14 +21,14 @@ class TransactionsDTO {
   });
 }
 
-TransactionsDTO convertTransactionModeltoDTO(TransactionsModel transaction) {
- late TransactionsDTO transactionDTO ;
+PartyAccountDTO convertPartyAccountModeltoDTO(PartyAccountsModel transaction) {
+ late PartyAccountDTO transactionDTO ;
   
-    if (transaction.secondaryTransaction != null &&
-        transaction.secondaryTransaction!.isNotEmpty) {
-    final secondaryList =  convertSecondaryTransactionsModeltoDTO(transaction.secondaryTransaction);
+    if (transaction.transactionList != null &&
+        transaction.transactionList!.isNotEmpty) {
+    final secondaryList =  convertTransactionModeltoDTO(transaction.transactionList);
    
-   transactionDTO=TransactionsDTO(
+   transactionDTO=PartyAccountDTO(
           contactId: transaction.contactId,
           recievedAmt: transaction.recievedAmt,
           payedAmt: transaction.payedAmt,
@@ -36,7 +36,7 @@ TransactionsDTO convertTransactionModeltoDTO(TransactionsModel transaction) {
           secondaryTransaction: secondaryList,
           );
     } else {
-      transactionDTO=TransactionsDTO(
+      transactionDTO=PartyAccountDTO(
           contactId: transaction.contactId,
           recievedAmt: transaction.recievedAmt,
           payedAmt: transaction.payedAmt,

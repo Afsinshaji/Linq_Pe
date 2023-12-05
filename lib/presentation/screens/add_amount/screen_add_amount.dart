@@ -6,29 +6,57 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linq_pe/application/party/customer/customer_bloc.dart';
+import 'package:linq_pe/application/seondary_party/secondary_party_bloc.dart';
+import 'package:linq_pe/application/split_amount/split_amount_bloc.dart';
 import 'package:linq_pe/application/transactions/transactions_bloc.dart';
+import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/drop_down_search_text_field.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/radio_box_widget.dart';
 import 'package:linq_pe/presentation/screens/add_party/widgets/add_textfield.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/secondary_party_riverpod/secondary_party.dart';
+import 'package:linq_pe/presentation/view_state/view_party_riverpod.dart/view_party.dart';
+import 'package:linq_pe/presentation/widgets/alert_snackbar.dart';
 import 'package:linq_pe/utilities/colors.dart';
 import 'package:linq_pe/utilities/list.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AddAmountScreen extends StatefulWidget {
-  const AddAmountScreen(
-      {super.key,
-      required this.isPay,
-      required this.isGive,
-      required this.partyName,
-      required this.isSecondaryPay,
-      this.primaryPartyName = ''});
+  const AddAmountScreen({
+    super.key,
+    this.isAddExpense = false,
+    required this.isPay,
+    required this.isAddBalance,
+    required this.partyName,
+    required this.isSplit,
+    required this.isSecondaryPay,
+    required this.isGive,
+    this.isSplittingBalance = false,
+    this.primaryPartyName = '',
+    this.splitAmount = '',
+    this.transactionRealId = '',
+    this.splittedTransactionId = '',
+    this.isEdit = false,
+    this.editTransaction = '',
+    this.primaryContactId = '',
+  });
   final bool isPay;
-  final bool isGive;
+  final bool isAddBalance;
   final String partyName;
   final bool isSecondaryPay;
+  final bool isSplit;
   final String primaryPartyName;
+  final String splitAmount;
+  final String transactionRealId;
+  final String splittedTransactionId;
+  final bool isGive;
+  final bool isAddExpense;
+  final bool isSplittingBalance;
+  final bool isEdit;
+  final dynamic editTransaction;
+  final String primaryContactId;
 
   @override
   State<AddAmountScreen> createState() => _AddAmountScreenState();
@@ -43,10 +71,20 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
   @override
   void initState() {
     super.initState();
+        if (widget.isEdit) {
+      amountController.text = widget.editTransaction.givenAmt.toString();
+      if (widget.editTransaction.transactionDetails != null) {
+        detailsController.text = widget.editTransaction.transactionDetails!;
+      }
+      if (widget.editTransaction.transactionId != null) {
+        transactionIdController.text = widget.editTransaction.transactionId!;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: LinqPeColors.kLightBluwWhite,
@@ -61,13 +99,17 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
             )),
         backgroundColor: LinqPeColors.kPinkColor,
         title: Text(
-          widget.isGive
-              ? 'You give to ${widget.partyName}'
-              : widget.isPay
-                  ? widget.isSecondaryPay
-                      ? '${widget.partyName} pay for ${widget.primaryPartyName}'
-                      : 'You pay for ${widget.partyName}'
-                  : 'You got from ${widget.partyName}',
+          widget.isAddExpense
+              ? 'Adding Expense'
+              : widget.isSplit
+                  ? 'Split Amount: ${widget.splitAmount}'
+                  : widget.isAddBalance || widget.isGive
+                      ? 'You give to ${widget.partyName}'
+                      : widget.isPay
+                          ? widget.isSecondaryPay
+                              ? '${widget.partyName} pay for ${widget.primaryPartyName}'
+                              : 'You pay for ${widget.partyName}'
+                          : 'You got from ${widget.partyName}',
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               letterSpacing: .1,
@@ -118,8 +160,17 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
           //   ),
           // ),
           AddButton(
-              size: size,
+              primaryContactId: widget.primaryContactId,
+              isEdit: widget.isEdit,
+              isAddExpense: widget.isAddExpense,
               isGive: widget.isGive,
+              splitAmount: widget.splitAmount,
+              splittedTransactionId: widget.splittedTransactionId,
+              transactionRealId: widget.transactionRealId,
+              isSplit: widget.isSplit,
+              size: size,
+              isSplittingBalance: widget.isSplittingBalance,
+              isAddBalance: widget.isAddBalance,
               isPay: widget.isPay,
               isSecondaryPay: widget.isSecondaryPay),
       //     ],
@@ -147,17 +198,40 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                   isTextNumberType: true,
                   text: 'Enter amount',
                   fieldColor: LinqPeColors.kPinkColor),
-              SizedBox(
-                height: widget.isGive ? 0 : size.height * 0.03,
-              ),
-              widget.isGive
-                  ? const SizedBox()
-                  : Padding(
+              widget.isAddExpense
+                  ? SizedBox(
+                      height: size.height * 0.03,
+                    )
+                  : const SizedBox(),
+              widget.isAddExpense
+                  ? Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0.03),
                       child: const DropDownSearchTextField(
+                        isFromField: true,
+                        hintText: 'From who',
+                      ))
+                  : const SizedBox(),
+              SizedBox(
+                height: widget.isPay ||
+                        widget.isSecondaryPay ||
+                        widget.isSplit ||
+                        widget.isAddExpense
+                    ? size.height * 0.03
+                    : 0,
+              ),
+              widget.isPay ||
+                      widget.isSecondaryPay ||
+                      widget.isSplit ||
+                      widget.isAddExpense
+                  ? Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                      child: const DropDownSearchTextField(
+                        isFromField: false,
                         hintText: 'To whom',
-                      )),
+                      ))
+                  : const SizedBox(),
               SizedBox(
                 height: size.height * 0.03,
               ),
@@ -264,108 +338,517 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
 class AddButton extends ConsumerWidget {
   const AddButton({
     super.key,
+    required this.isSplit,
     required this.size,
-    required this.isGive,
+    required this.isAddBalance,
     required this.isPay,
     required this.isSecondaryPay,
+    required this.transactionRealId,
+    required this.splittedTransactionId,
+    required this.splitAmount,
+    required this.isGive,
+    required this.isAddExpense,
+    required this.isSplittingBalance,
+    required this.isEdit,
+    required this.primaryContactId,
   });
 
   final Size size;
   final bool isPay;
-  final bool isGive;
+  final bool isAddBalance;
   final bool isSecondaryPay;
-
+  final bool isSplit;
+  final String transactionRealId;
+  final String splittedTransactionId;
+  final String splitAmount;
+  final bool isGive;
+  final bool isAddExpense;
+  final bool isSplittingBalance;
+  final bool isEdit;
+  final String primaryContactId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ColoredBox(
-      color: LinqPeColors.kLightBluwWhite,
-      child: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: size.width * 0.05, vertical: size.width * 0.05),
-        height: size.height * 0.065,
-        width: size.width,
-        decoration: const BoxDecoration(color: LinqPeColors.kPinkColor),
-        child: InkWell(
-          onTap: () {
-            if (ref.watch(amountProvider) >= 0) {
-              if (!isGive && !isSecondaryPay) {
-                log('Recalled');
-                BlocProvider.of<TransactionsBloc>(context).add(
-                    TransactionsEvent.addGetTransctions(
-                        transactionDetails:
-                            ref.watch(transactionDetailsProvider).isEmpty
-                                ? null
-                                : ref.watch(transactionDetailsProvider),
-                        fromContactId: ref.watch(fromContactIdProvider),
-                        toContactId: ref.watch(toContactIdProvider),
-                        amount: ref.watch(amountProvider),
-                        isPayed: isPay,
-                        transactionType: ref.watch(transactionTypeProvider),
-                        timeOfTrans: ref.watch(dateProvider),
-                        billImage: ref.watch(imageProvider).path.isEmpty
-                            ? null
-                            : ref.watch(imageProvider),
-                        transactionId: ref.watch(transactionIdProvider).isEmpty
-                            ? null
-                            : ref.watch(transactionIdProvider)));
-              } else if (isGive) {
-                BlocProvider.of<TransactionsBloc>(context).add(
-                    TransactionsEvent.addGiveTransctions(
-                        transactionDetails:
-                            ref.watch(transactionDetailsProvider).isEmpty
-                                ? null
-                                : ref.watch(transactionDetailsProvider),
-                        fromContactId: 'You',
-                        toContactId: ref.watch(fromContactIdProvider),
-                        amount: ref.watch(amountProvider),
-                        transactionType: ref.watch(transactionTypeProvider),
-                        timeOfTrans: ref.watch(dateProvider),
-                        billImage: ref.watch(imageProvider).path.isEmpty
-                            ? null
-                            : ref.watch(imageProvider),
-                        transactionId: ref.watch(transactionIdProvider).isEmpty
-                            ? null
-                            : ref.watch(transactionIdProvider)));
-              } else if (isSecondaryPay) {
-                log('Okays');
-                BlocProvider.of<TransactionsBloc>(context).add(
-                    TransactionsEvent.addSecondaryPartyPayment(
-                        amountPayed: ref.watch(amountProvider),
-                        payedToId: ref.watch(toContactIdProvider),
-                        primaryContactId: ref.watch(fromContactIdProvider),
-                        secondaryContactId:
-                            ref.watch(secondaryContactIdProvider),
-                        transactionDetails:
-                            ref.watch(transactionDetailsProvider).isEmpty
-                                ? null
-                                : ref.watch(transactionDetailsProvider),
-                        transactionType: ref.watch(transactionTypeProvider),
-                        timeOfTrans: ref.watch(dateProvider),
-                        billImage: ref.watch(imageProvider).path.isEmpty
-                            ? null
-                            : ref.watch(imageProvider),
-                        transactionId: ref.watch(transactionIdProvider).isEmpty
-                            ? null
-                            : ref.watch(transactionIdProvider)));
-              }
+    return BlocBuilder<SplitAmountBloc, SplitAmountState>(
+      builder: (context, splitstate) {
+        List<NestedSecondaryTransactionsDTO> splitList = [];
+        if (splitstate is displaySplitAmountList) {
+          splitList = splitstate.transactionList;
+        }
+        return BlocBuilder<SecondaryPartyBloc, SecondaryPartyState>(
+          builder: (context, secondarystate) {
+            List<NestedSecondaryTransactionsDTO> transactionList = [];
+            if (secondarystate is displaySecondaryPartyList) {
+              transactionList = secondarystate.transactionList;
             }
 
-            Navigator.pop(context);
-          },
-          child: Center(
-              child: Text(
-            isPay ? 'PAY' : 'SAVE',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                letterSpacing: .5,
-                fontSize: size.width * 0.04,
-                color: LinqPeColors.kWhiteColor,
-                fontWeight: FontWeight.w600,
+            return ColoredBox(
+              color: LinqPeColors.kLightBluwWhite,
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05, vertical: size.width * 0.05),
+                height: size.height * 0.065,
+                width: size.width,
+                decoration: const BoxDecoration(color: LinqPeColors.kPinkColor),
+                child: InkWell(
+                  onTap: () {
+                    bool isToGoBack = true;
+                    if (ref.watch(amountProvider) >= 0) {
+                      if (!isEdit) {
+                        if (!isAddBalance &&
+                            !isSecondaryPay &&
+                            !isAddExpense &&
+                            !isSplit &&
+                            !isSplittingBalance &&
+                            !isGive) {
+                          log('Recalled');
+                          if (isPay &&
+                              ref.watch(primaryPartyBalanceAmountProvider) <
+                                  ref.watch(amountProvider)) {
+                            isToGoBack = false;
+                            //Give a toast that you dont have enough Balance
+                            alertSnackbar(
+                                context, 'You dont have enough Balance');
+                          } else {
+                            BlocProvider.of<TransactionsBloc>(context).add(
+                                TransactionsEvent.addGetTransctions(
+                                    transactionDetails: ref
+                                            .watch(transactionDetailsProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionDetailsProvider),
+                                    fromContactId:
+                                        ref.watch(fromContactIdProvider),
+                                    toContactId: ref.watch(toContactIdProvider),
+                                    amount: ref.watch(amountProvider),
+                                    isPayed: isPay,
+                                    transactionType:
+                                        ref.watch(transactionTypeProvider),
+                                    timeOfTrans: ref.watch(dateProvider),
+                                    billImage:
+                                        ref.watch(imageProvider).path.isEmpty
+                                            ? null
+                                            : ref.watch(imageProvider),
+                                    transactionId: ref
+                                            .watch(transactionIdProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider)));
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => BlocProvider.of<CustomerBloc>(context)
+                                  .add(const CustomerEvent.getCustomerList()),
+                            );
+                          }
+                        } else if (isAddBalance) {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              TransactionsEvent.addBalanceTransctions(
+                                  transactionDetails: ref
+                                          .watch(transactionDetailsProvider)
+                                          .isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                                  fromContactId: 'You',
+                                  toContactId: ref.watch(fromContactIdProvider),
+                                  amount: ref.watch(amountProvider),
+                                  transactionType:
+                                      ref.watch(transactionTypeProvider),
+                                  timeOfTrans: ref.watch(dateProvider),
+                                  billImage:
+                                      ref.watch(imageProvider).path.isEmpty
+                                          ? null
+                                          : ref.watch(imageProvider),
+                                  transactionId:
+                                      ref.watch(transactionIdProvider).isEmpty
+                                          ? null
+                                          : ref.watch(transactionIdProvider)));
+                          Future.delayed(
+                            const Duration(milliseconds: 100),
+                            () => BlocProvider.of<CustomerBloc>(context)
+                                .add(const CustomerEvent.getCustomerList()),
+                          );
+                        } else if (isSecondaryPay) {
+                          log(ref.watch(amountProvider).toString());
+                          log(ref
+                              .watch(secondaryPartyBalanceAmountProvider)
+                              .toString());
+                          if (ref.watch(amountProvider) <=
+                              ref.watch(secondaryPartyBalanceAmountProvider)) {
+                            log('Okays');
+                            List<NestedSecondaryTransactionsDTO>
+                                listOfTransaction = List.from(transactionList);
+                            listOfTransaction
+                                .add(NestedSecondaryTransactionsDTO(
+                              isGet: false,
+                              isGive: false,
+                              isAddBalance: true,
+                              isSplit: false,
+                              id: DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString(),
+                              transactionType:
+                                  ref.watch(transactionTypeProvider),
+                              timeOfTrans: ref.watch(dateProvider),
+                              toContactId: ref.watch(toContactIdProvider),
+                              payedAmt: ref.watch(amountProvider),
+                              balanceAmt: ref
+                                  .watch(secondaryPartyBalanceAmountProvider),
+                              isPayed: true,
+                              givenAmt: ref.watch(amountProvider),
+                              fromContactId:
+                                  ref.watch(secondaryContactIdProvider),
+                              billImage: ref.watch(imageProvider).path.isEmpty
+                                  ? null
+                                  : ref.watch(imageProvider),
+                              secondaryList: null,
+                              transactionDetails:
+                                  ref.watch(transactionDetailsProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                              transactionId:
+                                  ref.watch(transactionIdProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionIdProvider),
+                            ));
+                            List<NestedSecondaryTransactionsDTO>
+                                listOfSplitTransaction = List.from(splitList);
+                            final splitIndex =
+                                listOfSplitTransaction.indexWhere((element) =>
+                                    element.id == transactionRealId);
+                            if (splitIndex >= 0) {
+                              listOfSplitTransaction[splitIndex] = NestedSecondaryTransactionsDTO(
+                                  isAddBalance: listOfSplitTransaction[splitIndex]
+                                      .isAddBalance,
+                                  isGet:
+                                      listOfSplitTransaction[splitIndex].isGet,
+                                  isGive:
+                                      listOfSplitTransaction[splitIndex].isGive,
+                                  isSplit: listOfSplitTransaction[splitIndex]
+                                      .isSplit,
+                                  id: listOfSplitTransaction[splitIndex].id,
+                                  transactionType:
+                                      listOfSplitTransaction[splitIndex]
+                                          .transactionType,
+                                  timeOfTrans: listOfSplitTransaction[splitIndex]
+                                      .timeOfTrans,
+                                  toContactId: listOfSplitTransaction[splitIndex]
+                                      .toContactId,
+                                  payedAmt: listOfSplitTransaction[splitIndex]
+                                      .payedAmt,
+                                  balanceAmt: listOfSplitTransaction[splitIndex]
+                                      .balanceAmt,
+                                  isPayed: listOfSplitTransaction[splitIndex]
+                                      .isPayed,
+                                  givenAmt: listOfSplitTransaction[splitIndex]
+                                      .givenAmt,
+                                  fromContactId: listOfSplitTransaction[splitIndex]
+                                      .fromContactId,
+                                  billImage: listOfSplitTransaction[splitIndex]
+                                      .billImage,
+                                  transactionDetails: listOfSplitTransaction[splitIndex]
+                                      .transactionDetails,
+                                  transactionId:
+                                      listOfSplitTransaction[splitIndex].transactionId,
+                                  secondaryList: listOfTransaction);
+                            }
+                            BlocProvider.of<SplitAmountBloc>(context).add(
+                                SplitAmountEvent.addSplitAmountList(
+                                    transactionList: listOfSplitTransaction));
+                            BlocProvider.of<SecondaryPartyBloc>(context).add(
+                                SecondaryPartyEvent.addSecondaryPartyList(
+                                    transactionList: listOfTransaction));
+
+                            // addSecondaryPayment(ref.watch(amountProvider), ref);
+
+                            // addSecondaryDTO(
+                            // SecondaryTransactionsDTO(
+                            //   transactionType: ref.watch(transactionTypeProvider),
+                            //   timeOfTrans: ref.watch(dateProvider),
+                            //   toContactId: ref.watch(toContactIdProvider),
+                            //   payedAmt: ref.watch(amountProvider),
+                            //   balanceAmt:
+                            //       ref.watch(secondaryPartyBalanceAmountProvider),
+                            //   isPayed: true,
+                            //   givenAmt: ref.watch(amountProvider),
+                            //   fromContactId: ref.watch(secondaryContactIdProvider),
+                            //   billImage: ref.watch(imageProvider).path.isEmpty
+                            //       ? null
+                            //       : ref.watch(imageProvider),
+                            //   secondaryTransaction: null,
+                            //   transactionDetails:
+                            //       ref.watch(transactionDetailsProvider).isEmpty
+                            //           ? null
+                            //           : ref.watch(transactionDetailsProvider),
+                            //   transactionId: ref.watch(transactionIdProvider).isEmpty
+                            //       ? null
+                            //       : ref.watch(transactionIdProvider),
+                            // ),
+                            //     ref);
+                            BlocProvider.of<TransactionsBloc>(context).add(
+                                TransactionsEvent.addSecondaryPartyPayment(
+                                    isSplittedPrimaryTransaction: true,
+                                    splittedTransactionId:
+                                        splittedTransactionId,
+                                    transactionRealId: transactionRealId,
+                                    amountPayed: ref.watch(amountProvider),
+                                    payedToId: ref.watch(toContactIdProvider),
+                                    primaryContactId:
+                                        ref.watch(fromContactIdProvider),
+                                    secondaryContactId:
+                                        ref.watch(secondaryContactIdProvider),
+                                    transactionDetails: ref
+                                            .watch(transactionDetailsProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionDetailsProvider),
+                                    transactionType:
+                                        ref.watch(transactionTypeProvider),
+                                    timeOfTrans: ref.watch(dateProvider),
+                                    billImage:
+                                        ref.watch(imageProvider).path.isEmpty
+                                            ? null
+                                            : ref.watch(imageProvider),
+                                    transactionId: ref
+                                            .watch(transactionIdProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider)));
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => BlocProvider.of<CustomerBloc>(context)
+                                  .add(const CustomerEvent.getCustomerList()),
+                            );
+                          } else {
+                            isToGoBack = false;
+                            //Give a toast that you dont have enough Balance
+                            alertSnackbar(
+                                context, 'You dont have enough Balance');
+                          }
+                        } else if (isSplit && !isSplittingBalance) {
+                          log('listHere2${ref.watch(toContactIdProvider).toString()}');
+                          if (double.parse(splitAmount) >=
+                              ref.watch(amountProvider)) {
+                            final id = DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString();
+                            List<NestedSecondaryTransactionsDTO>
+                                listOfTransaction = List.from(splitList);
+                            listOfTransaction
+                                .add(NestedSecondaryTransactionsDTO(
+                              isAddBalance: false,
+                              isGet: false,
+                              isGive: false,
+                              isSplit: isSplit,
+                              id: id,
+                              transactionType:
+                                  ref.watch(transactionTypeProvider),
+                              timeOfTrans: ref.watch(dateProvider),
+                              toContactId: ref.watch(toContactIdProvider),
+                              payedAmt: 0,
+                              balanceAmt: ref.watch(amountProvider),
+                              isPayed: false,
+                              givenAmt: ref.watch(amountProvider),
+                              fromContactId: 'You',
+                              billImage: ref.watch(imageProvider).path.isEmpty
+                                  ? null
+                                  : ref.watch(imageProvider),
+                              transactionDetails:
+                                  ref.watch(transactionDetailsProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                              transactionId:
+                                  ref.watch(transactionIdProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionIdProvider),
+                            ));
+
+                            BlocProvider.of<SplitAmountBloc>(context).add(
+                                SplitAmountEvent.addSplitAmountList(
+                                    transactionList: listOfTransaction));
+
+                            BlocProvider.of<TransactionsBloc>(context)
+                                .add(TransactionsEvent.splitAmounts(
+                              id: id,
+                              primaryContactId:
+                                  ref.watch(fromContactIdProvider),
+                              toContactId: ref.watch(toContactIdProvider),
+                              transactionId: transactionRealId,
+                              splitAmount: ref.watch(amountProvider),
+                              transactionDetails:
+                                  ref.watch(transactionDetailsProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                              transactionType:
+                                  ref.watch(transactionTypeProvider),
+                              timeOfTrans: ref.watch(dateProvider),
+                              billImage: ref.watch(imageProvider).path.isEmpty
+                                  ? null
+                                  : ref.watch(imageProvider),
+                              userTransactionId:
+                                  ref.watch(transactionIdProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionIdProvider),
+                            ));
+                          } else {
+                            isToGoBack = false;
+                            //Give a toast that you dont have enough Balance
+                            alertSnackbar(
+                                context, 'You dont have enough Balance');
+                          }
+                        } else if (isGive) {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              TransactionsEvent.addGiveTransactions(
+                                  transactionDetails: ref
+                                          .watch(transactionDetailsProvider)
+                                          .isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                                  fromContactId: 'You',
+                                  toContactId: ref.watch(fromContactIdProvider),
+                                  amount: ref.watch(amountProvider),
+                                  transactionType:
+                                      ref.watch(transactionTypeProvider),
+                                  timeOfTrans: ref.watch(dateProvider),
+                                  billImage:
+                                      ref.watch(imageProvider).path.isEmpty
+                                          ? null
+                                          : ref.watch(imageProvider),
+                                  transactionId:
+                                      ref.watch(transactionIdProvider).isEmpty
+                                          ? null
+                                          : ref.watch(transactionIdProvider)));
+                          Future.delayed(
+                            const Duration(milliseconds: 100),
+                            () => BlocProvider.of<CustomerBloc>(context)
+                                .add(const CustomerEvent.getCustomerList()),
+                          );
+                        } else if (isAddExpense) {
+                          log('AddEx${ref.watch(primaryPartyBalanceAmountProvider)}');
+                          if (ref.watch(primaryPartyBalanceAmountProvider) <
+                              ref.watch(amountProvider)) {
+                            isToGoBack = false;
+                            //Give a toast that you dont have enough Balance
+                            alertSnackbar(
+                                context, 'You dont have enough Balance');
+                          } else {
+                            BlocProvider.of<TransactionsBloc>(context).add(
+                                TransactionsEvent.addGetTransctions(
+                                    transactionDetails: ref
+                                            .watch(transactionDetailsProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionDetailsProvider),
+                                    fromContactId:
+                                        ref.watch(fromContactIdProvider),
+                                    toContactId: ref.watch(toContactIdProvider),
+                                    amount: ref.watch(amountProvider),
+                                    isPayed: true,
+                                    transactionType:
+                                        ref.watch(transactionTypeProvider),
+                                    timeOfTrans: ref.watch(dateProvider),
+                                    billImage:
+                                        ref.watch(imageProvider).path.isEmpty
+                                            ? null
+                                            : ref.watch(imageProvider),
+                                    transactionId: ref
+                                            .watch(transactionIdProvider)
+                                            .isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider)));
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => BlocProvider.of<CustomerBloc>(context)
+                                  .add(const CustomerEvent.getCustomerList()),
+                            );
+                          }
+                        } else if (isSplittingBalance) {
+                          if (double.parse(splitAmount) >=
+                              ref.watch(amountProvider)) {
+                            BlocProvider.of<TransactionsBloc>(context)
+                                .add(TransactionsEvent.splittingBalanceAmount(
+                              primaryContactId:
+                                  ref.watch(fromContactIdProvider),
+                              toContactId: ref.watch(toContactIdProvider),
+                              splitAmount: ref.watch(amountProvider),
+                              transactionDetails:
+                                  ref.watch(transactionDetailsProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                              transactionType:
+                                  ref.watch(transactionTypeProvider),
+                              timeOfTrans: ref.watch(dateProvider),
+                              billImage: ref.watch(imageProvider).path.isEmpty
+                                  ? null
+                                  : ref.watch(imageProvider),
+                              userTransactionId:
+                                  ref.watch(transactionIdProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionIdProvider),
+                            ));
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => BlocProvider.of<CustomerBloc>(context)
+                                  .add(const CustomerEvent.getCustomerList()),
+                            );
+                          } else {
+                            isToGoBack = false;
+                            //Give a toast that you dont have enough Balance
+                            alertSnackbar(
+                                context, 'You dont have enough Balance');
+                          }
+                        }
+                      } else {
+                        BlocProvider.of<TransactionsBloc>(context).add(
+                            TransactionsEvent.editTransactions(
+                                amount: ref.watch(amountProvider),
+                                transactionRealId: transactionRealId,
+                                toId: ref.watch(toContactIdProvider),
+                                transactionDetails: ref
+                                        .watch(transactionDetailsProvider)
+                                        .isEmpty
+                                    ? null
+                                    : ref.watch(transactionDetailsProvider),
+                                transactionType:
+                                    ref.watch(transactionTypeProvider),
+                                timeOfTrans: ref.watch(dateProvider),
+                                billImage: ref.watch(imageProvider).path.isEmpty
+                                    ? null
+                                    : ref.watch(imageProvider),
+                                transactionId:
+                                    ref.watch(transactionIdProvider).isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider),
+                                primaryContactId: primaryContactId));
+                                  Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => BlocProvider.of<CustomerBloc>(context)
+                                  .add(const CustomerEvent.getCustomerList()),
+                            );
+                        Navigator.pop(context);
+                      }
+                    }
+
+                    if (isToGoBack) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Center(
+                      child: Text(
+                    isPay ? 'PAY' : 'SAVE',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        letterSpacing: .5,
+                        fontSize: size.width * 0.04,
+                        color: LinqPeColors.kWhiteColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )),
+                ),
               ),
-            ),
-          )),
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }

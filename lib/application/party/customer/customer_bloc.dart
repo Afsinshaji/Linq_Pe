@@ -1,3 +1,5 @@
+
+
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,9 +18,18 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       add(const CustomerEvent.getCustomerList());
     });
     on<getCustomerList>((event, emit) {
+     
       final customerList = PartyImplementation.instance.getCustomers();
       final customerDTOList = convertModeltoDTO(customerList);
       emit(displayCustomerList(customers: customerDTOList));
+    });
+     on<deleteCustomers>((event, emit)async {
+     
+   await  PartyImplementation.instance.deleteCustomer(
+        contactId: event.contactId
+      );
+        add(const CustomerEvent.getCustomerList());
+      
     });
   }
 }

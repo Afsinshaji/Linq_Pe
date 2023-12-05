@@ -4,5 +4,11 @@ abstract class ContactsRepository {
   List<ContactsModel> getContactList();
   Future<void> addContactList();
   Future<void> addContacts({required ContactsModel contact});
- 
+Future<void>  updateContactAmounts({
+    required double balanceAmount,
+    required double receivedAmount,
+    required double payedAmount,
+    required String contactId,
+    
+  });
 }

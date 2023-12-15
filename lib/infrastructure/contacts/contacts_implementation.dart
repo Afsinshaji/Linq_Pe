@@ -21,7 +21,7 @@ class ContactsImplementation extends ContactsRepository {
   }
 
   @override
-  Future<void> addContactList() async {
+  Future<void> addContactList({required String ledgerId}) async {
     log('addContactList called');
     List<Contact> contacts =
         await ContactsService.getContacts().onError((error, stackTrace) {
@@ -29,7 +29,7 @@ class ContactsImplementation extends ContactsRepository {
       return [];
     });
     log('contacts:${contacts.toString()}');
-    await contactsBox.clear();
+    // await contactsBox.clear();
     String time = DateTime.now().toIso8601String();
     int index = 0;
     for (var contact in contacts) {
@@ -38,6 +38,7 @@ class ContactsImplementation extends ContactsRepository {
           contact.phones!.first.value != null) {
         time = '$time-$index';
         await contactsBox.add(ContactsModel(
+          ledgerId: ledgerId,
           contactId: time,
           contactNumber: contact.phones!.first.value ??= '',
           displayName: contact.displayName ??= '',
@@ -54,8 +55,9 @@ class ContactsImplementation extends ContactsRepository {
   }
 
   @override
-  List<ContactsModel> getContactList() {
-    final List<ContactsModel> contactModelList = contactsBox.values.toList();
+  List<ContactsModel> getContactList({  required String ledgerId}) {
+    final List<ContactsModel> contactModelList = contactsBox.values.toList().where((element)
+     => element.ledgerId==ledgerId).toList();
     log('KiBox${contactsBox.values.toList().toString()}');
     return contactModelList;
   }
@@ -64,44 +66,79 @@ class ContactsImplementation extends ContactsRepository {
   Future<void> addContacts({required ContactsModel contact}) async {
     final contactList = contactsBox.values.toList();
     if (contactList
-        .where((element) => element.contactId == contact.contactId)
+        .where((element) => element.contactId == contact.contactId&& element.ledgerId==contact.ledgerId)
         .isEmpty) {
       await contactsBox.add(contact);
     } else {
       int index = contactList
-          .indexWhere((element) => element.contactId == contact.contactId);
+          .indexWhere((element) => element.contactId == contact.contactId&& element.ledgerId==contact.ledgerId);
       await contactsBox.deleteAt(index);
       await contactsBox.add(contact);
     }
   }
- @override
+
+  @override
+  Future<void> addNonSplittedBalance(
+      {required String contactId, required double amount,  required String ledgerId,}) async {
+    final contactList = contactsBox.values.toList();
+    if (contactList
+        .where((element) => element.contactId == contactId&&element.ledgerId==ledgerId)
+        .isEmpty) {
+      return;
+    } else {
+      int index =
+          contactList.indexWhere((element) => element.contactId == contactId&&element.ledgerId==ledgerId);
+      final contact = contactList[index];
+      await contactsBox.putAt(
+          index,
+          ContactsModel(
+            ledgerId: contact.ledgerId,
+              contactId: contact.contactId,
+              displayName: contact.displayName,
+              contactNumber: contact.contactNumber,
+              initails: contact.initails,
+              avatar: contact.avatar,
+              blanceAmount: contact.blanceAmount,
+              payedAmount: contact.payedAmount,
+              receivedAmount: contact.receivedAmount,
+              lastTimeOfTransfer: DateTime.now(),
+              nonSplittedBalance: contact.nonSplittedBalance == null
+                  ? amount
+                  : contact.nonSplittedBalance! + amount));
+    }
+  }
+
+  @override
   Future<void> updateContactAmounts({
     required double balanceAmount,
     required double receivedAmount,
     required double payedAmount,
     required String contactId,
+      required String ledgerId,
   }) async {
     final contactList = contactsBox.values.toList();
     if (contactList
-        .where((element) => element.contactId == contactId)
+        .where((element) => element.contactId == contactId&& element.ledgerId==ledgerId)
         .isEmpty) {
       return;
     } else {
       int index =
-          contactList.indexWhere((element) => element.contactId == contactId);
+          contactList.indexWhere((element) => element.contactId == contactId&&element.ledgerId==ledgerId);
       final contact = contactList[index];
-      await contactsBox.putAt(index,ContactsModel(contactId: contact.contactId,
-       displayName: contact.displayName, 
-       contactNumber: contact.contactNumber,
-        initails: contact.initails,
-        avatar: contact.avatar,
-        blanceAmount: balanceAmount,
-        payedAmount: payedAmount,
-        receivedAmount: receivedAmount,
-        lastTimeOfTransfer: DateTime.now(),
-        
-        
-        ));
+      await contactsBox.putAt(
+          index,
+          ContactsModel(
+            ledgerId: contact.ledgerId,
+            contactId: contact.contactId,
+            displayName: contact.displayName,
+            contactNumber: contact.contactNumber,
+            initails: contact.initails,
+            avatar: contact.avatar,
+            blanceAmount: balanceAmount,
+            payedAmount: payedAmount,
+            receivedAmount: receivedAmount,
+            lastTimeOfTransfer: DateTime.now(),
+          ));
     }
   }
 }

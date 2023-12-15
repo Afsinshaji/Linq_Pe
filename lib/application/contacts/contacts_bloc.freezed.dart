@@ -18,23 +18,29 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ContactsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() addContactsList,
+    required TResult Function(String ledgerId) addContactsList,
     required TResult Function(ContactsDTO contact) addContact,
-    required TResult Function() getContacts,
+    required TResult Function(String ledgerId) getContacts,
+    required TResult Function(String contactId, String ledgerId, double amount)
+        addNonSplittingBalance,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? addContactsList,
+    TResult? Function(String ledgerId)? addContactsList,
     TResult? Function(ContactsDTO contact)? addContact,
-    TResult? Function()? getContacts,
+    TResult? Function(String ledgerId)? getContacts,
+    TResult? Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? addContactsList,
+    TResult Function(String ledgerId)? addContactsList,
     TResult Function(ContactsDTO contact)? addContact,
-    TResult Function()? getContacts,
+    TResult Function(String ledgerId)? getContacts,
+    TResult Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +49,8 @@ mixin _$ContactsEvent {
     required TResult Function(addContactsList value) addContactsList,
     required TResult Function(addContact value) addContact,
     required TResult Function(getContacts value) getContacts,
+    required TResult Function(addNonSplittingBalance value)
+        addNonSplittingBalance,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +58,7 @@ mixin _$ContactsEvent {
     TResult? Function(addContactsList value)? addContactsList,
     TResult? Function(addContact value)? addContact,
     TResult? Function(getContacts value)? getContacts,
+    TResult? Function(addNonSplittingBalance value)? addNonSplittingBalance,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +66,7 @@ mixin _$ContactsEvent {
     TResult Function(addContactsList value)? addContactsList,
     TResult Function(addContact value)? addContact,
     TResult Function(getContacts value)? getContacts,
+    TResult Function(addNonSplittingBalance value)? addNonSplittingBalance,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -85,6 +95,8 @@ abstract class _$$addContactsListImplCopyWith<$Res> {
   factory _$$addContactsListImplCopyWith(_$addContactsListImpl value,
           $Res Function(_$addContactsListImpl) then) =
       __$$addContactsListImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String ledgerId});
 }
 
 /// @nodoc
@@ -94,57 +106,89 @@ class __$$addContactsListImplCopyWithImpl<$Res>
   __$$addContactsListImplCopyWithImpl(
       _$addContactsListImpl _value, $Res Function(_$addContactsListImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ledgerId = null,
+  }) {
+    return _then(_$addContactsListImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$addContactsListImpl implements addContactsList {
-  const _$addContactsListImpl();
+  const _$addContactsListImpl({required this.ledgerId});
+
+  @override
+  final String ledgerId;
 
   @override
   String toString() {
-    return 'ContactsEvent.addContactsList()';
+    return 'ContactsEvent.addContactsList(ledgerId: $ledgerId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$addContactsListImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$addContactsListImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, ledgerId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$addContactsListImplCopyWith<_$addContactsListImpl> get copyWith =>
+      __$$addContactsListImplCopyWithImpl<_$addContactsListImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() addContactsList,
+    required TResult Function(String ledgerId) addContactsList,
     required TResult Function(ContactsDTO contact) addContact,
-    required TResult Function() getContacts,
+    required TResult Function(String ledgerId) getContacts,
+    required TResult Function(String contactId, String ledgerId, double amount)
+        addNonSplittingBalance,
   }) {
-    return addContactsList();
+    return addContactsList(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? addContactsList,
+    TResult? Function(String ledgerId)? addContactsList,
     TResult? Function(ContactsDTO contact)? addContact,
-    TResult? Function()? getContacts,
+    TResult? Function(String ledgerId)? getContacts,
+    TResult? Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
   }) {
-    return addContactsList?.call();
+    return addContactsList?.call(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? addContactsList,
+    TResult Function(String ledgerId)? addContactsList,
     TResult Function(ContactsDTO contact)? addContact,
-    TResult Function()? getContacts,
+    TResult Function(String ledgerId)? getContacts,
+    TResult Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (addContactsList != null) {
-      return addContactsList();
+      return addContactsList(ledgerId);
     }
     return orElse();
   }
@@ -155,6 +199,8 @@ class _$addContactsListImpl implements addContactsList {
     required TResult Function(addContactsList value) addContactsList,
     required TResult Function(addContact value) addContact,
     required TResult Function(getContacts value) getContacts,
+    required TResult Function(addNonSplittingBalance value)
+        addNonSplittingBalance,
   }) {
     return addContactsList(this);
   }
@@ -165,6 +211,7 @@ class _$addContactsListImpl implements addContactsList {
     TResult? Function(addContactsList value)? addContactsList,
     TResult? Function(addContact value)? addContact,
     TResult? Function(getContacts value)? getContacts,
+    TResult? Function(addNonSplittingBalance value)? addNonSplittingBalance,
   }) {
     return addContactsList?.call(this);
   }
@@ -175,6 +222,7 @@ class _$addContactsListImpl implements addContactsList {
     TResult Function(addContactsList value)? addContactsList,
     TResult Function(addContact value)? addContact,
     TResult Function(getContacts value)? getContacts,
+    TResult Function(addNonSplittingBalance value)? addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (addContactsList != null) {
@@ -185,7 +233,13 @@ class _$addContactsListImpl implements addContactsList {
 }
 
 abstract class addContactsList implements ContactsEvent {
-  const factory addContactsList() = _$addContactsListImpl;
+  const factory addContactsList({required final String ledgerId}) =
+      _$addContactsListImpl;
+
+  String get ledgerId;
+  @JsonKey(ignore: true)
+  _$$addContactsListImplCopyWith<_$addContactsListImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -252,9 +306,11 @@ class _$addContactImpl implements addContact {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() addContactsList,
+    required TResult Function(String ledgerId) addContactsList,
     required TResult Function(ContactsDTO contact) addContact,
-    required TResult Function() getContacts,
+    required TResult Function(String ledgerId) getContacts,
+    required TResult Function(String contactId, String ledgerId, double amount)
+        addNonSplittingBalance,
   }) {
     return addContact(contact);
   }
@@ -262,9 +318,11 @@ class _$addContactImpl implements addContact {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? addContactsList,
+    TResult? Function(String ledgerId)? addContactsList,
     TResult? Function(ContactsDTO contact)? addContact,
-    TResult? Function()? getContacts,
+    TResult? Function(String ledgerId)? getContacts,
+    TResult? Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
   }) {
     return addContact?.call(contact);
   }
@@ -272,9 +330,11 @@ class _$addContactImpl implements addContact {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? addContactsList,
+    TResult Function(String ledgerId)? addContactsList,
     TResult Function(ContactsDTO contact)? addContact,
-    TResult Function()? getContacts,
+    TResult Function(String ledgerId)? getContacts,
+    TResult Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (addContact != null) {
@@ -289,6 +349,8 @@ class _$addContactImpl implements addContact {
     required TResult Function(addContactsList value) addContactsList,
     required TResult Function(addContact value) addContact,
     required TResult Function(getContacts value) getContacts,
+    required TResult Function(addNonSplittingBalance value)
+        addNonSplittingBalance,
   }) {
     return addContact(this);
   }
@@ -299,6 +361,7 @@ class _$addContactImpl implements addContact {
     TResult? Function(addContactsList value)? addContactsList,
     TResult? Function(addContact value)? addContact,
     TResult? Function(getContacts value)? getContacts,
+    TResult? Function(addNonSplittingBalance value)? addNonSplittingBalance,
   }) {
     return addContact?.call(this);
   }
@@ -309,6 +372,7 @@ class _$addContactImpl implements addContact {
     TResult Function(addContactsList value)? addContactsList,
     TResult Function(addContact value)? addContact,
     TResult Function(getContacts value)? getContacts,
+    TResult Function(addNonSplittingBalance value)? addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (addContact != null) {
@@ -333,6 +397,8 @@ abstract class _$$getContactsImplCopyWith<$Res> {
   factory _$$getContactsImplCopyWith(
           _$getContactsImpl value, $Res Function(_$getContactsImpl) then) =
       __$$getContactsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String ledgerId});
 }
 
 /// @nodoc
@@ -342,57 +408,88 @@ class __$$getContactsImplCopyWithImpl<$Res>
   __$$getContactsImplCopyWithImpl(
       _$getContactsImpl _value, $Res Function(_$getContactsImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ledgerId = null,
+  }) {
+    return _then(_$getContactsImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$getContactsImpl implements getContacts {
-  const _$getContactsImpl();
+  const _$getContactsImpl({required this.ledgerId});
+
+  @override
+  final String ledgerId;
 
   @override
   String toString() {
-    return 'ContactsEvent.getContacts()';
+    return 'ContactsEvent.getContacts(ledgerId: $ledgerId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$getContactsImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$getContactsImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, ledgerId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$getContactsImplCopyWith<_$getContactsImpl> get copyWith =>
+      __$$getContactsImplCopyWithImpl<_$getContactsImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() addContactsList,
+    required TResult Function(String ledgerId) addContactsList,
     required TResult Function(ContactsDTO contact) addContact,
-    required TResult Function() getContacts,
+    required TResult Function(String ledgerId) getContacts,
+    required TResult Function(String contactId, String ledgerId, double amount)
+        addNonSplittingBalance,
   }) {
-    return getContacts();
+    return getContacts(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? addContactsList,
+    TResult? Function(String ledgerId)? addContactsList,
     TResult? Function(ContactsDTO contact)? addContact,
-    TResult? Function()? getContacts,
+    TResult? Function(String ledgerId)? getContacts,
+    TResult? Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
   }) {
-    return getContacts?.call();
+    return getContacts?.call(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? addContactsList,
+    TResult Function(String ledgerId)? addContactsList,
     TResult Function(ContactsDTO contact)? addContact,
-    TResult Function()? getContacts,
+    TResult Function(String ledgerId)? getContacts,
+    TResult Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (getContacts != null) {
-      return getContacts();
+      return getContacts(ledgerId);
     }
     return orElse();
   }
@@ -403,6 +500,8 @@ class _$getContactsImpl implements getContacts {
     required TResult Function(addContactsList value) addContactsList,
     required TResult Function(addContact value) addContact,
     required TResult Function(getContacts value) getContacts,
+    required TResult Function(addNonSplittingBalance value)
+        addNonSplittingBalance,
   }) {
     return getContacts(this);
   }
@@ -413,6 +512,7 @@ class _$getContactsImpl implements getContacts {
     TResult? Function(addContactsList value)? addContactsList,
     TResult? Function(addContact value)? addContact,
     TResult? Function(getContacts value)? getContacts,
+    TResult? Function(addNonSplittingBalance value)? addNonSplittingBalance,
   }) {
     return getContacts?.call(this);
   }
@@ -423,6 +523,7 @@ class _$getContactsImpl implements getContacts {
     TResult Function(addContactsList value)? addContactsList,
     TResult Function(addContact value)? addContact,
     TResult Function(getContacts value)? getContacts,
+    TResult Function(addNonSplittingBalance value)? addNonSplittingBalance,
     required TResult orElse(),
   }) {
     if (getContacts != null) {
@@ -433,7 +534,189 @@ class _$getContactsImpl implements getContacts {
 }
 
 abstract class getContacts implements ContactsEvent {
-  const factory getContacts() = _$getContactsImpl;
+  const factory getContacts({required final String ledgerId}) =
+      _$getContactsImpl;
+
+  String get ledgerId;
+  @JsonKey(ignore: true)
+  _$$getContactsImplCopyWith<_$getContactsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$addNonSplittingBalanceImplCopyWith<$Res> {
+  factory _$$addNonSplittingBalanceImplCopyWith(
+          _$addNonSplittingBalanceImpl value,
+          $Res Function(_$addNonSplittingBalanceImpl) then) =
+      __$$addNonSplittingBalanceImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String contactId, String ledgerId, double amount});
+}
+
+/// @nodoc
+class __$$addNonSplittingBalanceImplCopyWithImpl<$Res>
+    extends _$ContactsEventCopyWithImpl<$Res, _$addNonSplittingBalanceImpl>
+    implements _$$addNonSplittingBalanceImplCopyWith<$Res> {
+  __$$addNonSplittingBalanceImplCopyWithImpl(
+      _$addNonSplittingBalanceImpl _value,
+      $Res Function(_$addNonSplittingBalanceImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? contactId = null,
+    Object? ledgerId = null,
+    Object? amount = null,
+  }) {
+    return _then(_$addNonSplittingBalanceImpl(
+      contactId: null == contactId
+          ? _value.contactId
+          : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$addNonSplittingBalanceImpl implements addNonSplittingBalance {
+  const _$addNonSplittingBalanceImpl(
+      {required this.contactId, required this.ledgerId, required this.amount});
+
+  @override
+  final String contactId;
+  @override
+  final String ledgerId;
+  @override
+  final double amount;
+
+  @override
+  String toString() {
+    return 'ContactsEvent.addNonSplittingBalance(contactId: $contactId, ledgerId: $ledgerId, amount: $amount)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$addNonSplittingBalanceImpl &&
+            (identical(other.contactId, contactId) ||
+                other.contactId == contactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
+            (identical(other.amount, amount) || other.amount == amount));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, contactId, ledgerId, amount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$addNonSplittingBalanceImplCopyWith<_$addNonSplittingBalanceImpl>
+      get copyWith => __$$addNonSplittingBalanceImplCopyWithImpl<
+          _$addNonSplittingBalanceImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String ledgerId) addContactsList,
+    required TResult Function(ContactsDTO contact) addContact,
+    required TResult Function(String ledgerId) getContacts,
+    required TResult Function(String contactId, String ledgerId, double amount)
+        addNonSplittingBalance,
+  }) {
+    return addNonSplittingBalance(contactId, ledgerId, amount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String ledgerId)? addContactsList,
+    TResult? Function(ContactsDTO contact)? addContact,
+    TResult? Function(String ledgerId)? getContacts,
+    TResult? Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
+  }) {
+    return addNonSplittingBalance?.call(contactId, ledgerId, amount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String ledgerId)? addContactsList,
+    TResult Function(ContactsDTO contact)? addContact,
+    TResult Function(String ledgerId)? getContacts,
+    TResult Function(String contactId, String ledgerId, double amount)?
+        addNonSplittingBalance,
+    required TResult orElse(),
+  }) {
+    if (addNonSplittingBalance != null) {
+      return addNonSplittingBalance(contactId, ledgerId, amount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addContactsList value) addContactsList,
+    required TResult Function(addContact value) addContact,
+    required TResult Function(getContacts value) getContacts,
+    required TResult Function(addNonSplittingBalance value)
+        addNonSplittingBalance,
+  }) {
+    return addNonSplittingBalance(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addContactsList value)? addContactsList,
+    TResult? Function(addContact value)? addContact,
+    TResult? Function(getContacts value)? getContacts,
+    TResult? Function(addNonSplittingBalance value)? addNonSplittingBalance,
+  }) {
+    return addNonSplittingBalance?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addContactsList value)? addContactsList,
+    TResult Function(addContact value)? addContact,
+    TResult Function(getContacts value)? getContacts,
+    TResult Function(addNonSplittingBalance value)? addNonSplittingBalance,
+    required TResult orElse(),
+  }) {
+    if (addNonSplittingBalance != null) {
+      return addNonSplittingBalance(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class addNonSplittingBalance implements ContactsEvent {
+  const factory addNonSplittingBalance(
+      {required final String contactId,
+      required final String ledgerId,
+      required final double amount}) = _$addNonSplittingBalanceImpl;
+
+  String get contactId;
+  String get ledgerId;
+  double get amount;
+  @JsonKey(ignore: true)
+  _$$addNonSplittingBalanceImplCopyWith<_$addNonSplittingBalanceImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

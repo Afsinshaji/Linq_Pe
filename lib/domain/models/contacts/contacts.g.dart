@@ -17,6 +17,7 @@ class ContactsModelAdapter extends TypeAdapter<ContactsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ContactsModel(
+      nonSplittedBalance: fields[9] as double?,
       lastTimeOfTransfer: fields[8] as DateTime?,
       contactId: fields[4] as String,
       displayName: fields[0] as String,
@@ -26,13 +27,14 @@ class ContactsModelAdapter extends TypeAdapter<ContactsModel> {
       receivedAmount: fields[7] as double?,
       avatar: fields[2] as Uint8List?,
       initails: fields[3] as String,
+      ledgerId: fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ContactsModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.displayName)
       ..writeByte(1)
@@ -50,7 +52,11 @@ class ContactsModelAdapter extends TypeAdapter<ContactsModel> {
       ..writeByte(7)
       ..write(obj.receivedAmount)
       ..writeByte(8)
-      ..write(obj.lastTimeOfTransfer);
+      ..write(obj.lastTimeOfTransfer)
+      ..writeByte(9)
+      ..write(obj.nonSplittedBalance)
+      ..writeByte(10)
+      ..write(obj.ledgerId);
   }
 
   @override

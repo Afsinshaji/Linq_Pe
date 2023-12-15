@@ -15,6 +15,7 @@ import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
 import 'package:linq_pe/presentation/screens/add_amount/screen_add_amount.dart';
 import 'package:linq_pe/presentation/screens/each_transaction/widgets/image_screen.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/widgets/alert_box.dart';
 import 'package:linq_pe/utilities/colors.dart';
 import 'package:linq_pe/utilities/list.dart';
@@ -349,6 +350,7 @@ class EachTransactionScreen extends StatelessWidget {
   alertBox(context,'Delete Transaction',(){ 
  BlocProvider.of<TransactionsBloc>(context).add(
                               TransactionsEvent.deleteTransactions(
+                                ledgerId: contact.ledgerId,
                                   transactionRealId: transaction.id,
                                   primaryContactId: contact.contactId));
       Navigator.pop(context);
@@ -547,6 +549,7 @@ class TransactionEditButton extends ConsumerWidget {
             context,
             CupertinoPageRoute(
               builder: (context) => AddAmountScreen(
+                ledgerId: ref.watch(currentLedgerIdProvider),
                 transactionRealId: transaction.id,
                 primaryContactId: contactId,
                   editTransaction: transaction,

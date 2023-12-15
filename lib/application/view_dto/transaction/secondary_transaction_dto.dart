@@ -103,6 +103,7 @@ Future<List<NestedSecondaryTransactionsDTO>>
       continue;
     }
     secondaryTransactionList.add(NestedSecondaryTransactionsDTO(
+      isExpense: allTransactions[trsnsactionIndex].isExpense,
       isSplit: allTransactions[trsnsactionIndex].isSplit,
       id: allTransactions[trsnsactionIndex].id,
       transactionType: findTransactionTypes(
@@ -145,9 +146,11 @@ class NestedSecondaryTransactionsDTO {
   final String id;
   final bool isSplit;
   final List<NestedSecondaryTransactionsDTO>? secondaryList;
+  final bool isExpense;
 
   final String? transactionId;
   NestedSecondaryTransactionsDTO({
+        required this.isExpense,
     required this.isGet,
     required this.isGive,
     required this.isAddBalance,

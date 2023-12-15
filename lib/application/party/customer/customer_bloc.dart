@@ -14,21 +14,24 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   CustomerBloc() : super(const customerInitial()) {
     on<addCustomers>((event, emit) async {
       await PartyImplementation.instance
-          .addCustomer(contactId: event.contactId);
-      add(const CustomerEvent.getCustomerList());
+          .addCustomer(contactId: event.contactId,ledgerId:event.ledgerId );
+      add( CustomerEvent.getCustomerList(ledgerId: event.ledgerId));
     });
     on<getCustomerList>((event, emit) {
      
-      final customerList = PartyImplementation.instance.getCustomers();
+      final customerList = PartyImplementation.instance.getCustomers(
+        ledgerId: event.ledgerId
+      );
       final customerDTOList = convertModeltoDTO(customerList);
       emit(displayCustomerList(customers: customerDTOList));
     });
      on<deleteCustomers>((event, emit)async {
      
    await  PartyImplementation.instance.deleteCustomer(
+    ledgerId:event.ledgerId ,
         contactId: event.contactId
       );
-        add(const CustomerEvent.getCustomerList());
+        add( CustomerEvent.getCustomerList(ledgerId: event.ledgerId));
       
     });
   }

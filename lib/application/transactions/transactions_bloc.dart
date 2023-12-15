@@ -16,6 +16,8 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   TransactionsBloc() : super(const transactionInitial()) {
     on<addGetTransctions>((event, emit) async {
       await TransactionsImplementation.instance.addGetTransction(
+        ledgerId: event.ledgerId,
+        isExpenseAccount: false,
         transactionDetails: event.transactionDetails,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
@@ -27,11 +29,12 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         transactionId: event.transactionId,
       );
 
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.fromContactId));
     });
     on<addBalanceTransctions>((event, emit) async {
       await TransactionsImplementation.instance.addBalanceTransction(
+         ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
@@ -41,12 +44,12 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList(contactId: event.toContactId));
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,contactId: event.toContactId));
     });
 
-on<addGiveTransactions>((event, emit) async { 
-
- await TransactionsImplementation.instance.addGiveTransaction(
+    on<addGiveTransactions>((event, emit) async {
+      await TransactionsImplementation.instance.addGiveTransaction(
+         ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
@@ -55,28 +58,24 @@ on<addGiveTransactions>((event, emit) async {
         timeOfTrans: event.timeOfTrans,
         billImage: event.billImage,
         transactionId: event.transactionId,
-        
       );
-      add(TransactionsEvent.getTransactionsList(contactId: event.toContactId));
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,contactId: event.toContactId));
+    });
 
-
-});
-
-    on<getTransactionsList>((event, emit)async {
-      
+    on<getTransactionsList>((event, emit) async {
       final transactionModel =
           TransactionsImplementation.instance.getAccountDetails(
         contactId: event.contactId,
+         ledgerId: event.ledgerId,
       );
       // log('Hiii${transactionModel!.transactionList!.length}');
-
 
       if (transactionModel != null) {
         final transactionDTO = convertPartyAccountModeltoDTO(transactionModel);
         emit(displayTransactions(
             partyAccount: transactionDTO,
             transactionList:
-            await    convertTransactionidListToSeconadryTransactionDTOList(
+                await convertTransactionidListToSeconadryTransactionDTOList(
                     transactionModel.transactionList)));
       } else {
         emit(
@@ -86,6 +85,7 @@ on<addGiveTransactions>((event, emit) async {
 
     on<addSecondaryPartyPayment>((event, emit) async {
       await TransactionsImplementation.instance.secondaryPartyPayment(
+         ledgerId: event.ledgerId,
         isSplittedPrimaryTransaction: event.isSplittedPrimaryTransaction,
         splittedTransactionId: event.splittedTransactionId,
         transactionRealId: event.transactionRealId,
@@ -99,12 +99,13 @@ on<addGiveTransactions>((event, emit) async {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.primaryContactId));
     });
 
     on<splitAmounts>((event, emit) async {
       await TransactionsImplementation.instance.splitAmount(
+         ledgerId: event.ledgerId,
         id: event.id,
         transactionDetails: event.transactionDetails,
         splitAmount: event.splitAmount,
@@ -116,12 +117,12 @@ on<addGiveTransactions>((event, emit) async {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.primaryContactId));
     });
-      on<splittingBalanceAmount>((event, emit) async {
+    on<splittingBalanceAmount>((event, emit) async {
       await TransactionsImplementation.instance.splitBalanceAmount(
-     
+         ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         splitAmount: event.splitAmount,
         toContactId: event.toContactId,
@@ -130,40 +131,48 @@ on<addGiveTransactions>((event, emit) async {
         transactionType: findTransactionType(event.transactionType),
         timeOfTrans: event.timeOfTrans,
         billImage: event.billImage,
-      
       );
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.primaryContactId));
     });
 
-
-      on<editTransactions>((event, emit) async {
+    on<editTransactions>((event, emit) async {
       await TransactionsImplementation.instance.editTransaction(
-     
+         ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
-       amount: event.amount,
-       toId: event.toId,
-       transactionRealId: event.transactionRealId,
-       transactionId: event.transactionId,
+        amount: event.amount,
+        toId: event.toId,
+        transactionRealId: event.transactionRealId,
+        transactionId: event.transactionId,
         transactionType: findTransactionType(event.transactionType),
         timeOfTrans: event.timeOfTrans,
         billImage: event.billImage,
-      
       );
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.primaryContactId));
     });
 
-         on<deleteTransactions>((event, emit) async {
-      await TransactionsImplementation.instance.deleteTransaction(
-  
-      transactionRealId: event.transactionRealId,
+    on<deleteTransactions>((event, emit) async {
+      await TransactionsImplementation.instance.deleteTransaction( ledgerId: event.ledgerId,
+        transactionRealId: event.transactionRealId,
       );
-      add(TransactionsEvent.getTransactionsList(
+      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
           contactId: event.primaryContactId));
     });
-
-
+    on<splittingPayment>((event, emit) async {
+      await TransactionsImplementation.instance.splittedPayment(
+         ledgerId: event.ledgerId,
+        fromContactId: event.fromContactId,
+        toContactId: event.toContactId,
+        amount: event.amount,
+        primaryContactId: event.primaryContactId,
+        transactionType: findTransactionType(event.transactionType),
+        timeOfTrans: event.timeOfTrans,
+      );
+      add(TransactionsEvent.getTransactionsList(
+         ledgerId: event.ledgerId,
+          contactId: event.primaryContactId));
+    });
   }
 }
 

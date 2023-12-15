@@ -17,6 +17,7 @@ class PartyAccountsModelAdapter extends TypeAdapter<PartyAccountsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PartyAccountsModel(
+      ledgerId: fields[5] as String,
       contactId: fields[0] as String,
       recievedAmt: fields[1] as double,
       payedAmt: fields[2] as double,
@@ -28,7 +29,7 @@ class PartyAccountsModelAdapter extends TypeAdapter<PartyAccountsModel> {
   @override
   void write(BinaryWriter writer, PartyAccountsModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.contactId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class PartyAccountsModelAdapter extends TypeAdapter<PartyAccountsModel> {
       ..writeByte(3)
       ..write(obj.balanceAmt)
       ..writeByte(4)
-      ..write(obj.transactionList);
+      ..write(obj.transactionList)
+      ..writeByte(5)
+      ..write(obj.ledgerId);
   }
 
   @override

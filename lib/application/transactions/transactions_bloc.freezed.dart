@@ -16,10 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TransactionsEvent {
+  String get ledgerId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -31,6 +33,7 @@ mixin _$TransactionsEvent {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -39,9 +42,11 @@ mixin _$TransactionsEvent {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -56,6 +61,7 @@ mixin _$TransactionsEvent {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -68,6 +74,7 @@ mixin _$TransactionsEvent {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -78,6 +85,7 @@ mixin _$TransactionsEvent {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -87,6 +95,7 @@ mixin _$TransactionsEvent {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -97,14 +106,28 @@ mixin _$TransactionsEvent {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -116,6 +139,7 @@ mixin _$TransactionsEvent {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -124,9 +148,10 @@ mixin _$TransactionsEvent {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -141,6 +166,7 @@ mixin _$TransactionsEvent {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -153,6 +179,7 @@ mixin _$TransactionsEvent {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -163,6 +190,7 @@ mixin _$TransactionsEvent {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -172,6 +200,7 @@ mixin _$TransactionsEvent {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -182,14 +211,28 @@ mixin _$TransactionsEvent {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -201,6 +244,7 @@ mixin _$TransactionsEvent {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -209,9 +253,10 @@ mixin _$TransactionsEvent {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -226,6 +271,7 @@ mixin _$TransactionsEvent {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -238,6 +284,7 @@ mixin _$TransactionsEvent {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -248,6 +295,7 @@ mixin _$TransactionsEvent {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -257,6 +305,7 @@ mixin _$TransactionsEvent {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -267,8 +316,21 @@ mixin _$TransactionsEvent {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -286,6 +348,7 @@ mixin _$TransactionsEvent {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -299,6 +362,7 @@ mixin _$TransactionsEvent {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -312,8 +376,13 @@ mixin _$TransactionsEvent {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $TransactionsEventCopyWith<TransactionsEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -322,6 +391,8 @@ abstract class $TransactionsEventCopyWith<$Res> {
   factory $TransactionsEventCopyWith(
           TransactionsEvent value, $Res Function(TransactionsEvent) then) =
       _$TransactionsEventCopyWithImpl<$Res, TransactionsEvent>;
+  @useResult
+  $Res call({String ledgerId});
 }
 
 /// @nodoc
@@ -333,16 +404,32 @@ class _$TransactionsEventCopyWithImpl<$Res, $Val extends TransactionsEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ledgerId = null,
+  }) {
+    return _then(_value.copyWith(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$addGetTransctionsImplCopyWith<$Res> {
+abstract class _$$addGetTransctionsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$addGetTransctionsImplCopyWith(_$addGetTransctionsImpl value,
           $Res Function(_$addGetTransctionsImpl) then) =
       __$$addGetTransctionsImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {String? transactionDetails,
+      String ledgerId,
       String fromContactId,
       String toContactId,
       double amount,
@@ -365,6 +452,7 @@ class __$$addGetTransctionsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? transactionDetails = freezed,
+    Object? ledgerId = null,
     Object? fromContactId = null,
     Object? toContactId = null,
     Object? amount = null,
@@ -379,6 +467,10 @@ class __$$addGetTransctionsImplCopyWithImpl<$Res>
           ? _value.transactionDetails
           : transactionDetails // ignore: cast_nullable_to_non_nullable
               as String?,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       fromContactId: null == fromContactId
           ? _value.fromContactId
           : fromContactId // ignore: cast_nullable_to_non_nullable
@@ -420,6 +512,7 @@ class __$$addGetTransctionsImplCopyWithImpl<$Res>
 class _$addGetTransctionsImpl implements addGetTransctions {
   const _$addGetTransctionsImpl(
       {required this.transactionDetails,
+      required this.ledgerId,
       required this.fromContactId,
       required this.toContactId,
       required this.amount,
@@ -431,6 +524,8 @@ class _$addGetTransctionsImpl implements addGetTransctions {
 
   @override
   final String? transactionDetails;
+  @override
+  final String ledgerId;
   @override
   final String fromContactId;
   @override
@@ -450,7 +545,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.addGetTransctions(transactionDetails: $transactionDetails, fromContactId: $fromContactId, toContactId: $toContactId, amount: $amount, isPayed: $isPayed, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId)';
+    return 'TransactionsEvent.addGetTransctions(transactionDetails: $transactionDetails, ledgerId: $ledgerId, fromContactId: $fromContactId, toContactId: $toContactId, amount: $amount, isPayed: $isPayed, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId)';
   }
 
   @override
@@ -460,6 +555,8 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             other is _$addGetTransctionsImpl &&
             (identical(other.transactionDetails, transactionDetails) ||
                 other.transactionDetails == transactionDetails) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.fromContactId, fromContactId) ||
                 other.fromContactId == fromContactId) &&
             (identical(other.toContactId, toContactId) ||
@@ -480,6 +577,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
   int get hashCode => Object.hash(
       runtimeType,
       transactionDetails,
+      ledgerId,
       fromContactId,
       toContactId,
       amount,
@@ -501,6 +599,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -512,6 +611,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -520,9 +620,11 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -537,6 +639,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -549,6 +652,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -559,6 +663,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -568,6 +673,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -578,11 +684,25 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return addGetTransctions(
         transactionDetails,
+        ledgerId,
         fromContactId,
         toContactId,
         amount,
@@ -598,6 +718,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -609,6 +730,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -617,9 +739,10 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -634,6 +757,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -646,6 +770,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -656,6 +781,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -665,6 +791,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -675,11 +802,25 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return addGetTransctions?.call(
         transactionDetails,
+        ledgerId,
         fromContactId,
         toContactId,
         amount,
@@ -695,6 +836,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -706,6 +848,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -714,9 +857,10 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -731,6 +875,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -743,6 +888,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -753,6 +899,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -762,6 +909,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -772,13 +920,27 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (addGetTransctions != null) {
       return addGetTransctions(
           transactionDetails,
+          ledgerId,
           fromContactId,
           toContactId,
           amount,
@@ -806,6 +968,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return addGetTransctions(this);
   }
@@ -822,6 +985,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return addGetTransctions?.call(this);
   }
@@ -838,6 +1002,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (addGetTransctions != null) {
@@ -850,6 +1015,7 @@ class _$addGetTransctionsImpl implements addGetTransctions {
 abstract class addGetTransctions implements TransactionsEvent {
   const factory addGetTransctions(
       {required final String? transactionDetails,
+      required final String ledgerId,
       required final String fromContactId,
       required final String toContactId,
       required final double amount,
@@ -860,6 +1026,8 @@ abstract class addGetTransctions implements TransactionsEvent {
       required final String? transactionId}) = _$addGetTransctionsImpl;
 
   String? get transactionDetails;
+  @override
+  String get ledgerId;
   String get fromContactId;
   String get toContactId;
   double get amount;
@@ -868,20 +1036,24 @@ abstract class addGetTransctions implements TransactionsEvent {
   DateTime get timeOfTrans;
   File? get billImage;
   String? get transactionId;
+  @override
   @JsonKey(ignore: true)
   _$$addGetTransctionsImplCopyWith<_$addGetTransctionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$addBalanceTransctionsImplCopyWith<$Res> {
+abstract class _$$addBalanceTransctionsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$addBalanceTransctionsImplCopyWith(
           _$addBalanceTransctionsImpl value,
           $Res Function(_$addBalanceTransctionsImpl) then) =
       __$$addBalanceTransctionsImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {String? transactionDetails,
+      String ledgerId,
       String fromContactId,
       String toContactId,
       double amount,
@@ -903,6 +1075,7 @@ class __$$addBalanceTransctionsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? transactionDetails = freezed,
+    Object? ledgerId = null,
     Object? fromContactId = null,
     Object? toContactId = null,
     Object? amount = null,
@@ -916,6 +1089,10 @@ class __$$addBalanceTransctionsImplCopyWithImpl<$Res>
           ? _value.transactionDetails
           : transactionDetails // ignore: cast_nullable_to_non_nullable
               as String?,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       fromContactId: null == fromContactId
           ? _value.fromContactId
           : fromContactId // ignore: cast_nullable_to_non_nullable
@@ -953,6 +1130,7 @@ class __$$addBalanceTransctionsImplCopyWithImpl<$Res>
 class _$addBalanceTransctionsImpl implements addBalanceTransctions {
   const _$addBalanceTransctionsImpl(
       {required this.transactionDetails,
+      required this.ledgerId,
       required this.fromContactId,
       required this.toContactId,
       required this.amount,
@@ -963,6 +1141,8 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
 
   @override
   final String? transactionDetails;
+  @override
+  final String ledgerId;
   @override
   final String fromContactId;
   @override
@@ -980,7 +1160,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.addBalanceTransctions(transactionDetails: $transactionDetails, fromContactId: $fromContactId, toContactId: $toContactId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId)';
+    return 'TransactionsEvent.addBalanceTransctions(transactionDetails: $transactionDetails, ledgerId: $ledgerId, fromContactId: $fromContactId, toContactId: $toContactId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId)';
   }
 
   @override
@@ -990,6 +1170,8 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             other is _$addBalanceTransctionsImpl &&
             (identical(other.transactionDetails, transactionDetails) ||
                 other.transactionDetails == transactionDetails) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.fromContactId, fromContactId) ||
                 other.fromContactId == fromContactId) &&
             (identical(other.toContactId, toContactId) ||
@@ -1009,6 +1191,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
   int get hashCode => Object.hash(
       runtimeType,
       transactionDetails,
+      ledgerId,
       fromContactId,
       toContactId,
       amount,
@@ -1029,6 +1212,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1040,6 +1224,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1048,9 +1233,11 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1065,6 +1252,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1077,6 +1265,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1087,6 +1276,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1096,6 +1286,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1106,11 +1297,32 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
-    return addBalanceTransctions(transactionDetails, fromContactId, toContactId,
-        amount, transactionType, timeOfTrans, billImage, transactionId);
+    return addBalanceTransctions(
+        transactionDetails,
+        ledgerId,
+        fromContactId,
+        toContactId,
+        amount,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        transactionId);
   }
 
   @override
@@ -1118,6 +1330,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1129,6 +1342,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1137,9 +1351,10 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1154,6 +1369,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1166,6 +1382,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1176,6 +1393,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1185,6 +1403,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1195,11 +1414,25 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return addBalanceTransctions?.call(
         transactionDetails,
+        ledgerId,
         fromContactId,
         toContactId,
         amount,
@@ -1214,6 +1447,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1225,6 +1459,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1233,9 +1468,10 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1250,6 +1486,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1262,6 +1499,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1272,6 +1510,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1281,6 +1520,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1291,13 +1531,27 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (addBalanceTransctions != null) {
       return addBalanceTransctions(
           transactionDetails,
+          ledgerId,
           fromContactId,
           toContactId,
           amount,
@@ -1324,6 +1578,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return addBalanceTransctions(this);
   }
@@ -1340,6 +1595,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return addBalanceTransctions?.call(this);
   }
@@ -1356,6 +1612,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (addBalanceTransctions != null) {
@@ -1368,6 +1625,7 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
 abstract class addBalanceTransctions implements TransactionsEvent {
   const factory addBalanceTransctions(
       {required final String? transactionDetails,
+      required final String ledgerId,
       required final String fromContactId,
       required final String toContactId,
       required final double amount,
@@ -1377,6 +1635,8 @@ abstract class addBalanceTransctions implements TransactionsEvent {
       required final String? transactionId}) = _$addBalanceTransctionsImpl;
 
   String? get transactionDetails;
+  @override
+  String get ledgerId;
   String get fromContactId;
   String get toContactId;
   double get amount;
@@ -1384,18 +1644,21 @@ abstract class addBalanceTransctions implements TransactionsEvent {
   DateTime get timeOfTrans;
   File? get billImage;
   String? get transactionId;
+  @override
   @JsonKey(ignore: true)
   _$$addBalanceTransctionsImplCopyWith<_$addBalanceTransctionsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$getTransactionsListImplCopyWith<$Res> {
+abstract class _$$getTransactionsListImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$getTransactionsListImplCopyWith(_$getTransactionsListImpl value,
           $Res Function(_$getTransactionsListImpl) then) =
       __$$getTransactionsListImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({String contactId});
+  $Res call({String ledgerId, String contactId});
 }
 
 /// @nodoc
@@ -1409,9 +1672,14 @@ class __$$getTransactionsListImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? ledgerId = null,
     Object? contactId = null,
   }) {
     return _then(_$getTransactionsListImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       contactId: null == contactId
           ? _value.contactId
           : contactId // ignore: cast_nullable_to_non_nullable
@@ -1423,14 +1691,17 @@ class __$$getTransactionsListImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$getTransactionsListImpl implements getTransactionsList {
-  const _$getTransactionsListImpl({required this.contactId});
+  const _$getTransactionsListImpl(
+      {required this.ledgerId, required this.contactId});
 
+  @override
+  final String ledgerId;
   @override
   final String contactId;
 
   @override
   String toString() {
-    return 'TransactionsEvent.getTransactionsList(contactId: $contactId)';
+    return 'TransactionsEvent.getTransactionsList(ledgerId: $ledgerId, contactId: $contactId)';
   }
 
   @override
@@ -1438,12 +1709,14 @@ class _$getTransactionsListImpl implements getTransactionsList {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$getTransactionsListImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.contactId, contactId) ||
                 other.contactId == contactId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, contactId);
+  int get hashCode => Object.hash(runtimeType, ledgerId, contactId);
 
   @JsonKey(ignore: true)
   @override
@@ -1457,6 +1730,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1468,6 +1742,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1476,9 +1751,11 @@ class _$getTransactionsListImpl implements getTransactionsList {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1493,6 +1770,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1505,6 +1783,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1515,6 +1794,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1524,6 +1804,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1534,10 +1815,23 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
-    return getTransactionsList(contactId);
+    return getTransactionsList(ledgerId, contactId);
   }
 
   @override
@@ -1545,6 +1839,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1556,6 +1851,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1564,9 +1860,10 @@ class _$getTransactionsListImpl implements getTransactionsList {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1581,6 +1878,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1593,6 +1891,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1603,6 +1902,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1612,6 +1912,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1622,10 +1923,23 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
-    return getTransactionsList?.call(contactId);
+    return getTransactionsList?.call(ledgerId, contactId);
   }
 
   @override
@@ -1633,6 +1947,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1644,6 +1959,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -1652,9 +1968,10 @@ class _$getTransactionsListImpl implements getTransactionsList {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -1669,6 +1986,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -1681,6 +1999,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -1691,6 +2010,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -1700,6 +2020,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1710,12 +2031,25 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (getTransactionsList != null) {
-      return getTransactionsList(contactId);
+      return getTransactionsList(ledgerId, contactId);
     }
     return orElse();
   }
@@ -1735,6 +2069,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return getTransactionsList(this);
   }
@@ -1751,6 +2086,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return getTransactionsList?.call(this);
   }
@@ -1767,6 +2103,7 @@ class _$getTransactionsListImpl implements getTransactionsList {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (getTransactionsList != null) {
@@ -1777,24 +2114,31 @@ class _$getTransactionsListImpl implements getTransactionsList {
 }
 
 abstract class getTransactionsList implements TransactionsEvent {
-  const factory getTransactionsList({required final String contactId}) =
-      _$getTransactionsListImpl;
+  const factory getTransactionsList(
+      {required final String ledgerId,
+      required final String contactId}) = _$getTransactionsListImpl;
 
+  @override
+  String get ledgerId;
   String get contactId;
+  @override
   @JsonKey(ignore: true)
   _$$getTransactionsListImplCopyWith<_$getTransactionsListImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$addSecondaryPartyPaymentImplCopyWith<$Res> {
+abstract class _$$addSecondaryPartyPaymentImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$addSecondaryPartyPaymentImplCopyWith(
           _$addSecondaryPartyPaymentImpl value,
           $Res Function(_$addSecondaryPartyPaymentImpl) then) =
       __$$addSecondaryPartyPaymentImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {bool isSplittedPrimaryTransaction,
+      String ledgerId,
       String transactionRealId,
       String splittedTransactionId,
       String primaryContactId,
@@ -1822,6 +2166,7 @@ class __$$addSecondaryPartyPaymentImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isSplittedPrimaryTransaction = null,
+    Object? ledgerId = null,
     Object? transactionRealId = null,
     Object? splittedTransactionId = null,
     Object? primaryContactId = null,
@@ -1839,6 +2184,10 @@ class __$$addSecondaryPartyPaymentImplCopyWithImpl<$Res>
           ? _value.isSplittedPrimaryTransaction
           : isSplittedPrimaryTransaction // ignore: cast_nullable_to_non_nullable
               as bool,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       transactionRealId: null == transactionRealId
           ? _value.transactionRealId
           : transactionRealId // ignore: cast_nullable_to_non_nullable
@@ -1892,6 +2241,7 @@ class __$$addSecondaryPartyPaymentImplCopyWithImpl<$Res>
 class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
   const _$addSecondaryPartyPaymentImpl(
       {required this.isSplittedPrimaryTransaction,
+      required this.ledgerId,
       required this.transactionRealId,
       required this.splittedTransactionId,
       required this.primaryContactId,
@@ -1906,6 +2256,8 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
 
   @override
   final bool isSplittedPrimaryTransaction;
+  @override
+  final String ledgerId;
   @override
   final String transactionRealId;
   @override
@@ -1931,7 +2283,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
 
   @override
   String toString() {
-    return 'TransactionsEvent.addSecondaryPartyPayment(isSplittedPrimaryTransaction: $isSplittedPrimaryTransaction, transactionRealId: $transactionRealId, splittedTransactionId: $splittedTransactionId, primaryContactId: $primaryContactId, secondaryContactId: $secondaryContactId, payedToId: $payedToId, amountPayed: $amountPayed, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails)';
+    return 'TransactionsEvent.addSecondaryPartyPayment(isSplittedPrimaryTransaction: $isSplittedPrimaryTransaction, ledgerId: $ledgerId, transactionRealId: $transactionRealId, splittedTransactionId: $splittedTransactionId, primaryContactId: $primaryContactId, secondaryContactId: $secondaryContactId, payedToId: $payedToId, amountPayed: $amountPayed, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails)';
   }
 
   @override
@@ -1943,6 +2295,8 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
                     isSplittedPrimaryTransaction) ||
                 other.isSplittedPrimaryTransaction ==
                     isSplittedPrimaryTransaction) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.transactionRealId, transactionRealId) ||
                 other.transactionRealId == transactionRealId) &&
             (identical(other.splittedTransactionId, splittedTransactionId) ||
@@ -1971,6 +2325,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
   int get hashCode => Object.hash(
       runtimeType,
       isSplittedPrimaryTransaction,
+      ledgerId,
       transactionRealId,
       splittedTransactionId,
       primaryContactId,
@@ -1995,6 +2350,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2006,6 +2362,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2014,9 +2371,11 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2031,6 +2390,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2043,6 +2403,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2053,6 +2414,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2062,6 +2424,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2072,11 +2435,25 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return addSecondaryPartyPayment(
         isSplittedPrimaryTransaction,
+        ledgerId,
         transactionRealId,
         splittedTransactionId,
         primaryContactId,
@@ -2095,6 +2472,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2106,6 +2484,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2114,9 +2493,10 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2131,6 +2511,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2143,6 +2524,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2153,6 +2535,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2162,6 +2545,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2172,11 +2556,25 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return addSecondaryPartyPayment?.call(
         isSplittedPrimaryTransaction,
+        ledgerId,
         transactionRealId,
         splittedTransactionId,
         primaryContactId,
@@ -2195,6 +2593,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2206,6 +2605,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2214,9 +2614,10 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2231,6 +2632,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2243,6 +2645,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2253,6 +2656,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2262,6 +2666,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2272,13 +2677,27 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (addSecondaryPartyPayment != null) {
       return addSecondaryPartyPayment(
           isSplittedPrimaryTransaction,
+          ledgerId,
           transactionRealId,
           splittedTransactionId,
           primaryContactId,
@@ -2309,6 +2728,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return addSecondaryPartyPayment(this);
   }
@@ -2325,6 +2745,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return addSecondaryPartyPayment?.call(this);
   }
@@ -2341,6 +2762,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (addSecondaryPartyPayment != null) {
@@ -2353,6 +2775,7 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
 abstract class addSecondaryPartyPayment implements TransactionsEvent {
   const factory addSecondaryPartyPayment(
           {required final bool isSplittedPrimaryTransaction,
+          required final String ledgerId,
           required final String transactionRealId,
           required final String splittedTransactionId,
           required final String primaryContactId,
@@ -2367,6 +2790,8 @@ abstract class addSecondaryPartyPayment implements TransactionsEvent {
       _$addSecondaryPartyPaymentImpl;
 
   bool get isSplittedPrimaryTransaction;
+  @override
+  String get ledgerId;
   String get transactionRealId;
   String get splittedTransactionId;
   String get primaryContactId;
@@ -2378,19 +2803,23 @@ abstract class addSecondaryPartyPayment implements TransactionsEvent {
   File? get billImage;
   String? get transactionId;
   String? get transactionDetails;
+  @override
   @JsonKey(ignore: true)
   _$$addSecondaryPartyPaymentImplCopyWith<_$addSecondaryPartyPaymentImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$splitAmountsImplCopyWith<$Res> {
+abstract class _$$splitAmountsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$splitAmountsImplCopyWith(
           _$splitAmountsImpl value, $Res Function(_$splitAmountsImpl) then) =
       __$$splitAmountsImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {String primaryContactId,
+      String ledgerId,
       String toContactId,
       String transactionId,
       double splitAmount,
@@ -2414,6 +2843,7 @@ class __$$splitAmountsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? primaryContactId = null,
+    Object? ledgerId = null,
     Object? toContactId = null,
     Object? transactionId = null,
     Object? splitAmount = null,
@@ -2428,6 +2858,10 @@ class __$$splitAmountsImplCopyWithImpl<$Res>
       primaryContactId: null == primaryContactId
           ? _value.primaryContactId
           : primaryContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
       toContactId: null == toContactId
           ? _value.toContactId
@@ -2474,6 +2908,7 @@ class __$$splitAmountsImplCopyWithImpl<$Res>
 class _$splitAmountsImpl implements splitAmounts {
   const _$splitAmountsImpl(
       {required this.primaryContactId,
+      required this.ledgerId,
       required this.toContactId,
       required this.transactionId,
       required this.splitAmount,
@@ -2486,6 +2921,8 @@ class _$splitAmountsImpl implements splitAmounts {
 
   @override
   final String primaryContactId;
+  @override
+  final String ledgerId;
   @override
   final String toContactId;
   @override
@@ -2507,7 +2944,7 @@ class _$splitAmountsImpl implements splitAmounts {
 
   @override
   String toString() {
-    return 'TransactionsEvent.splitAmounts(primaryContactId: $primaryContactId, toContactId: $toContactId, transactionId: $transactionId, splitAmount: $splitAmount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails, id: $id)';
+    return 'TransactionsEvent.splitAmounts(primaryContactId: $primaryContactId, ledgerId: $ledgerId, toContactId: $toContactId, transactionId: $transactionId, splitAmount: $splitAmount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails, id: $id)';
   }
 
   @override
@@ -2517,6 +2954,8 @@ class _$splitAmountsImpl implements splitAmounts {
             other is _$splitAmountsImpl &&
             (identical(other.primaryContactId, primaryContactId) ||
                 other.primaryContactId == primaryContactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.toContactId, toContactId) ||
                 other.toContactId == toContactId) &&
             (identical(other.transactionId, transactionId) ||
@@ -2540,6 +2979,7 @@ class _$splitAmountsImpl implements splitAmounts {
   int get hashCode => Object.hash(
       runtimeType,
       primaryContactId,
+      ledgerId,
       toContactId,
       transactionId,
       splitAmount,
@@ -2561,6 +3001,7 @@ class _$splitAmountsImpl implements splitAmounts {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2572,6 +3013,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2580,9 +3022,11 @@ class _$splitAmountsImpl implements splitAmounts {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2597,6 +3041,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2609,6 +3054,7 @@ class _$splitAmountsImpl implements splitAmounts {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2619,6 +3065,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2628,6 +3075,7 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2638,11 +3086,25 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return splitAmounts(
         primaryContactId,
+        ledgerId,
         toContactId,
         transactionId,
         splitAmount,
@@ -2659,6 +3121,7 @@ class _$splitAmountsImpl implements splitAmounts {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2670,6 +3133,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2678,9 +3142,10 @@ class _$splitAmountsImpl implements splitAmounts {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2695,6 +3160,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2707,6 +3173,7 @@ class _$splitAmountsImpl implements splitAmounts {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2717,6 +3184,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2726,6 +3194,7 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2736,11 +3205,25 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return splitAmounts?.call(
         primaryContactId,
+        ledgerId,
         toContactId,
         transactionId,
         splitAmount,
@@ -2757,6 +3240,7 @@ class _$splitAmountsImpl implements splitAmounts {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2768,6 +3252,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -2776,9 +3261,10 @@ class _$splitAmountsImpl implements splitAmounts {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -2793,6 +3279,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -2805,6 +3292,7 @@ class _$splitAmountsImpl implements splitAmounts {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -2815,6 +3303,7 @@ class _$splitAmountsImpl implements splitAmounts {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -2824,6 +3313,7 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2834,13 +3324,27 @@ class _$splitAmountsImpl implements splitAmounts {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (splitAmounts != null) {
       return splitAmounts(
           primaryContactId,
+          ledgerId,
           toContactId,
           transactionId,
           splitAmount,
@@ -2869,6 +3373,7 @@ class _$splitAmountsImpl implements splitAmounts {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return splitAmounts(this);
   }
@@ -2885,6 +3390,7 @@ class _$splitAmountsImpl implements splitAmounts {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return splitAmounts?.call(this);
   }
@@ -2901,6 +3407,7 @@ class _$splitAmountsImpl implements splitAmounts {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (splitAmounts != null) {
@@ -2913,6 +3420,7 @@ class _$splitAmountsImpl implements splitAmounts {
 abstract class splitAmounts implements TransactionsEvent {
   const factory splitAmounts(
       {required final String primaryContactId,
+      required final String ledgerId,
       required final String toContactId,
       required final String transactionId,
       required final double splitAmount,
@@ -2924,6 +3432,8 @@ abstract class splitAmounts implements TransactionsEvent {
       required final String id}) = _$splitAmountsImpl;
 
   String get primaryContactId;
+  @override
+  String get ledgerId;
   String get toContactId;
   String get transactionId;
   double get splitAmount;
@@ -2933,19 +3443,23 @@ abstract class splitAmounts implements TransactionsEvent {
   String? get userTransactionId;
   String? get transactionDetails;
   String get id;
+  @override
   @JsonKey(ignore: true)
   _$$splitAmountsImplCopyWith<_$splitAmountsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$addGiveTransactionsImplCopyWith<$Res> {
+abstract class _$$addGiveTransactionsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$addGiveTransactionsImplCopyWith(_$addGiveTransactionsImpl value,
           $Res Function(_$addGiveTransactionsImpl) then) =
       __$$addGiveTransactionsImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {String fromContactId,
+      String ledgerId,
       String toContactId,
       double amount,
       TransactionTypes transactionType,
@@ -2967,6 +3481,7 @@ class __$$addGiveTransactionsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? fromContactId = null,
+    Object? ledgerId = null,
     Object? toContactId = null,
     Object? amount = null,
     Object? transactionType = null,
@@ -2979,6 +3494,10 @@ class __$$addGiveTransactionsImplCopyWithImpl<$Res>
       fromContactId: null == fromContactId
           ? _value.fromContactId
           : fromContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
       toContactId: null == toContactId
           ? _value.toContactId
@@ -3017,6 +3536,7 @@ class __$$addGiveTransactionsImplCopyWithImpl<$Res>
 class _$addGiveTransactionsImpl implements addGiveTransactions {
   const _$addGiveTransactionsImpl(
       {required this.fromContactId,
+      required this.ledgerId,
       required this.toContactId,
       required this.amount,
       required this.transactionType,
@@ -3027,6 +3547,8 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
 
   @override
   final String fromContactId;
+  @override
+  final String ledgerId;
   @override
   final String toContactId;
   @override
@@ -3044,7 +3566,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.addGiveTransactions(fromContactId: $fromContactId, toContactId: $toContactId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, transactionDetails: $transactionDetails, billImage: $billImage, transactionId: $transactionId)';
+    return 'TransactionsEvent.addGiveTransactions(fromContactId: $fromContactId, ledgerId: $ledgerId, toContactId: $toContactId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, transactionDetails: $transactionDetails, billImage: $billImage, transactionId: $transactionId)';
   }
 
   @override
@@ -3054,6 +3576,8 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             other is _$addGiveTransactionsImpl &&
             (identical(other.fromContactId, fromContactId) ||
                 other.fromContactId == fromContactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.toContactId, toContactId) ||
                 other.toContactId == toContactId) &&
             (identical(other.amount, amount) || other.amount == amount) &&
@@ -3073,6 +3597,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
   int get hashCode => Object.hash(
       runtimeType,
       fromContactId,
+      ledgerId,
       toContactId,
       amount,
       transactionType,
@@ -3093,6 +3618,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3104,6 +3630,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3112,9 +3639,11 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3129,6 +3658,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3141,6 +3671,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3151,6 +3682,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3160,6 +3692,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3170,11 +3703,25 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return addGiveTransactions(
         fromContactId,
+        ledgerId,
         toContactId,
         amount,
         transactionType,
@@ -3189,6 +3736,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3200,6 +3748,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3208,9 +3757,10 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3225,6 +3775,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3237,6 +3788,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3247,6 +3799,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3256,6 +3809,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3266,11 +3820,25 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return addGiveTransactions?.call(
         fromContactId,
+        ledgerId,
         toContactId,
         amount,
         transactionType,
@@ -3285,6 +3853,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3296,6 +3865,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3304,9 +3874,10 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3321,6 +3892,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3333,6 +3905,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3343,6 +3916,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3352,6 +3926,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3362,13 +3937,27 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (addGiveTransactions != null) {
       return addGiveTransactions(
           fromContactId,
+          ledgerId,
           toContactId,
           amount,
           transactionType,
@@ -3395,6 +3984,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return addGiveTransactions(this);
   }
@@ -3411,6 +4001,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return addGiveTransactions?.call(this);
   }
@@ -3427,6 +4018,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (addGiveTransactions != null) {
@@ -3439,6 +4031,7 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
 abstract class addGiveTransactions implements TransactionsEvent {
   const factory addGiveTransactions(
       {required final String fromContactId,
+      required final String ledgerId,
       required final String toContactId,
       required final double amount,
       required final TransactionTypes transactionType,
@@ -3448,6 +4041,8 @@ abstract class addGiveTransactions implements TransactionsEvent {
       required final String? transactionId}) = _$addGiveTransactionsImpl;
 
   String get fromContactId;
+  @override
+  String get ledgerId;
   String get toContactId;
   double get amount;
   TransactionTypes get transactionType;
@@ -3455,20 +4050,24 @@ abstract class addGiveTransactions implements TransactionsEvent {
   String? get transactionDetails;
   File? get billImage;
   String? get transactionId;
+  @override
   @JsonKey(ignore: true)
   _$$addGiveTransactionsImplCopyWith<_$addGiveTransactionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$splittingBalanceAmountImplCopyWith<$Res> {
+abstract class _$$splittingBalanceAmountImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$splittingBalanceAmountImplCopyWith(
           _$splittingBalanceAmountImpl value,
           $Res Function(_$splittingBalanceAmountImpl) then) =
       __$$splittingBalanceAmountImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {String primaryContactId,
+      String ledgerId,
       String toContactId,
       double splitAmount,
       TransactionTypes transactionType,
@@ -3491,6 +4090,7 @@ class __$$splittingBalanceAmountImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? primaryContactId = null,
+    Object? ledgerId = null,
     Object? toContactId = null,
     Object? splitAmount = null,
     Object? transactionType = null,
@@ -3503,6 +4103,10 @@ class __$$splittingBalanceAmountImplCopyWithImpl<$Res>
       primaryContactId: null == primaryContactId
           ? _value.primaryContactId
           : primaryContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
       toContactId: null == toContactId
           ? _value.toContactId
@@ -3541,6 +4145,7 @@ class __$$splittingBalanceAmountImplCopyWithImpl<$Res>
 class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
   const _$splittingBalanceAmountImpl(
       {required this.primaryContactId,
+      required this.ledgerId,
       required this.toContactId,
       required this.splitAmount,
       required this.transactionType,
@@ -3551,6 +4156,8 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
 
   @override
   final String primaryContactId;
+  @override
+  final String ledgerId;
   @override
   final String toContactId;
   @override
@@ -3568,7 +4175,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
 
   @override
   String toString() {
-    return 'TransactionsEvent.splittingBalanceAmount(primaryContactId: $primaryContactId, toContactId: $toContactId, splitAmount: $splitAmount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails)';
+    return 'TransactionsEvent.splittingBalanceAmount(primaryContactId: $primaryContactId, ledgerId: $ledgerId, toContactId: $toContactId, splitAmount: $splitAmount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails)';
   }
 
   @override
@@ -3578,6 +4185,8 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             other is _$splittingBalanceAmountImpl &&
             (identical(other.primaryContactId, primaryContactId) ||
                 other.primaryContactId == primaryContactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.toContactId, toContactId) ||
                 other.toContactId == toContactId) &&
             (identical(other.splitAmount, splitAmount) ||
@@ -3598,6 +4207,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
   int get hashCode => Object.hash(
       runtimeType,
       primaryContactId,
+      ledgerId,
       toContactId,
       splitAmount,
       transactionType,
@@ -3618,6 +4228,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3629,6 +4240,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3637,9 +4249,11 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3654,6 +4268,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3666,6 +4281,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3676,6 +4292,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3685,6 +4302,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3695,11 +4313,25 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return splittingBalanceAmount(
         primaryContactId,
+        ledgerId,
         toContactId,
         splitAmount,
         transactionType,
@@ -3714,6 +4346,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3725,6 +4358,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3733,9 +4367,10 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3750,6 +4385,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3762,6 +4398,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3772,6 +4409,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3781,6 +4419,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3791,11 +4430,25 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return splittingBalanceAmount?.call(
         primaryContactId,
+        ledgerId,
         toContactId,
         splitAmount,
         transactionType,
@@ -3810,6 +4463,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3821,6 +4475,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -3829,9 +4484,10 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -3846,6 +4502,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -3858,6 +4515,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -3868,6 +4526,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -3877,6 +4536,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3887,13 +4547,27 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (splittingBalanceAmount != null) {
       return splittingBalanceAmount(
           primaryContactId,
+          ledgerId,
           toContactId,
           splitAmount,
           transactionType,
@@ -3920,6 +4594,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return splittingBalanceAmount(this);
   }
@@ -3936,6 +4611,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return splittingBalanceAmount?.call(this);
   }
@@ -3952,6 +4628,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (splittingBalanceAmount != null) {
@@ -3964,6 +4641,7 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
 abstract class splittingBalanceAmount implements TransactionsEvent {
   const factory splittingBalanceAmount(
           {required final String primaryContactId,
+          required final String ledgerId,
           required final String toContactId,
           required final double splitAmount,
           required final TransactionTypes transactionType,
@@ -3974,6 +4652,8 @@ abstract class splittingBalanceAmount implements TransactionsEvent {
       _$splittingBalanceAmountImpl;
 
   String get primaryContactId;
+  @override
+  String get ledgerId;
   String get toContactId;
   double get splitAmount;
   TransactionTypes get transactionType;
@@ -3981,19 +4661,23 @@ abstract class splittingBalanceAmount implements TransactionsEvent {
   File? get billImage;
   String? get userTransactionId;
   String? get transactionDetails;
+  @override
   @JsonKey(ignore: true)
   _$$splittingBalanceAmountImplCopyWith<_$splittingBalanceAmountImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$editTransactionsImplCopyWith<$Res> {
+abstract class _$$editTransactionsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$editTransactionsImplCopyWith(_$editTransactionsImpl value,
           $Res Function(_$editTransactionsImpl) then) =
       __$$editTransactionsImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
-      {String transactionRealId,
+      {String ledgerId,
+      String transactionRealId,
       String toId,
       double amount,
       TransactionTypes transactionType,
@@ -4015,6 +4699,7 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? ledgerId = null,
     Object? transactionRealId = null,
     Object? toId = null,
     Object? amount = null,
@@ -4026,6 +4711,10 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
     Object? primaryContactId = null,
   }) {
     return _then(_$editTransactionsImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       transactionRealId: null == transactionRealId
           ? _value.transactionRealId
           : transactionRealId // ignore: cast_nullable_to_non_nullable
@@ -4070,7 +4759,8 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
 
 class _$editTransactionsImpl implements editTransactions {
   const _$editTransactionsImpl(
-      {required this.transactionRealId,
+      {required this.ledgerId,
+      required this.transactionRealId,
       required this.toId,
       required this.amount,
       required this.transactionType,
@@ -4080,6 +4770,8 @@ class _$editTransactionsImpl implements editTransactions {
       required this.transactionDetails,
       required this.primaryContactId});
 
+  @override
+  final String ledgerId;
   @override
   final String transactionRealId;
   @override
@@ -4101,7 +4793,7 @@ class _$editTransactionsImpl implements editTransactions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.editTransactions(transactionRealId: $transactionRealId, toId: $toId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails, primaryContactId: $primaryContactId)';
+    return 'TransactionsEvent.editTransactions(ledgerId: $ledgerId, transactionRealId: $transactionRealId, toId: $toId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails, primaryContactId: $primaryContactId)';
   }
 
   @override
@@ -4109,6 +4801,8 @@ class _$editTransactionsImpl implements editTransactions {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$editTransactionsImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.transactionRealId, transactionRealId) ||
                 other.transactionRealId == transactionRealId) &&
             (identical(other.toId, toId) || other.toId == toId) &&
@@ -4130,6 +4824,7 @@ class _$editTransactionsImpl implements editTransactions {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      ledgerId,
       transactionRealId,
       toId,
       amount,
@@ -4152,6 +4847,7 @@ class _$editTransactionsImpl implements editTransactions {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4163,6 +4859,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4171,9 +4868,11 @@ class _$editTransactionsImpl implements editTransactions {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4188,6 +4887,7 @@ class _$editTransactionsImpl implements editTransactions {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4200,6 +4900,7 @@ class _$editTransactionsImpl implements editTransactions {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4210,6 +4911,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4219,6 +4921,7 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4229,10 +4932,24 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
     return editTransactions(
+        ledgerId,
         transactionRealId,
         toId,
         amount,
@@ -4249,6 +4966,7 @@ class _$editTransactionsImpl implements editTransactions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4260,6 +4978,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4268,9 +4987,10 @@ class _$editTransactionsImpl implements editTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4285,6 +5005,7 @@ class _$editTransactionsImpl implements editTransactions {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4297,6 +5018,7 @@ class _$editTransactionsImpl implements editTransactions {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4307,6 +5029,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4316,6 +5039,7 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4326,10 +5050,24 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
     return editTransactions?.call(
+        ledgerId,
         transactionRealId,
         toId,
         amount,
@@ -4346,6 +5084,7 @@ class _$editTransactionsImpl implements editTransactions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4357,6 +5096,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4365,9 +5105,10 @@ class _$editTransactionsImpl implements editTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4382,6 +5123,7 @@ class _$editTransactionsImpl implements editTransactions {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4394,6 +5136,7 @@ class _$editTransactionsImpl implements editTransactions {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4404,6 +5147,7 @@ class _$editTransactionsImpl implements editTransactions {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4413,6 +5157,7 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4423,12 +5168,26 @@ class _$editTransactionsImpl implements editTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (editTransactions != null) {
       return editTransactions(
+          ledgerId,
           transactionRealId,
           toId,
           amount,
@@ -4457,6 +5216,7 @@ class _$editTransactionsImpl implements editTransactions {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return editTransactions(this);
   }
@@ -4473,6 +5233,7 @@ class _$editTransactionsImpl implements editTransactions {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return editTransactions?.call(this);
   }
@@ -4489,6 +5250,7 @@ class _$editTransactionsImpl implements editTransactions {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (editTransactions != null) {
@@ -4500,7 +5262,8 @@ class _$editTransactionsImpl implements editTransactions {
 
 abstract class editTransactions implements TransactionsEvent {
   const factory editTransactions(
-      {required final String transactionRealId,
+      {required final String ledgerId,
+      required final String transactionRealId,
       required final String toId,
       required final double amount,
       required final TransactionTypes transactionType,
@@ -4510,6 +5273,8 @@ abstract class editTransactions implements TransactionsEvent {
       required final String? transactionDetails,
       required final String primaryContactId}) = _$editTransactionsImpl;
 
+  @override
+  String get ledgerId;
   String get transactionRealId;
   String get toId;
   double get amount;
@@ -4519,18 +5284,22 @@ abstract class editTransactions implements TransactionsEvent {
   String? get transactionId;
   String? get transactionDetails;
   String get primaryContactId;
+  @override
   @JsonKey(ignore: true)
   _$$editTransactionsImplCopyWith<_$editTransactionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$deleteTransactionsImplCopyWith<$Res> {
+abstract class _$$deleteTransactionsImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
   factory _$$deleteTransactionsImplCopyWith(_$deleteTransactionsImpl value,
           $Res Function(_$deleteTransactionsImpl) then) =
       __$$deleteTransactionsImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({String transactionRealId, String primaryContactId});
+  $Res call(
+      {String ledgerId, String transactionRealId, String primaryContactId});
 }
 
 /// @nodoc
@@ -4544,10 +5313,15 @@ class __$$deleteTransactionsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? ledgerId = null,
     Object? transactionRealId = null,
     Object? primaryContactId = null,
   }) {
     return _then(_$deleteTransactionsImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
       transactionRealId: null == transactionRealId
           ? _value.transactionRealId
           : transactionRealId // ignore: cast_nullable_to_non_nullable
@@ -4564,8 +5338,12 @@ class __$$deleteTransactionsImplCopyWithImpl<$Res>
 
 class _$deleteTransactionsImpl implements deleteTransactions {
   const _$deleteTransactionsImpl(
-      {required this.transactionRealId, required this.primaryContactId});
+      {required this.ledgerId,
+      required this.transactionRealId,
+      required this.primaryContactId});
 
+  @override
+  final String ledgerId;
   @override
   final String transactionRealId;
   @override
@@ -4573,7 +5351,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.deleteTransactions(transactionRealId: $transactionRealId, primaryContactId: $primaryContactId)';
+    return 'TransactionsEvent.deleteTransactions(ledgerId: $ledgerId, transactionRealId: $transactionRealId, primaryContactId: $primaryContactId)';
   }
 
   @override
@@ -4581,6 +5359,8 @@ class _$deleteTransactionsImpl implements deleteTransactions {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$deleteTransactionsImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
             (identical(other.transactionRealId, transactionRealId) ||
                 other.transactionRealId == transactionRealId) &&
             (identical(other.primaryContactId, primaryContactId) ||
@@ -4589,7 +5369,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, transactionRealId, primaryContactId);
+      Object.hash(runtimeType, ledgerId, transactionRealId, primaryContactId);
 
   @JsonKey(ignore: true)
   @override
@@ -4603,6 +5383,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
   TResult when<TResult extends Object?>({
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4614,6 +5395,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGetTransctions,
     required TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4622,9 +5404,11 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             File? billImage,
             String? transactionId)
         addBalanceTransctions,
-    required TResult Function(String contactId) getTransactionsList,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
     required TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4639,6 +5423,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addSecondaryPartyPayment,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4651,6 +5436,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splitAmounts,
     required TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4661,6 +5447,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGiveTransactions,
     required TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4670,6 +5457,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails)
         splittingBalanceAmount,
     required TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4680,10 +5468,23 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails,
             String primaryContactId)
         editTransactions,
-    required TResult Function(String transactionRealId, String primaryContactId)
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
         deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
   }) {
-    return deleteTransactions(transactionRealId, primaryContactId);
+    return deleteTransactions(ledgerId, transactionRealId, primaryContactId);
   }
 
   @override
@@ -4691,6 +5492,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4702,6 +5504,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGetTransctions,
     TResult? Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4710,9 +5513,10 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult? Function(String contactId)? getTransactionsList,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
     TResult? Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4727,6 +5531,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addSecondaryPartyPayment,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4739,6 +5544,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splitAmounts,
     TResult? Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4749,6 +5555,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGiveTransactions,
     TResult? Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4758,6 +5565,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult? Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4768,10 +5576,24 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult? Function(String transactionRealId, String primaryContactId)?
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
   }) {
-    return deleteTransactions?.call(transactionRealId, primaryContactId);
+    return deleteTransactions?.call(
+        ledgerId, transactionRealId, primaryContactId);
   }
 
   @override
@@ -4779,6 +5601,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4790,6 +5613,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGetTransctions,
     TResult Function(
             String? transactionDetails,
+            String ledgerId,
             String fromContactId,
             String toContactId,
             double amount,
@@ -4798,9 +5622,10 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             File? billImage,
             String? transactionId)?
         addBalanceTransctions,
-    TResult Function(String contactId)? getTransactionsList,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
     TResult Function(
             bool isSplittedPrimaryTransaction,
+            String ledgerId,
             String transactionRealId,
             String splittedTransactionId,
             String primaryContactId,
@@ -4815,6 +5640,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addSecondaryPartyPayment,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             String transactionId,
             double splitAmount,
@@ -4827,6 +5653,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splitAmounts,
     TResult Function(
             String fromContactId,
+            String ledgerId,
             String toContactId,
             double amount,
             TransactionTypes transactionType,
@@ -4837,6 +5664,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         addGiveTransactions,
     TResult Function(
             String primaryContactId,
+            String ledgerId,
             String toContactId,
             double splitAmount,
             TransactionTypes transactionType,
@@ -4846,6 +5674,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails)?
         splittingBalanceAmount,
     TResult Function(
+            String ledgerId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4856,12 +5685,25 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionDetails,
             String primaryContactId)?
         editTransactions,
-    TResult Function(String transactionRealId, String primaryContactId)?
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
         deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
     required TResult orElse(),
   }) {
     if (deleteTransactions != null) {
-      return deleteTransactions(transactionRealId, primaryContactId);
+      return deleteTransactions(ledgerId, transactionRealId, primaryContactId);
     }
     return orElse();
   }
@@ -4881,6 +5723,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splittingBalanceAmount,
     required TResult Function(editTransactions value) editTransactions,
     required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
   }) {
     return deleteTransactions(this);
   }
@@ -4897,6 +5740,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
     TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult? Function(editTransactions value)? editTransactions,
     TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
   }) {
     return deleteTransactions?.call(this);
   }
@@ -4913,6 +5757,7 @@ class _$deleteTransactionsImpl implements deleteTransactions {
     TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
     TResult Function(editTransactions value)? editTransactions,
     TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
     required TResult orElse(),
   }) {
     if (deleteTransactions != null) {
@@ -4924,13 +5769,641 @@ class _$deleteTransactionsImpl implements deleteTransactions {
 
 abstract class deleteTransactions implements TransactionsEvent {
   const factory deleteTransactions(
-      {required final String transactionRealId,
+      {required final String ledgerId,
+      required final String transactionRealId,
       required final String primaryContactId}) = _$deleteTransactionsImpl;
 
+  @override
+  String get ledgerId;
   String get transactionRealId;
   String get primaryContactId;
+  @override
   @JsonKey(ignore: true)
   _$$deleteTransactionsImplCopyWith<_$deleteTransactionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$splittingPaymentImplCopyWith<$Res>
+    implements $TransactionsEventCopyWith<$Res> {
+  factory _$$splittingPaymentImplCopyWith(_$splittingPaymentImpl value,
+          $Res Function(_$splittingPaymentImpl) then) =
+      __$$splittingPaymentImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String fromContactId,
+      String ledgerId,
+      String toContactId,
+      double amount,
+      String primaryContactId,
+      TransactionTypes transactionType,
+      DateTime timeOfTrans,
+      String? transactionDetails,
+      File? billImage,
+      String? transactionId});
+}
+
+/// @nodoc
+class __$$splittingPaymentImplCopyWithImpl<$Res>
+    extends _$TransactionsEventCopyWithImpl<$Res, _$splittingPaymentImpl>
+    implements _$$splittingPaymentImplCopyWith<$Res> {
+  __$$splittingPaymentImplCopyWithImpl(_$splittingPaymentImpl _value,
+      $Res Function(_$splittingPaymentImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? fromContactId = null,
+    Object? ledgerId = null,
+    Object? toContactId = null,
+    Object? amount = null,
+    Object? primaryContactId = null,
+    Object? transactionType = null,
+    Object? timeOfTrans = null,
+    Object? transactionDetails = freezed,
+    Object? billImage = freezed,
+    Object? transactionId = freezed,
+  }) {
+    return _then(_$splittingPaymentImpl(
+      fromContactId: null == fromContactId
+          ? _value.fromContactId
+          : fromContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      toContactId: null == toContactId
+          ? _value.toContactId
+          : toContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
+      primaryContactId: null == primaryContactId
+          ? _value.primaryContactId
+          : primaryContactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionTypes,
+      timeOfTrans: null == timeOfTrans
+          ? _value.timeOfTrans
+          : timeOfTrans // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      transactionDetails: freezed == transactionDetails
+          ? _value.transactionDetails
+          : transactionDetails // ignore: cast_nullable_to_non_nullable
+              as String?,
+      billImage: freezed == billImage
+          ? _value.billImage
+          : billImage // ignore: cast_nullable_to_non_nullable
+              as File?,
+      transactionId: freezed == transactionId
+          ? _value.transactionId
+          : transactionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$splittingPaymentImpl implements splittingPayment {
+  const _$splittingPaymentImpl(
+      {required this.fromContactId,
+      required this.ledgerId,
+      required this.toContactId,
+      required this.amount,
+      required this.primaryContactId,
+      required this.transactionType,
+      required this.timeOfTrans,
+      required this.transactionDetails,
+      required this.billImage,
+      required this.transactionId});
+
+  @override
+  final String fromContactId;
+  @override
+  final String ledgerId;
+  @override
+  final String toContactId;
+  @override
+  final double amount;
+  @override
+  final String primaryContactId;
+  @override
+  final TransactionTypes transactionType;
+  @override
+  final DateTime timeOfTrans;
+  @override
+  final String? transactionDetails;
+  @override
+  final File? billImage;
+  @override
+  final String? transactionId;
+
+  @override
+  String toString() {
+    return 'TransactionsEvent.splittingPayment(fromContactId: $fromContactId, ledgerId: $ledgerId, toContactId: $toContactId, amount: $amount, primaryContactId: $primaryContactId, transactionType: $transactionType, timeOfTrans: $timeOfTrans, transactionDetails: $transactionDetails, billImage: $billImage, transactionId: $transactionId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$splittingPaymentImpl &&
+            (identical(other.fromContactId, fromContactId) ||
+                other.fromContactId == fromContactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId) &&
+            (identical(other.toContactId, toContactId) ||
+                other.toContactId == toContactId) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.primaryContactId, primaryContactId) ||
+                other.primaryContactId == primaryContactId) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
+            (identical(other.timeOfTrans, timeOfTrans) ||
+                other.timeOfTrans == timeOfTrans) &&
+            (identical(other.transactionDetails, transactionDetails) ||
+                other.transactionDetails == transactionDetails) &&
+            (identical(other.billImage, billImage) ||
+                other.billImage == billImage) &&
+            (identical(other.transactionId, transactionId) ||
+                other.transactionId == transactionId));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      fromContactId,
+      ledgerId,
+      toContactId,
+      amount,
+      primaryContactId,
+      transactionType,
+      timeOfTrans,
+      transactionDetails,
+      billImage,
+      transactionId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$splittingPaymentImplCopyWith<_$splittingPaymentImpl> get copyWith =>
+      __$$splittingPaymentImplCopyWithImpl<_$splittingPaymentImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            bool isPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)
+        addGetTransctions,
+    required TResult Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)
+        addBalanceTransctions,
+    required TResult Function(String ledgerId, String contactId)
+        getTransactionsList,
+    required TResult Function(
+            bool isSplittedPrimaryTransaction,
+            String ledgerId,
+            String transactionRealId,
+            String splittedTransactionId,
+            String primaryContactId,
+            String secondaryContactId,
+            String payedToId,
+            double amountPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails)
+        addSecondaryPartyPayment,
+    required TResult Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            String transactionId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String id)
+        splitAmounts,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        addGiveTransactions,
+    required TResult Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        splittingBalanceAmount,
+    required TResult Function(
+            String ledgerId,
+            String transactionRealId,
+            String toId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails,
+            String primaryContactId)
+        editTransactions,
+    required TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)
+        deleteTransactions,
+    required TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)
+        splittingPayment,
+  }) {
+    return splittingPayment(
+        fromContactId,
+        ledgerId,
+        toContactId,
+        amount,
+        primaryContactId,
+        transactionType,
+        timeOfTrans,
+        transactionDetails,
+        billImage,
+        transactionId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            bool isPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)?
+        addGetTransctions,
+    TResult? Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)?
+        addBalanceTransctions,
+    TResult? Function(String ledgerId, String contactId)? getTransactionsList,
+    TResult? Function(
+            bool isSplittedPrimaryTransaction,
+            String ledgerId,
+            String transactionRealId,
+            String splittedTransactionId,
+            String primaryContactId,
+            String secondaryContactId,
+            String payedToId,
+            double amountPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails)?
+        addSecondaryPartyPayment,
+    TResult? Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            String transactionId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String id)?
+        splitAmounts,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        addGiveTransactions,
+    TResult? Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        splittingBalanceAmount,
+    TResult? Function(
+            String ledgerId,
+            String transactionRealId,
+            String toId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails,
+            String primaryContactId)?
+        editTransactions,
+    TResult? Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
+        deleteTransactions,
+    TResult? Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
+  }) {
+    return splittingPayment?.call(
+        fromContactId,
+        ledgerId,
+        toContactId,
+        amount,
+        primaryContactId,
+        transactionType,
+        timeOfTrans,
+        transactionDetails,
+        billImage,
+        transactionId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            bool isPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)?
+        addGetTransctions,
+    TResult Function(
+            String? transactionDetails,
+            String ledgerId,
+            String fromContactId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId)?
+        addBalanceTransctions,
+    TResult Function(String ledgerId, String contactId)? getTransactionsList,
+    TResult Function(
+            bool isSplittedPrimaryTransaction,
+            String ledgerId,
+            String transactionRealId,
+            String splittedTransactionId,
+            String primaryContactId,
+            String secondaryContactId,
+            String payedToId,
+            double amountPayed,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails)?
+        addSecondaryPartyPayment,
+    TResult Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            String transactionId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String id)?
+        splitAmounts,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        addGiveTransactions,
+    TResult Function(
+            String primaryContactId,
+            String ledgerId,
+            String toContactId,
+            double splitAmount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        splittingBalanceAmount,
+    TResult Function(
+            String ledgerId,
+            String transactionRealId,
+            String toId,
+            double amount,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? transactionId,
+            String? transactionDetails,
+            String primaryContactId)?
+        editTransactions,
+    TResult Function(
+            String ledgerId, String transactionRealId, String primaryContactId)?
+        deleteTransactions,
+    TResult Function(
+            String fromContactId,
+            String ledgerId,
+            String toContactId,
+            double amount,
+            String primaryContactId,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            String? transactionDetails,
+            File? billImage,
+            String? transactionId)?
+        splittingPayment,
+    required TResult orElse(),
+  }) {
+    if (splittingPayment != null) {
+      return splittingPayment(
+          fromContactId,
+          ledgerId,
+          toContactId,
+          amount,
+          primaryContactId,
+          transactionType,
+          timeOfTrans,
+          transactionDetails,
+          billImage,
+          transactionId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addGetTransctions value) addGetTransctions,
+    required TResult Function(addBalanceTransctions value)
+        addBalanceTransctions,
+    required TResult Function(getTransactionsList value) getTransactionsList,
+    required TResult Function(addSecondaryPartyPayment value)
+        addSecondaryPartyPayment,
+    required TResult Function(splitAmounts value) splitAmounts,
+    required TResult Function(addGiveTransactions value) addGiveTransactions,
+    required TResult Function(splittingBalanceAmount value)
+        splittingBalanceAmount,
+    required TResult Function(editTransactions value) editTransactions,
+    required TResult Function(deleteTransactions value) deleteTransactions,
+    required TResult Function(splittingPayment value) splittingPayment,
+  }) {
+    return splittingPayment(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addGetTransctions value)? addGetTransctions,
+    TResult? Function(addBalanceTransctions value)? addBalanceTransctions,
+    TResult? Function(getTransactionsList value)? getTransactionsList,
+    TResult? Function(addSecondaryPartyPayment value)? addSecondaryPartyPayment,
+    TResult? Function(splitAmounts value)? splitAmounts,
+    TResult? Function(addGiveTransactions value)? addGiveTransactions,
+    TResult? Function(splittingBalanceAmount value)? splittingBalanceAmount,
+    TResult? Function(editTransactions value)? editTransactions,
+    TResult? Function(deleteTransactions value)? deleteTransactions,
+    TResult? Function(splittingPayment value)? splittingPayment,
+  }) {
+    return splittingPayment?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addGetTransctions value)? addGetTransctions,
+    TResult Function(addBalanceTransctions value)? addBalanceTransctions,
+    TResult Function(getTransactionsList value)? getTransactionsList,
+    TResult Function(addSecondaryPartyPayment value)? addSecondaryPartyPayment,
+    TResult Function(splitAmounts value)? splitAmounts,
+    TResult Function(addGiveTransactions value)? addGiveTransactions,
+    TResult Function(splittingBalanceAmount value)? splittingBalanceAmount,
+    TResult Function(editTransactions value)? editTransactions,
+    TResult Function(deleteTransactions value)? deleteTransactions,
+    TResult Function(splittingPayment value)? splittingPayment,
+    required TResult orElse(),
+  }) {
+    if (splittingPayment != null) {
+      return splittingPayment(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class splittingPayment implements TransactionsEvent {
+  const factory splittingPayment(
+      {required final String fromContactId,
+      required final String ledgerId,
+      required final String toContactId,
+      required final double amount,
+      required final String primaryContactId,
+      required final TransactionTypes transactionType,
+      required final DateTime timeOfTrans,
+      required final String? transactionDetails,
+      required final File? billImage,
+      required final String? transactionId}) = _$splittingPaymentImpl;
+
+  String get fromContactId;
+  @override
+  String get ledgerId;
+  String get toContactId;
+  double get amount;
+  String get primaryContactId;
+  TransactionTypes get transactionType;
+  DateTime get timeOfTrans;
+  String? get transactionDetails;
+  File? get billImage;
+  String? get transactionId;
+  @override
+  @JsonKey(ignore: true)
+  _$$splittingPaymentImplCopyWith<_$splittingPaymentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

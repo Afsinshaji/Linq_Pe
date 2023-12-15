@@ -15,6 +15,7 @@ import 'package:linq_pe/presentation/screens/add_amount/screen_add_amount.dart';
 import 'package:linq_pe/presentation/screens/each_transaction/screen_each_transaction.dart';
 import 'package:linq_pe/presentation/screens/secondary_party/screen_secondary_party.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/view_state/secondary_party_riverpod/secondary_party.dart';
 import 'package:linq_pe/presentation/widgets/click_button.dart';
 import 'package:linq_pe/utilities/colors.dart';
@@ -136,6 +137,7 @@ class SplitAmountScreen extends ConsumerWidget {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => AddAmountScreen(
+                                   ledgerId: ref.watch(currentLedgerIdProvider),
                                     isGive: false,
                                     transactionRealId: transaction.id,
                                     splitAmount:

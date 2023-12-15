@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/add_split_amount/add_split_amount.dart';
 
 import 'package:linq_pe/utilities/colors.dart';
 
@@ -14,10 +15,12 @@ class AddTextField extends ConsumerWidget {
     this.prefix,
     this.fontSize,
     this.textFieldType = TextFieldType.none,
+    this.providerNum=-1,
   });
 
   final TextEditingController controller;
   final bool isTextNumberType;
+  final int providerNum;
 
   final String text;
 
@@ -39,11 +42,15 @@ class AddTextField extends ConsumerWidget {
         child: TextFormField(
           onChanged: (value) {
             if (textFieldType == TextFieldType.amount) {
-           if(value.isNotEmpty) {  addAmount(double.parse(value), ref);}
+              if (value.isNotEmpty) {
+                addAmount(double.parse(value), ref);
+              }
             } else if (textFieldType == TextFieldType.details) {
               addTransactionDetails(value, ref);
             } else if (textFieldType == TextFieldType.transactionId) {
               addTransactionId(value, ref);
+            } else if (textFieldType == TextFieldType.splitAmount&&providerNum>=0&&value.isNotEmpty) {
+              addAmountProviderValue(providerNum,ref,double.parse(value));
             }
           },
           controller: controller,
@@ -95,4 +102,4 @@ class AddTextField extends ConsumerWidget {
   }
 }
 
-enum TextFieldType { details, transactionId, amount, none }
+enum TextFieldType { details, transactionId, amount, splitAmount, none }

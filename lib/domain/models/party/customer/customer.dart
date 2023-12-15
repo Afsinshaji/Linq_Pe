@@ -6,8 +6,10 @@ part 'customer.g.dart';
 class CustomerModel {
   @HiveField(0)
   final String contactId;
+  @HiveField(1)
+  final String ledgerId;
 
-  CustomerModel({required this.contactId});
+  CustomerModel({required this.contactId, required this.ledgerId});
 }
 
 class CustomerBox {

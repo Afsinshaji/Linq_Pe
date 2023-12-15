@@ -19,17 +19,20 @@ class TransactionModelAdapter extends TypeAdapter<TransactionModel> {
     return TransactionModel(
       transactionId: fields[0] as String,
       transactionsList: (fields[1] as List?)?.cast<TransactionModel>(),
+      ledgerId: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.transactionId)
       ..writeByte(1)
-      ..write(obj.transactionsList);
+      ..write(obj.transactionsList)
+      ..writeByte(2)
+      ..write(obj.ledgerId);
   }
 
   @override

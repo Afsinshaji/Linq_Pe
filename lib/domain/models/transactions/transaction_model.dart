@@ -8,8 +8,10 @@ class TransactionModel {
   final String transactionId;
    @HiveField(1)
   final List<TransactionModel>? transactionsList;
+    @HiveField(2)
+  final String ledgerId;
 
-  TransactionModel({required this.transactionId,  this.transactionsList});
+  TransactionModel({required this.transactionId,  this.transactionsList,required  this.ledgerId});
 }
 
 class TransactionBox {

@@ -17,6 +17,7 @@ class SecondaryTransactionsModel {
   @HiveField(4)
   final double payedAmt;
 
+
   @HiveField(5)
   final String fromContactId;
   @HiveField(6)
@@ -43,7 +44,10 @@ class SecondaryTransactionsModel {
   final String primaryAccountId;
   @HiveField(17)
   final bool isSecondaryPay;
+    @HiveField(18)
+  final bool isExpense;
   SecondaryTransactionsModel({
+        required this.isExpense,
     required this.isSecondaryPay,
     required this.primaryAccountId,
     required this.isGive,

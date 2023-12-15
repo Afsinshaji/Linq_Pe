@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
+import 'package:linq_pe/domain/models/party/Expense_account/expense_account.dart';
+import 'package:linq_pe/domain/models/splitted/splitted_accounts.dart';
 import 'package:linq_pe/domain/models/transactions/secondary_transactions.dart';
 import 'package:linq_pe/domain/models/transactions/party_account_model.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_model.dart';
 import 'package:linq_pe/domain/repositories/transactions/transactions_repository.dart';
 import 'package:linq_pe/infrastructure/contacts/contacts_implementation.dart';
 import 'package:linq_pe/infrastructure/party/party_implementation.dart';
+import 'package:linq_pe/infrastructure/splitting/splitting_implementation.dart';
 
 class TransactionsImplementation extends TransactionsRepository {
   // creating a singleton
@@ -32,22 +35,142 @@ class TransactionsImplementation extends TransactionsRepository {
     transactionBox = await Hive.openBox("transactionBox");
   }
 
-Future<void>  deletePartyAccount({required String contactId})async {
+  late Box<ExpenseAccountModel> expenseBox;
+  openExpenseBox() async {
+    expenseBox = await Hive.openBox("expenseBox");
+  }
+
+  Future<void> deletePartyAccount({required String contactId, required String ledgerId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == contactId);
+        .indexWhere((element) => element.contactId == contactId&& element.ledgerId==ledgerId);
     if (transactedAccountIndex >= 0) {
-     await partyAccountsBox.deleteAt(transactedAccountIndex);
-
-
+      await partyAccountsBox.deleteAt(transactedAccountIndex);
     }
   }
 
   @override
-  Future<void> addGetTransction(
+  Future<void> splittedPayment(
       {required String fromContactId,
       required String toContactId,
       required double amount,
+      required String primaryContactId,
+      required TransactionType transactionType,
+        required String ledgerId,
+      required DateTime timeOfTrans,
+      
+      String? transactionDetails,
+      File? billImage,
+      String? transactionId}) async {
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final splittingAccountsList =
+        SplittingImplementation.instance.splittingBox.values.toList();
+    final splittedAccountIndex = splittingAccountsList.indexWhere((element) =>
+    element.ledgerId==ledgerId&&
+        element.splittedAccountContactId == fromContactId &&
+        element.primaryAccountContactId == primaryContactId);
+    final contactsList =
+        ContactsImplementation.instance.contactsBox.values.toList();
+    final contactIndex = contactsList
+        .indexWhere((element) => element.contactId == primaryContactId&&
+        element.ledgerId==ledgerId);
+    // final contact = contactsList[contactIndex];
+    // final partyList = partyAccountsBox.values.toList();
+    // final partyIndex = partyList
+    //     .indexWhere((element) => element.contactId == primaryContactId);
+    // if (partyIndex >= 0) {
+    //   final party = partyList[partyIndex];
+    //   await partyAccountsBox.putAt(
+    //       partyIndex,
+    //       PartyAccountsModel(
+    //           contactId: party.contactId,
+    //           recievedAmt: party.recievedAmt,
+    //           payedAmt: party.payedAmt + amount,
+    //           balanceAmt: party.balanceAmt - amount,
+    //           transactionList: party.transactionList,
+
+    //           ));
+    // }
+    if (splittedAccountIndex < 0) {
+      return;
+    }
+    if (contactIndex < 0) {
+      return;
+    }
+    final splittedAccount = splittingAccountsList[splittedAccountIndex];
+    List<TransactionModel> transactionList = [];
+    if (splittedAccount.transactionList != null) {
+      transactionList = splittedAccount.transactionList!;
+    }
+
+    transactionList.add(TransactionModel(transactionId: id,
+    ledgerId: ledgerId,
+    ));
+
+    await SplittingImplementation.instance.splittingBox.putAt(
+        splittedAccountIndex,
+        SplittedAccountsModel(
+          ledgerId: splittedAccount.ledgerId,
+          primaryAccountContactId: splittedAccount.primaryAccountContactId,
+          splittedAccountContactId: splittedAccount.splittedAccountContactId,
+          recievedAmt: splittedAccount.recievedAmt,
+          payedAmt: splittedAccount.payedAmt + amount,
+          balanceAmt: splittedAccount.balanceAmt - amount,
+          transactionList: transactionList,
+        ));
+
+    await transactionBox.add(SecondaryTransactionsModel(
+        isExpense: true,
+        isSecondaryPay: false,
+        primaryAccountId: primaryContactId,
+        isGive: false,
+        isGet: false,
+        isAddBalance: false,
+        isSplit: false,
+        id: id,
+        transactionDetails: transactionDetails,
+        transactionType: transactionType,
+        billImage: await convertToUni8List(billImage),
+        transactionId: transactionId,
+        timeOfTrans: timeOfTrans,
+        toContactId: toContactId,
+        payedAmt: splittedAccount.payedAmt + amount,
+        balanceAmt: splittedAccount.balanceAmt - amount,
+        isPayed: true,
+        givenAmt: amount,
+        fromContactId: fromContactId));
+
+    // await ContactsImplementation.instance.updateContactAmounts(
+    //     balanceAmount: contact.blanceAmount! - amount,
+    //     receivedAmount: contact.receivedAmount!,
+    //     payedAmount: contact.payedAmount! + amount,
+    //     contactId: primaryContactId);
+
+    await recepientTransaction(
+      billImage: billImage,
+      transactionDetails: transactionDetails,
+      transactionId: transactionId,
+      ledgerId: ledgerId,
+        isExpenseAccount: true,
+        fromContactId: fromContactId,
+        toContactId: toContactId,
+        amount: amount,
+        isPayed: true,
+        transactionType: transactionType,
+        timeOfTrans: timeOfTrans,
+        isAddBalance: false,
+        isGetting: false,
+        isGive: false,
+        primaryContactId: primaryContactId);
+  }
+
+  @override
+  Future<void> addGetTransction(
+      {required bool isExpenseAccount,
+      required String fromContactId,
+      required String toContactId,
+      required double amount,
+        required String ledgerId,
       required bool isPayed,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
@@ -58,9 +181,16 @@ Future<void>  deletePartyAccount({required String contactId})async {
 
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == fromContactId);
+        .indexWhere((element) => element.contactId == fromContactId
+        && element.ledgerId==ledgerId
+        );
+
     if (transactedAccountIndex < 0) {
+      //come
+
       await createNewTransaction(
+        ledgerId:ledgerId ,
+        isExpenseAccount: isExpenseAccount,
         primaryContactId: fromContactId,
         isGive: false,
         isGetting: isPayed ? false : true,
@@ -93,6 +223,8 @@ Future<void>  deletePartyAccount({required String contactId})async {
       //     ]));
     } else {
       await updateExistingTransaction(
+        ledgerId: ledgerId,
+          isExpenseAccount: isExpenseAccount,
           isSecondaryPay: false,
           primaryContactId: fromContactId,
           isGive: false,
@@ -185,11 +317,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required bool isGetting,
       required bool isGive,
       required String primaryContactId,
+      required bool isExpenseAccount,
+       required String ledgerId,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     await transactionBox.add(SecondaryTransactionsModel(
+        isExpense: isExpenseAccount,
         isSecondaryPay: false,
         primaryAccountId: primaryContactId,
         isGive: isGive,
@@ -217,15 +352,19 @@ Future<void>  deletePartyAccount({required String contactId})async {
     }
 
     await partyAccountsBox.add(PartyAccountsModel(
+      ledgerId: ledgerId,
         contactId: fromContactId,
         recievedAmt: isAddBalance || isGive ? 0 : amount,
         payedAmt: isPayed || isGive ? amount : 0,
         balanceAmt: isGive ? -amount : amount,
         transactionList: [
-          TransactionModel(transactionId: id, transactionsList: []),
+          TransactionModel(transactionId: id, transactionsList: [],
+          ledgerId:ledgerId ,
+          ),
         ]));
 
     await ContactsImplementation.instance.updateContactAmounts(
+      ledgerId: ledgerId,
         balanceAmount: isGive ? -amount : amount,
         receivedAmount: isAddBalance || isGive ? 0 : amount,
         payedAmount: isPayed || isGive ? amount : 0,
@@ -237,7 +376,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required String toContactId,
       String? transactionDetails,
       required double amount,
-      required bool isPayed,
+      required bool isPayed,  required String ledgerId,
       required List<PartyAccountsModel> transactedAccountsList,
       required int transactedAccountIndex,
       required TransactionType transactionType,
@@ -247,12 +386,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required bool isGive,
       required String primaryContactId,
       required bool isSecondaryPay,
+      required bool isExpenseAccount,
       File? billImage,
       String? transactionId}) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     final transaction = transactedAccountsList[transactedAccountIndex];
     List<SecondaryTransactionsModel> secondaryList = [];
     final transactionModel = SecondaryTransactionsModel(
+        isExpense: isExpenseAccount,
         isSecondaryPay: isSecondaryPay,
         isGive: isGive,
         primaryAccountId: primaryContactId,
@@ -282,13 +423,16 @@ Future<void>  deletePartyAccount({required String contactId})async {
       log('kiki');
       if (!isPayed) {
         final lastIndex = secondaryList
-            .lastIndexWhere((element) => element.toContactId == toContactId);
+            .lastIndexWhere((element) => element.toContactId == toContactId
+         
+            );
         if (lastIndex < 0) {
           await transactionBox.add(transactionModel);
         } else {
           final secondayTrans = secondaryList[lastIndex];
-
+//come
           await transactionBox.add(SecondaryTransactionsModel(
+              isExpense: isExpenseAccount,
               isSecondaryPay: isSecondaryPay,
               primaryAccountId: primaryContactId,
               isGive: isGive,
@@ -321,12 +465,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
       await transactionBox.add(transactionModel);
     }
     transactionIdList!.add(TransactionModel(
+      ledgerId:ledgerId ,
       transactionId: id,
     ));
     log('Giving:${transaction.recievedAmt}');
     await partyAccountsBox.putAt(
         transactedAccountIndex,
         PartyAccountsModel(
+          ledgerId: ledgerId,
             contactId: transaction.contactId,
             recievedAmt: isAddBalance || isPayed || isGive
                 ? transaction.recievedAmt
@@ -341,6 +487,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
             // secondaryTransaction: secondaryList,
             ));
     await ContactsImplementation.instance.updateContactAmounts(
+      ledgerId: ledgerId,
         balanceAmount: isPayed || isGive
             ? transaction.balanceAmt - amount
             : transaction.balanceAmt + amount,
@@ -354,12 +501,12 @@ Future<void>  deletePartyAccount({required String contactId})async {
 
     if (isPayed) {
       await recepientTransaction(
+        ledgerId: ledgerId,
+          isExpenseAccount: true,
           fromContactId: fromContactId,
           toContactId: toContactId,
           amount: amount,
           isPayed: isPayed,
-          transactedAccountsList: transactedAccountsList,
-          transactedAccountIndex: transactedAccountIndex,
           transactionType: transactionType,
           timeOfTrans: timeOfTrans,
           isAddBalance: isAddBalance,
@@ -375,23 +522,36 @@ Future<void>  deletePartyAccount({required String contactId})async {
       String? transactionDetails,
       required double amount,
       required bool isPayed,
-      required List<PartyAccountsModel> transactedAccountsList,
-      required int transactedAccountIndex,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
       required bool isAddBalance,
       required bool isGetting,
       required bool isGive,
       required String primaryContactId,
+      required bool isExpenseAccount,
+        required String ledgerId,
       File? billImage,
       String? transactionId}) async {
-    final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == toContactId);
-    if (transactedAccountIndex < 0) {
-      await PartyImplementation.instance.addCustomer(contactId: toContactId);
+    if (isExpenseAccount) {
+      final expenseAccountList = expenseBox.values.toList();
+      final expenseAccountIndex = expenseAccountList
+          .indexWhere((element) => element.contactId == toContactId && element.ledgerId==ledgerId);
+      if (expenseAccountIndex < 0) {
+        await expenseBox.add(ExpenseAccountModel(
+          ledgerId: ledgerId,
+          contactId: toContactId));
+      }
+    } else {
+      final transactedAccountsList = partyAccountsBox.values.toList();
+      final transactedAccountIndex = transactedAccountsList
+          .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
+      if (transactedAccountIndex < 0) {
+        await PartyImplementation.instance.addCustomer(contactId: toContactId,ledgerId: ledgerId);
+      }
     }
     await addGetTransction(
+      ledgerId: ledgerId,
+      isExpenseAccount: isExpenseAccount,
       fromContactId: toContactId,
       toContactId: fromContactId,
       amount: amount,
@@ -411,14 +571,17 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+        required String ledgerId,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == toContactId);
+        .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
     if (transactedAccountIndex < 0) {
       await createNewTransaction(
+        ledgerId: ledgerId,
+        isExpenseAccount: false,
         primaryContactId: toContactId,
         isGive: false,
         isGetting: false,
@@ -435,6 +598,8 @@ Future<void>  deletePartyAccount({required String contactId})async {
       );
     } else {
       await updateExistingTransaction(
+        ledgerId: ledgerId,
+          isExpenseAccount: false,
           isSecondaryPay: false,
           primaryContactId: toContactId,
           isGive: false,
@@ -461,14 +626,17 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+        required String ledgerId,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == toContactId);
+        .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
     if (transactedAccountIndex < 0) {
       createNewTransaction(
+        ledgerId: ledgerId,
+          isExpenseAccount: false,
           billImage: billImage,
           transactionDetails: transactionDetails,
           transactionId: transactionId,
@@ -484,6 +652,8 @@ Future<void>  deletePartyAccount({required String contactId})async {
           isGive: true);
     } else {
       await updateExistingTransaction(
+        ledgerId: ledgerId,
+          isExpenseAccount: false,
           isSecondaryPay: false,
           primaryContactId: toContactId,
           isGive: true,
@@ -504,10 +674,10 @@ Future<void>  deletePartyAccount({required String contactId})async {
   }
 
   @override
-  PartyAccountsModel? getAccountDetails({required String contactId}) {
+  PartyAccountsModel? getAccountDetails({required String contactId,  required String ledgerId,}) {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == contactId);
+        .indexWhere((element) => element.contactId == contactId&&element.ledgerId==ledgerId&& element.ledgerId==ledgerId);
     if (transactedAccountIndex < 0) {
       return null;
     } else {
@@ -545,6 +715,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required double amountPayed,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+        required String ledgerId,
       File? billImage,
       String? transactionId,
       String? transactionDetails}) async {
@@ -552,7 +723,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     // Step 2: Find Primary Transaction
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId);
+        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
     if (transactedAccountIndex < 0) {
       // If primary transaction not found, return
       return;
@@ -572,7 +743,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
 
         final transactionIdIndex =
             listOfPrimeSecondaryTransactionIds.indexWhere(
-                (element) => element.transactionId == splittedTransactionId);
+                (element) => element.transactionId == splittedTransactionId&& element.ledgerId==ledgerId);
         if (transactionIdIndex < 0) {
           return;
         }
@@ -609,7 +780,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
           }
 
           final idIndex = splittedIdList.indexWhere(
-              (element) => element.transactionId == transactionRealId);
+              (element) => element.transactionId == transactionRealId&& element.ledgerId==ledgerId);
           if (idIndex < 0) {
             return;
           }
@@ -637,12 +808,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
             }
           }
 
-          idList.add(TransactionModel(transactionId: id));
+          idList.add(TransactionModel(transactionId: id,ledgerId: ledgerId));
           splittedIdList[idIndex] = TransactionModel(
+            ledgerId: ledgerId,
               transactionId: splittedIdList[idIndex].transactionId,
               transactionsList: idList);
           listOfPrimeSecondaryTransactionIds[transactionIdIndex] =
               TransactionModel(
+                ledgerId: ledgerId,
                   transactionId:
                       listOfPrimeSecondaryTransactionIds[transactionIdIndex]
                           .transactionId,
@@ -650,6 +823,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
           await partyAccountsBox.putAt(
               transactedAccountIndex,
               PartyAccountsModel(
+                ledgerId: primaryTransaction.ledgerId,
                   contactId: primaryTransaction.contactId,
                   recievedAmt: primaryTransaction.recievedAmt,
                   payedAmt: primaryTransaction.payedAmt + amountPayed,
@@ -657,6 +831,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
                   transactionList: listOfPrimeSecondaryTransactionIds));
 
           await transactionBox.add(SecondaryTransactionsModel(
+              isExpense: false,
               isSecondaryPay: true,
               primaryAccountId: primaryContactId,
               isGive: false,
@@ -784,6 +959,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
 // // Update the primary transaction in the data store
 //         transactionBox.putAt(transactedAccountIndex, renewedPrimaryTransaction);
         await ContactsImplementation.instance.updateContactAmounts(
+          ledgerId: ledgerId,
             balanceAmount: primaryTransaction.balanceAmt - amountPayed,
             receivedAmount: primaryTransaction.recievedAmt,
             payedAmount: primaryTransaction.payedAmt + amountPayed,
@@ -800,7 +976,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
 
   @override
   Future<void> splitBalanceAmount(
-      {required String primaryContactId,
+      {required String primaryContactId,  required String ledgerId,
       required String toContactId,
       required double splitAmount,
       required TransactionType transactionType,
@@ -810,7 +986,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
       String? transactionDetails}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId);
+        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
 
     if (transactedAccountIndex < 0) {
       return;
@@ -821,6 +997,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
     }
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     await transactionBox.add(SecondaryTransactionsModel(
+        isExpense: false,
         isSecondaryPay: false,
         primaryAccountId: primaryContactId,
         billImage: await convertToUni8List(billImage),
@@ -839,16 +1016,16 @@ Future<void>  deletePartyAccount({required String contactId})async {
         isPayed: false,
         givenAmt: splitAmount,
         fromContactId: 'You'));
-    primaryAccount.transactionList!.add(TransactionModel(transactionId: id));
+    primaryAccount.transactionList!.add(TransactionModel(transactionId: id,ledgerId: ledgerId));
     await partyAccountsBox.putAt(transactedAccountIndex, primaryAccount);
 
     await recepientTransaction(
+      ledgerId: ledgerId,
+        isExpenseAccount: false,
         fromContactId: primaryContactId,
         toContactId: toContactId,
         amount: splitAmount,
         isPayed: false,
-        transactedAccountsList: transactedAccountsList,
-        transactedAccountIndex: transactedAccountIndex,
         transactionType: transactionType,
         timeOfTrans: timeOfTrans,
         isAddBalance: false,
@@ -868,13 +1045,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required double splitAmount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+        required String ledgerId,
       required String id,
       File? billImage,
       String? userTransactionId,
       String? transactionDetails}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
     final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId);
+        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
 
     if (transactedAccountIndex < 0) {
       return;
@@ -886,7 +1064,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
       return;
     }
     final transactionIndex = transactionsIdList
-        .indexWhere((element) => element.transactionId == transactionId);
+        .indexWhere((element) => element.transactionId == transactionId&& element.ledgerId==ledgerId);
     if (transactionIndex < 0) {
       return;
     }
@@ -920,10 +1098,11 @@ Future<void>  deletePartyAccount({required String contactId})async {
       }
     }
 
-    splitList.add(TransactionModel(transactionId: id));
+    splitList.add(TransactionModel(transactionId: id, ledgerId: ledgerId));
     log('listHere1${toContactId.toString()}');
 
     await transactionBox.add(SecondaryTransactionsModel(
+        isExpense: false,
         isSecondaryPay: false,
         primaryAccountId: primaryContactId,
         billImage: await convertToUni8List(billImage),
@@ -959,12 +1138,14 @@ Future<void>  deletePartyAccount({required String contactId})async {
     //     transactionDetails: transaction.transactionDetails,
     //     transactionId: transaction.transactionId);
     transactionsIdList[transactionIndex] = TransactionModel(
+      ledgerId: ledgerId,
       transactionId: transactionId,
       transactionsList: splitList,
     );
     await partyAccountsBox.putAt(
         transactedAccountIndex,
         PartyAccountsModel(
+          ledgerId: primaryAccount.ledgerId,
           contactId: primaryAccount.contactId,
           recievedAmt: primaryAccount.recievedAmt,
           payedAmt: primaryAccount.payedAmt,
@@ -977,6 +1158,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
   @override
   Future<void> deleteTransaction({
     required String transactionRealId,
+      required String ledgerId,
   }) async {
     final listOfAllTransactions = transactionBox.values.toList();
     final transactionIndex = listOfAllTransactions
@@ -987,12 +1169,13 @@ Future<void>  deletePartyAccount({required String contactId})async {
     final transaction = listOfAllTransactions[transactionIndex];
     final partyAccountList = partyAccountsBox.values.toList();
     final partyIndex = partyAccountList.indexWhere(
-        (element) => element.contactId == transaction.primaryAccountId);
+        (element) => element.contactId == transaction.primaryAccountId&& element.ledgerId==ledgerId);
     final partyAccount = partyAccountList[partyIndex];
 
     await partyAccountsBox.putAt(
         partyIndex,
         PartyAccountsModel(
+          ledgerId: partyAccount.ledgerId,
           contactId: partyAccount.contactId,
           recievedAmt: transaction.isGet
               ? partyAccount.recievedAmt - transaction.givenAmt
@@ -1020,6 +1203,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
           // secondaryTransaction: secondaryList,
         ));
     await ContactsImplementation.instance.updateContactAmounts(
+      ledgerId: ledgerId,
         balanceAmount: transaction.isPayed || transaction.isGive
             ? partyAccount.balanceAmt + transaction.givenAmt
             : partyAccount.balanceAmt - transaction.givenAmt,
@@ -1043,6 +1227,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+        required String ledgerId,
       File? billImage,
       String? transactionId,
       String? transactionDetails}) async {
@@ -1055,12 +1240,13 @@ Future<void>  deletePartyAccount({required String contactId})async {
     final transaction = listOfAllTransactions[transactionIndex];
     final partyAccountList = partyAccountsBox.values.toList();
     final partyIndex = partyAccountList.indexWhere(
-        (element) => element.contactId == transaction.primaryAccountId);
+        (element) => element.contactId == transaction.primaryAccountId&& element.ledgerId==ledgerId);
     final partyAccount = partyAccountList[partyIndex];
 
     await partyAccountsBox.putAt(
         partyIndex,
         PartyAccountsModel(
+          ledgerId: partyAccount.ledgerId,
           contactId: partyAccount.contactId,
           recievedAmt: transaction.isGet
               ? (partyAccount.recievedAmt - transaction.givenAmt) + amount
@@ -1086,6 +1272,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
           // secondaryTransaction: secondaryList,
         ));
     await ContactsImplementation.instance.updateContactAmounts(
+      ledgerId: ledgerId,
         balanceAmount: transaction.isPayed || transaction.isGive
             ? (partyAccount.balanceAmt + transaction.givenAmt) - amount
             : (partyAccount.balanceAmt - transaction.givenAmt) + amount,
@@ -1105,6 +1292,7 @@ Future<void>  deletePartyAccount({required String contactId})async {
     await transactionBox.putAt(
         transactionIndex,
         SecondaryTransactionsModel(
+            isExpense: transaction.isExpense,
             billImage: await convertToUni8List(billImage),
             transactionDetails: transactionDetails,
             transactionId: transactionId,

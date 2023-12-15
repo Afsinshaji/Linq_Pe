@@ -12,10 +12,10 @@ import 'package:linq_pe/utilities/colors.dart';
 
 class SelectPartyScreen extends StatefulWidget {
   const SelectPartyScreen(
-      {super.key, required this.partyType, required this.partyColor});
+      {super.key, required this.partyType, required this.partyColor, required this.ledgerId});
   final String partyType;
   final Color partyColor;
-
+  final String ledgerId;
   @override
   State<SelectPartyScreen> createState() => _SelectPartyScreenState();
 }
@@ -48,7 +48,7 @@ class _SelectPartyScreenState extends State<SelectPartyScreen> {
             if (!isOneTime) {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 BlocProvider.of<ContactsBloc>(context)
-                    .add(const ContactsEvent.getContacts());
+                    .add(ContactsEvent.getContacts(ledgerId: widget.ledgerId));
                 isOneTime = true;
               });
             }
@@ -111,12 +111,15 @@ class SelectPartyList extends ConsumerWidget {
             },
             leading: const CircleAvatar(
               backgroundColor: LinqPeColors.kPinkColor,
-              child: Icon(Icons.add,color: LinqPeColors.kWhiteColor,),
+              child: Icon(
+                Icons.add,
+                color: LinqPeColors.kWhiteColor,
+              ),
             ),
             title: const Text('Add Party'),
           );
         } else {
-        final  index = count - 1;
+          final index = count - 1;
           return ListTile(
             onTap: () {
               Navigator.push(
@@ -152,7 +155,7 @@ class SelectSearchColumn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-      final Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,7 +172,8 @@ class SelectSearchColumn extends ConsumerWidget {
         ),
         Expanded(
           child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: size.width*0.05, vertical: size.height*0.005),
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05, vertical: size.height * 0.005),
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
@@ -183,16 +187,16 @@ class SelectSearchColumn extends ConsumerWidget {
                 // controller: searchController,
 
                 style: GoogleFonts.openSans(
-                  textStyle:  TextStyle(
+                  textStyle: TextStyle(
                     letterSpacing: .3,
-                    fontSize: size.height*0.021,
+                    fontSize: size.height * 0.021,
                     color: LinqPeColors.kBlackColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 cursorColor: LinqPeColors.kBlackColor,
                 cursorWidth: 1,
-                cursorHeight: size.height*0.03,
+                cursorHeight: size.height * 0.03,
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 40, right: 20),
                     suffixIcon: Padding(

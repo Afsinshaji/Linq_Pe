@@ -18,6 +18,7 @@ class SecondaryTransactionsModelAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SecondaryTransactionsModel(
+      isExpense: fields[18] as bool,
       isSecondaryPay: fields[17] as bool,
       primaryAccountId: fields[16] as String,
       isGive: fields[15] as bool,
@@ -42,7 +43,7 @@ class SecondaryTransactionsModelAdapter
   @override
   void write(BinaryWriter writer, SecondaryTransactionsModel obj) {
     writer
-      ..writeByte(18)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.toContactId)
       ..writeByte(1)
@@ -78,7 +79,9 @@ class SecondaryTransactionsModelAdapter
       ..writeByte(16)
       ..write(obj.primaryAccountId)
       ..writeByte(17)
-      ..write(obj.isSecondaryPay);
+      ..write(obj.isSecondaryPay)
+      ..writeByte(18)
+      ..write(obj.isExpense);
   }
 
   @override

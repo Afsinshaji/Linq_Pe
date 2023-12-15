@@ -16,25 +16,27 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CustomerEvent {
+  String get ledgerId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String contactId) addCustomers,
-    required TResult Function() getCustomerList,
-    required TResult Function(String contactId) deleteCustomers,
+    required TResult Function(String contactId, String ledgerId) addCustomers,
+    required TResult Function(String ledgerId) getCustomerList,
+    required TResult Function(String contactId, String ledgerId)
+        deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String contactId)? addCustomers,
-    TResult? Function()? getCustomerList,
-    TResult? Function(String contactId)? deleteCustomers,
+    TResult? Function(String contactId, String ledgerId)? addCustomers,
+    TResult? Function(String ledgerId)? getCustomerList,
+    TResult? Function(String contactId, String ledgerId)? deleteCustomers,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String contactId)? addCustomers,
-    TResult Function()? getCustomerList,
-    TResult Function(String contactId)? deleteCustomers,
+    TResult Function(String contactId, String ledgerId)? addCustomers,
+    TResult Function(String ledgerId)? getCustomerList,
+    TResult Function(String contactId, String ledgerId)? deleteCustomers,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -60,6 +62,10 @@ mixin _$CustomerEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $CustomerEventCopyWith<CustomerEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -67,6 +73,8 @@ abstract class $CustomerEventCopyWith<$Res> {
   factory $CustomerEventCopyWith(
           CustomerEvent value, $Res Function(CustomerEvent) then) =
       _$CustomerEventCopyWithImpl<$Res, CustomerEvent>;
+  @useResult
+  $Res call({String ledgerId});
 }
 
 /// @nodoc
@@ -78,15 +86,30 @@ class _$CustomerEventCopyWithImpl<$Res, $Val extends CustomerEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ledgerId = null,
+  }) {
+    return _then(_value.copyWith(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$addCustomersImplCopyWith<$Res> {
+abstract class _$$addCustomersImplCopyWith<$Res>
+    implements $CustomerEventCopyWith<$Res> {
   factory _$$addCustomersImplCopyWith(
           _$addCustomersImpl value, $Res Function(_$addCustomersImpl) then) =
       __$$addCustomersImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({String contactId});
+  $Res call({String contactId, String ledgerId});
 }
 
 /// @nodoc
@@ -101,11 +124,16 @@ class __$$addCustomersImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? contactId = null,
+    Object? ledgerId = null,
   }) {
     return _then(_$addCustomersImpl(
       contactId: null == contactId
           ? _value.contactId
           : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -114,14 +142,16 @@ class __$$addCustomersImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$addCustomersImpl implements addCustomers {
-  const _$addCustomersImpl({required this.contactId});
+  const _$addCustomersImpl({required this.contactId, required this.ledgerId});
 
   @override
   final String contactId;
+  @override
+  final String ledgerId;
 
   @override
   String toString() {
-    return 'CustomerEvent.addCustomers(contactId: $contactId)';
+    return 'CustomerEvent.addCustomers(contactId: $contactId, ledgerId: $ledgerId)';
   }
 
   @override
@@ -130,11 +160,13 @@ class _$addCustomersImpl implements addCustomers {
         (other.runtimeType == runtimeType &&
             other is _$addCustomersImpl &&
             (identical(other.contactId, contactId) ||
-                other.contactId == contactId));
+                other.contactId == contactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, contactId);
+  int get hashCode => Object.hash(runtimeType, contactId, ledgerId);
 
   @JsonKey(ignore: true)
   @override
@@ -145,33 +177,34 @@ class _$addCustomersImpl implements addCustomers {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String contactId) addCustomers,
-    required TResult Function() getCustomerList,
-    required TResult Function(String contactId) deleteCustomers,
+    required TResult Function(String contactId, String ledgerId) addCustomers,
+    required TResult Function(String ledgerId) getCustomerList,
+    required TResult Function(String contactId, String ledgerId)
+        deleteCustomers,
   }) {
-    return addCustomers(contactId);
+    return addCustomers(contactId, ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String contactId)? addCustomers,
-    TResult? Function()? getCustomerList,
-    TResult? Function(String contactId)? deleteCustomers,
+    TResult? Function(String contactId, String ledgerId)? addCustomers,
+    TResult? Function(String ledgerId)? getCustomerList,
+    TResult? Function(String contactId, String ledgerId)? deleteCustomers,
   }) {
-    return addCustomers?.call(contactId);
+    return addCustomers?.call(contactId, ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String contactId)? addCustomers,
-    TResult Function()? getCustomerList,
-    TResult Function(String contactId)? deleteCustomers,
+    TResult Function(String contactId, String ledgerId)? addCustomers,
+    TResult Function(String ledgerId)? getCustomerList,
+    TResult Function(String contactId, String ledgerId)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (addCustomers != null) {
-      return addCustomers(contactId);
+      return addCustomers(contactId, ledgerId);
     }
     return orElse();
   }
@@ -212,20 +245,28 @@ class _$addCustomersImpl implements addCustomers {
 }
 
 abstract class addCustomers implements CustomerEvent {
-  const factory addCustomers({required final String contactId}) =
-      _$addCustomersImpl;
+  const factory addCustomers(
+      {required final String contactId,
+      required final String ledgerId}) = _$addCustomersImpl;
 
   String get contactId;
+  @override
+  String get ledgerId;
+  @override
   @JsonKey(ignore: true)
   _$$addCustomersImplCopyWith<_$addCustomersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$getCustomerListImplCopyWith<$Res> {
+abstract class _$$getCustomerListImplCopyWith<$Res>
+    implements $CustomerEventCopyWith<$Res> {
   factory _$$getCustomerListImplCopyWith(_$getCustomerListImpl value,
           $Res Function(_$getCustomerListImpl) then) =
       __$$getCustomerListImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String ledgerId});
 }
 
 /// @nodoc
@@ -235,57 +276,84 @@ class __$$getCustomerListImplCopyWithImpl<$Res>
   __$$getCustomerListImplCopyWithImpl(
       _$getCustomerListImpl _value, $Res Function(_$getCustomerListImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ledgerId = null,
+  }) {
+    return _then(_$getCustomerListImpl(
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$getCustomerListImpl implements getCustomerList {
-  const _$getCustomerListImpl();
+  const _$getCustomerListImpl({required this.ledgerId});
+
+  @override
+  final String ledgerId;
 
   @override
   String toString() {
-    return 'CustomerEvent.getCustomerList()';
+    return 'CustomerEvent.getCustomerList(ledgerId: $ledgerId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$getCustomerListImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$getCustomerListImpl &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, ledgerId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$getCustomerListImplCopyWith<_$getCustomerListImpl> get copyWith =>
+      __$$getCustomerListImplCopyWithImpl<_$getCustomerListImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String contactId) addCustomers,
-    required TResult Function() getCustomerList,
-    required TResult Function(String contactId) deleteCustomers,
+    required TResult Function(String contactId, String ledgerId) addCustomers,
+    required TResult Function(String ledgerId) getCustomerList,
+    required TResult Function(String contactId, String ledgerId)
+        deleteCustomers,
   }) {
-    return getCustomerList();
+    return getCustomerList(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String contactId)? addCustomers,
-    TResult? Function()? getCustomerList,
-    TResult? Function(String contactId)? deleteCustomers,
+    TResult? Function(String contactId, String ledgerId)? addCustomers,
+    TResult? Function(String ledgerId)? getCustomerList,
+    TResult? Function(String contactId, String ledgerId)? deleteCustomers,
   }) {
-    return getCustomerList?.call();
+    return getCustomerList?.call(ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String contactId)? addCustomers,
-    TResult Function()? getCustomerList,
-    TResult Function(String contactId)? deleteCustomers,
+    TResult Function(String contactId, String ledgerId)? addCustomers,
+    TResult Function(String ledgerId)? getCustomerList,
+    TResult Function(String contactId, String ledgerId)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (getCustomerList != null) {
-      return getCustomerList();
+      return getCustomerList(ledgerId);
     }
     return orElse();
   }
@@ -326,16 +394,26 @@ class _$getCustomerListImpl implements getCustomerList {
 }
 
 abstract class getCustomerList implements CustomerEvent {
-  const factory getCustomerList() = _$getCustomerListImpl;
+  const factory getCustomerList({required final String ledgerId}) =
+      _$getCustomerListImpl;
+
+  @override
+  String get ledgerId;
+  @override
+  @JsonKey(ignore: true)
+  _$$getCustomerListImplCopyWith<_$getCustomerListImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$deleteCustomersImplCopyWith<$Res> {
+abstract class _$$deleteCustomersImplCopyWith<$Res>
+    implements $CustomerEventCopyWith<$Res> {
   factory _$$deleteCustomersImplCopyWith(_$deleteCustomersImpl value,
           $Res Function(_$deleteCustomersImpl) then) =
       __$$deleteCustomersImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({String contactId});
+  $Res call({String contactId, String ledgerId});
 }
 
 /// @nodoc
@@ -350,11 +428,16 @@ class __$$deleteCustomersImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? contactId = null,
+    Object? ledgerId = null,
   }) {
     return _then(_$deleteCustomersImpl(
       contactId: null == contactId
           ? _value.contactId
           : contactId // ignore: cast_nullable_to_non_nullable
+              as String,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -363,14 +446,17 @@ class __$$deleteCustomersImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$deleteCustomersImpl implements deleteCustomers {
-  const _$deleteCustomersImpl({required this.contactId});
+  const _$deleteCustomersImpl(
+      {required this.contactId, required this.ledgerId});
 
   @override
   final String contactId;
+  @override
+  final String ledgerId;
 
   @override
   String toString() {
-    return 'CustomerEvent.deleteCustomers(contactId: $contactId)';
+    return 'CustomerEvent.deleteCustomers(contactId: $contactId, ledgerId: $ledgerId)';
   }
 
   @override
@@ -379,11 +465,13 @@ class _$deleteCustomersImpl implements deleteCustomers {
         (other.runtimeType == runtimeType &&
             other is _$deleteCustomersImpl &&
             (identical(other.contactId, contactId) ||
-                other.contactId == contactId));
+                other.contactId == contactId) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, contactId);
+  int get hashCode => Object.hash(runtimeType, contactId, ledgerId);
 
   @JsonKey(ignore: true)
   @override
@@ -395,33 +483,34 @@ class _$deleteCustomersImpl implements deleteCustomers {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String contactId) addCustomers,
-    required TResult Function() getCustomerList,
-    required TResult Function(String contactId) deleteCustomers,
+    required TResult Function(String contactId, String ledgerId) addCustomers,
+    required TResult Function(String ledgerId) getCustomerList,
+    required TResult Function(String contactId, String ledgerId)
+        deleteCustomers,
   }) {
-    return deleteCustomers(contactId);
+    return deleteCustomers(contactId, ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String contactId)? addCustomers,
-    TResult? Function()? getCustomerList,
-    TResult? Function(String contactId)? deleteCustomers,
+    TResult? Function(String contactId, String ledgerId)? addCustomers,
+    TResult? Function(String ledgerId)? getCustomerList,
+    TResult? Function(String contactId, String ledgerId)? deleteCustomers,
   }) {
-    return deleteCustomers?.call(contactId);
+    return deleteCustomers?.call(contactId, ledgerId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String contactId)? addCustomers,
-    TResult Function()? getCustomerList,
-    TResult Function(String contactId)? deleteCustomers,
+    TResult Function(String contactId, String ledgerId)? addCustomers,
+    TResult Function(String ledgerId)? getCustomerList,
+    TResult Function(String contactId, String ledgerId)? deleteCustomers,
     required TResult orElse(),
   }) {
     if (deleteCustomers != null) {
-      return deleteCustomers(contactId);
+      return deleteCustomers(contactId, ledgerId);
     }
     return orElse();
   }
@@ -462,10 +551,14 @@ class _$deleteCustomersImpl implements deleteCustomers {
 }
 
 abstract class deleteCustomers implements CustomerEvent {
-  const factory deleteCustomers({required final String contactId}) =
-      _$deleteCustomersImpl;
+  const factory deleteCustomers(
+      {required final String contactId,
+      required final String ledgerId}) = _$deleteCustomersImpl;
 
   String get contactId;
+  @override
+  String get ledgerId;
+  @override
   @JsonKey(ignore: true)
   _$$deleteCustomersImplCopyWith<_$deleteCustomersImpl> get copyWith =>
       throw _privateConstructorUsedError;

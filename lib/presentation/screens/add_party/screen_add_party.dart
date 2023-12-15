@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
+import 'package:linq_pe/application/transactions/transactions_bloc.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 
 import 'package:linq_pe/presentation/screens/add_party/widgets/add_textfield.dart';
 import 'package:linq_pe/presentation/screens/view_party/screen_view_party.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/utilities/colors.dart';
 
 class AddPartyScreen extends ConsumerStatefulWidget {
@@ -82,6 +84,7 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
                 dynamic contacts;
                 if (widget.contact != null) {
                   contacts = ContactsDTO(
+                    ledgerId: widget.contact!.ledgerId,
                     contactId: widget.contact!.contactId,
                     displayName: nameController.text,
                     contactNumber: numberController.text,
@@ -99,6 +102,7 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
                 } else {
                   String time = DateTime.now().toIso8601String();
                   contacts = ContactsDTO(
+                    ledgerId: ref.watch(currentLedgerIdProvider),
                     contactId: '$time-${numberController.text}',
                     displayName: nameController.text,
                     contactNumber: numberController.text,
@@ -111,17 +115,21 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
 
                 if (widget.partyType == 'Customer') {
                   BlocProvider.of<CustomerBloc>(context).add(
-                      CustomerEvent.addCustomers(
+                      CustomerEvent.addCustomers(ledgerId: widget.contact!.ledgerId,
                           contactId: widget.contact!.contactId));
                 }
 
                 ref.read(fromContactIdProvider.notifier).state =
                     contacts.contactId;
-
+                BlocProvider.of<TransactionsBloc>(context).add(
+                    TransactionsEvent.getTransactionsList(
+                      ledgerId: contacts.ledgerId,
+                        contactId: contacts.contactId));
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => ViewPartyScreen(contact: contacts),
+                      builder: (context) =>
+                          ViewPartyScreen(contact: contacts, isExpense: false),
                     ));
               } else {}
             }

@@ -6,16 +6,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
+import 'package:linq_pe/application/rolling/rolling_bloc.dart';
 import 'package:linq_pe/application/seondary_party/secondary_party_bloc.dart';
 import 'package:linq_pe/application/split_amount/split_amount_bloc.dart';
+import 'package:linq_pe/application/splitted/splitted_bloc.dart';
 import 'package:linq_pe/application/transactions/transactions_bloc.dart';
+import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
+import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/drop_down_search_text_field.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/radio_box_widget.dart';
 import 'package:linq_pe/presentation/screens/add_party/widgets/add_textfield.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/view_state/secondary_party_riverpod/secondary_party.dart';
 import 'package:linq_pe/presentation/view_state/view_party_riverpod.dart/view_party.dart';
 import 'package:linq_pe/presentation/widgets/alert_snackbar.dart';
@@ -41,6 +47,7 @@ class AddAmountScreen extends StatefulWidget {
     this.isEdit = false,
     this.editTransaction = '',
     this.primaryContactId = '',
+    required this.ledgerId,
   });
   final bool isPay;
   final bool isAddBalance;
@@ -57,6 +64,7 @@ class AddAmountScreen extends StatefulWidget {
   final bool isEdit;
   final dynamic editTransaction;
   final String primaryContactId;
+  final String ledgerId;
 
   @override
   State<AddAmountScreen> createState() => _AddAmountScreenState();
@@ -71,7 +79,7 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
   @override
   void initState() {
     super.initState();
-        if (widget.isEdit) {
+    if (widget.isEdit) {
       amountController.text = widget.editTransaction.givenAmt.toString();
       if (widget.editTransaction.transactionDetails != null) {
         detailsController.text = widget.editTransaction.transactionDetails!;
@@ -79,12 +87,15 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
       if (widget.editTransaction.transactionId != null) {
         transactionIdController.text = widget.editTransaction.transactionId!;
       }
+    } else {
+      BlocProvider.of<SplittedBloc>(context).add(SplittedEvent.getSplittedList(
+        ledgerId: widget.ledgerId,
+      ));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: LinqPeColors.kLightBluwWhite,
@@ -180,138 +191,157 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(size.width * 0.01),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              AddTextField(
-                  textFieldType: TextFieldType.amount,
-                  prefix: Icon(
-                    Icons.currency_rupee,
-                    size: size.width * 0.08,
-                    color: LinqPeColors.kBlackColor.withOpacity(0.9),
-                  ),
-                  fontSize: size.width * 0.08,
-                  controller: amountController,
-                  isTextNumberType: true,
-                  text: 'Enter amount',
-                  fieldColor: LinqPeColors.kPinkColor),
-              widget.isAddExpense
-                  ? SizedBox(
-                      height: size.height * 0.03,
-                    )
-                  : const SizedBox(),
-              widget.isAddExpense
-                  ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                      child: const DropDownSearchTextField(
-                        isFromField: true,
-                        hintText: 'From who',
-                      ))
-                  : const SizedBox(),
-              SizedBox(
-                height: widget.isPay ||
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: widget.isAddExpense ? 0.0 : size.height * 0.02,
+                ),
+                widget.isAddExpense
+                    ? const ExpenseRollRadioBoxWidget()
+                    : const SizedBox(),
+
+                AddTextField(
+                    textFieldType: TextFieldType.amount,
+                    prefix: Icon(
+                      Icons.currency_rupee,
+                      size: size.width * 0.08,
+                      color: LinqPeColors.kBlackColor.withOpacity(0.9),
+                    ),
+                    fontSize: size.width * 0.08,
+                    controller: amountController,
+                    isTextNumberType: true,
+                    text: 'Enter amount',
+                    fieldColor: LinqPeColors.kPinkColor),
+                widget.isAddExpense
+                    ? SizedBox(
+                        height: size.height * 0.03,
+                      )
+                    : const SizedBox(),
+                widget.isAddExpense
+                    ? Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                        child: const DropDownSearchTextField(
+                          isFromField: true,
+                          hintText: 'From who',
+                        ))
+                    : const SizedBox(),
+                widget.isAddExpense
+                    ? SizedBox(
+                        height: size.height * 0.03,
+                      )
+                    : const SizedBox(),
+                widget.isAddExpense
+                    ? const SplitListBalanceWidget()
+                    : const SizedBox(),
+                // widget.isAddExpense
+                //     ? SizedBox(
+                //         height: size.height * 0.01,
+                //       )
+                //     : const SizedBox(),
+                SizedBox(
+                  height: widget.isPay ||
+                          widget.isSecondaryPay ||
+                          widget.isSplit ||
+                          widget.isAddExpense
+                      ? size.height * 0.03
+                      : 0,
+                ),
+                widget.isPay ||
                         widget.isSecondaryPay ||
                         widget.isSplit ||
                         widget.isAddExpense
-                    ? size.height * 0.03
-                    : 0,
-              ),
-              widget.isPay ||
-                      widget.isSecondaryPay ||
-                      widget.isSplit ||
-                      widget.isAddExpense
-                  ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                      child: const DropDownSearchTextField(
-                        isFromField: false,
-                        hintText: 'To whom',
-                      ))
-                  : const SizedBox(),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              AddTextField(
-                  textFieldType: TextFieldType.details,
-                  controller: detailsController,
-                  isTextNumberType: false,
-                  text: 'Enter details',
-                  fieldColor: LinqPeColors.kPinkColor),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              SizedBox(
-                height: size.height * 0.0001,
-              ),
-              AddTextField(
-                  textFieldType: TextFieldType.transactionId,
-                  controller: transactionIdController,
-                  isTextNumberType: true,
-                  text: 'Add transaction Id',
-                  fieldColor: LinqPeColors.kPinkColor),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: size.width * 0.05,
+                    ? Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                        child: const DropDownSearchTextField(
+                          isFromField: false,
+                          hintText: 'To whom',
+                        ))
+                    : const SizedBox(),
+                SizedBox(
+                  height: size.height * 0.03,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                      LinqPeList.transactionTypeList.length,
-                      (index) => RadioBoxWidget(
-                            transactionName:
-                                LinqPeList.transactionTypeList[index],
-                            transactionValue: transactionList(index),
-                          )),
+                AddTextField(
+                    textFieldType: TextFieldType.details,
+                    controller: detailsController,
+                    isTextNumberType: false,
+                    text: 'Enter details',
+                    fieldColor: LinqPeColors.kPinkColor),
+                SizedBox(
+                  height: size.height * 0.03,
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      showPopup(context, size);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: size.width * 0.04),
-                      width: size.width * 0.35,
-                      height: size.height * 0.05,
-                      decoration: BoxDecoration(
-                          color: LinqPeColors.kWhiteColor,
-                          boxShadow: [
-                            BoxShadow(
-                                color:
-                                    LinqPeColors.kBlackColor.withOpacity(0.5),
-                                spreadRadius: 0.01,
-                                offset: const Offset(0.3, 1))
-                          ]),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.date_range),
-                          TimeWidget(),
-                        ],
+                SizedBox(
+                  height: size.height * 0.0001,
+                ),
+                AddTextField(
+                    textFieldType: TextFieldType.transactionId,
+                    controller: transactionIdController,
+                    isTextNumberType: true,
+                    text: 'Add transaction Id',
+                    fieldColor: LinqPeColors.kPinkColor),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: size.width * 0.05,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                        LinqPeList.transactionTypeList.length,
+                        (index) => RadioBoxWidget(
+                              transactionName:
+                                  LinqPeList.transactionTypeList[index],
+                              transactionValue: transactionList(index),
+                            )),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.04,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        showPopup(context, size);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: size.width * 0.04),
+                        width: size.width * 0.35,
+                        height: size.height * 0.05,
+                        decoration: BoxDecoration(
+                            color: LinqPeColors.kWhiteColor,
+                            boxShadow: [
+                              BoxShadow(
+                                  color:
+                                      LinqPeColors.kBlackColor.withOpacity(0.5),
+                                  spreadRadius: 0.01,
+                                  offset: const Offset(0.3, 1))
+                            ]),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(Icons.date_range),
+                            TimeWidget(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  // SfDateRangePicker(
-                  //   onSubmit: (value) {
-                  //     log(value.toString());
-                  //   },
-                  // ),
-                  AttachBillRow(size: size),
-                ],
-              )
-            ],
+                    // SfDateRangePicker(
+                    //   onSubmit: (value) {
+                    //     log(value.toString());
+                    //   },
+                    // ),
+                    AttachBillRow(size: size),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -331,6 +361,87 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                 height: size.width * 0.8,
                 child: const DatePickerWidget()));
       },
+    );
+  }
+}
+
+class ExpenseRollRadioBoxWidget extends ConsumerWidget {
+  const ExpenseRollRadioBoxWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.all(size.width * 0.035),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            width: size.width * 0.4,
+            decoration: BoxDecoration(
+                color: ref.watch(expenseTypeProvider) == ExpenseType.roll
+                    ? LinqPeColors.kLightBluwWhite
+                    : LinqPeColors.kPinkColor,
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Pay',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: size.width * 0.05,
+                        color:
+                            ref.watch(expenseTypeProvider) == ExpenseType.roll
+                                ? LinqPeColors.kBlackColor
+                                : LinqPeColors.kWhiteColor)),
+                Radio(
+                    activeColor: LinqPeColors.kWhiteColor,
+                    groupValue: ref.watch(expenseTypeProvider),
+                    value: ExpenseType.pay,
+                    onChanged: (value) {
+                      if (value != null) {
+                        addExpenseType(value, ref);
+                      }
+                    })
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: size.width * 0.4,
+            decoration: BoxDecoration(
+                color: ref.watch(expenseTypeProvider) == ExpenseType.roll
+                    ? LinqPeColors.kPinkColor
+                    : LinqPeColors.kLightBluwWhite,
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Roll',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: size.width * 0.05,
+                        color:
+                            ref.watch(expenseTypeProvider) == ExpenseType.roll
+                                ? LinqPeColors.kWhiteColor
+                                : LinqPeColors.kBlackColor)),
+                Radio(
+                    activeColor: LinqPeColors.kWhiteColor,
+                    groupValue: ref.watch(expenseTypeProvider),
+                    value: ExpenseType.roll,
+                    onChanged: (value) {
+                      if (value != null) {
+                        addExpenseType(value, ref);
+                      }
+                    })
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -411,6 +522,8 @@ class AddButton extends ConsumerWidget {
                           } else {
                             BlocProvider.of<TransactionsBloc>(context).add(
                                 TransactionsEvent.addGetTransctions(
+                                    ledgerId:
+                                        ref.watch(currentLedgerIdProvider),
                                     transactionDetails: ref
                                             .watch(transactionDetailsProvider)
                                             .isEmpty
@@ -436,12 +549,15 @@ class AddButton extends ConsumerWidget {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () => BlocProvider.of<CustomerBloc>(context)
-                                  .add(const CustomerEvent.getCustomerList()),
+                                  .add(CustomerEvent.getCustomerList(
+                                ledgerId: ref.watch(currentLedgerIdProvider),
+                              )),
                             );
                           }
                         } else if (isAddBalance) {
                           BlocProvider.of<TransactionsBloc>(context).add(
                               TransactionsEvent.addBalanceTransctions(
+                                  ledgerId: ref.watch(currentLedgerIdProvider),
                                   transactionDetails: ref
                                           .watch(transactionDetailsProvider)
                                           .isEmpty
@@ -464,7 +580,9 @@ class AddButton extends ConsumerWidget {
                           Future.delayed(
                             const Duration(milliseconds: 100),
                             () => BlocProvider.of<CustomerBloc>(context)
-                                .add(const CustomerEvent.getCustomerList()),
+                                .add(CustomerEvent.getCustomerList(
+                              ledgerId: ref.watch(currentLedgerIdProvider),
+                            )),
                           );
                         } else if (isSecondaryPay) {
                           log(ref.watch(amountProvider).toString());
@@ -478,6 +596,7 @@ class AddButton extends ConsumerWidget {
                                 listOfTransaction = List.from(transactionList);
                             listOfTransaction
                                 .add(NestedSecondaryTransactionsDTO(
+                              isExpense: false,
                               isGet: false,
                               isGive: false,
                               isAddBalance: true,
@@ -516,6 +635,8 @@ class AddButton extends ConsumerWidget {
                                     element.id == transactionRealId);
                             if (splitIndex >= 0) {
                               listOfSplitTransaction[splitIndex] = NestedSecondaryTransactionsDTO(
+                                  isExpense: listOfSplitTransaction[splitIndex]
+                                      .isExpense,
                                   isAddBalance: listOfSplitTransaction[splitIndex]
                                       .isAddBalance,
                                   isGet:
@@ -544,10 +665,9 @@ class AddButton extends ConsumerWidget {
                                       .fromContactId,
                                   billImage: listOfSplitTransaction[splitIndex]
                                       .billImage,
-                                  transactionDetails: listOfSplitTransaction[splitIndex]
-                                      .transactionDetails,
-                                  transactionId:
-                                      listOfSplitTransaction[splitIndex].transactionId,
+                                  transactionDetails:
+                                      listOfSplitTransaction[splitIndex].transactionDetails,
+                                  transactionId: listOfSplitTransaction[splitIndex].transactionId,
                                   secondaryList: listOfTransaction);
                             }
                             BlocProvider.of<SplitAmountBloc>(context).add(
@@ -585,6 +705,8 @@ class AddButton extends ConsumerWidget {
                             //     ref);
                             BlocProvider.of<TransactionsBloc>(context).add(
                                 TransactionsEvent.addSecondaryPartyPayment(
+                                    ledgerId:
+                                        ref.watch(currentLedgerIdProvider),
                                     isSplittedPrimaryTransaction: true,
                                     splittedTransactionId:
                                         splittedTransactionId,
@@ -615,7 +737,9 @@ class AddButton extends ConsumerWidget {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () => BlocProvider.of<CustomerBloc>(context)
-                                  .add(const CustomerEvent.getCustomerList()),
+                                  .add(CustomerEvent.getCustomerList(
+                                ledgerId: ref.watch(currentLedgerIdProvider),
+                              )),
                             );
                           } else {
                             isToGoBack = false;
@@ -634,6 +758,7 @@ class AddButton extends ConsumerWidget {
                                 listOfTransaction = List.from(splitList);
                             listOfTransaction
                                 .add(NestedSecondaryTransactionsDTO(
+                              isExpense: false,
                               isAddBalance: false,
                               isGet: false,
                               isGive: false,
@@ -667,6 +792,7 @@ class AddButton extends ConsumerWidget {
 
                             BlocProvider.of<TransactionsBloc>(context)
                                 .add(TransactionsEvent.splitAmounts(
+                              ledgerId: ref.watch(currentLedgerIdProvider),
                               id: id,
                               primaryContactId:
                                   ref.watch(fromContactIdProvider),
@@ -697,6 +823,7 @@ class AddButton extends ConsumerWidget {
                         } else if (isGive) {
                           BlocProvider.of<TransactionsBloc>(context).add(
                               TransactionsEvent.addGiveTransactions(
+                                  ledgerId: ref.watch(currentLedgerIdProvider),
                                   transactionDetails: ref
                                           .watch(transactionDetailsProvider)
                                           .isEmpty
@@ -719,52 +846,132 @@ class AddButton extends ConsumerWidget {
                           Future.delayed(
                             const Duration(milliseconds: 100),
                             () => BlocProvider.of<CustomerBloc>(context)
-                                .add(const CustomerEvent.getCustomerList()),
+                                .add(CustomerEvent.getCustomerList(
+                              ledgerId: ref.watch(currentLedgerIdProvider),
+                            )),
                           );
-                        } else if (isAddExpense) {
+                        } else if (isAddExpense &&
+                            ref.watch(expenseTypeProvider) == ExpenseType.pay) {
+                          log('K');
                           log('AddEx${ref.watch(primaryPartyBalanceAmountProvider)}');
-                          if (ref.watch(primaryPartyBalanceAmountProvider) <
-                              ref.watch(amountProvider)) {
-                            isToGoBack = false;
-                            //Give a toast that you dont have enough Balance
-                            alertSnackbar(
-                                context, 'You dont have enough Balance');
+
+                          if (ref.watch(fromContactIdProvider) ==
+                              ref.watch(splittedAccountBalanceProvider)) {
+                            log('Yes');
+
+                            if (ref.watch(primaryPartyBalanceAmountProvider) <
+                                ref.watch(amountProvider)) {
+                              isToGoBack = false;
+                              //Give a toast that you dont have enough Balance
+                              alertSnackbar(
+                                  context, 'You dont have enough Balance');
+                            } else {
+                              BlocProvider.of<TransactionsBloc>(context).add(
+                                  TransactionsEvent.addGetTransctions(
+                                      ledgerId:
+                                          ref.watch(currentLedgerIdProvider),
+                                      transactionDetails: ref
+                                              .watch(transactionDetailsProvider)
+                                              .isEmpty
+                                          ? null
+                                          : ref.watch(
+                                              transactionDetailsProvider),
+                                      fromContactId:
+                                          ref.watch(fromContactIdProvider),
+                                      toContactId:
+                                          ref.watch(toContactIdProvider),
+                                      amount: ref.watch(amountProvider),
+                                      isPayed: true,
+                                      transactionType:
+                                          ref.watch(transactionTypeProvider),
+                                      timeOfTrans: ref.watch(dateProvider),
+                                      billImage:
+                                          ref.watch(imageProvider).path.isEmpty
+                                              ? null
+                                              : ref.watch(imageProvider),
+                                      transactionId: ref
+                                              .watch(transactionIdProvider)
+                                              .isEmpty
+                                          ? null
+                                          : ref.watch(transactionIdProvider)));
+                              Future.delayed(
+                                const Duration(milliseconds: 100),
+                                () => BlocProvider.of<CustomerBloc>(context)
+                                    .add(CustomerEvent.getCustomerList(
+                                  ledgerId: ref.watch(currentLedgerIdProvider),
+                                )),
+                              );
+                            }
                           } else {
-                            BlocProvider.of<TransactionsBloc>(context).add(
-                                TransactionsEvent.addGetTransctions(
-                                    transactionDetails: ref
-                                            .watch(transactionDetailsProvider)
-                                            .isEmpty
-                                        ? null
-                                        : ref.watch(transactionDetailsProvider),
-                                    fromContactId:
-                                        ref.watch(fromContactIdProvider),
-                                    toContactId: ref.watch(toContactIdProvider),
-                                    amount: ref.watch(amountProvider),
-                                    isPayed: true,
-                                    transactionType:
-                                        ref.watch(transactionTypeProvider),
-                                    timeOfTrans: ref.watch(dateProvider),
-                                    billImage:
-                                        ref.watch(imageProvider).path.isEmpty
-                                            ? null
-                                            : ref.watch(imageProvider),
-                                    transactionId: ref
-                                            .watch(transactionIdProvider)
-                                            .isEmpty
-                                        ? null
-                                        : ref.watch(transactionIdProvider)));
+                            log('YesNo');
+
+                            BlocProvider.of<TransactionsBloc>(context)
+                                .add(TransactionsEvent.splittingPayment(
+                              ledgerId: ref.watch(currentLedgerIdProvider),
+                              fromContactId: ref.watch(fromContactIdProvider),
+                              toContactId: ref.watch(toContactIdProvider),
+                              amount: ref.watch(amountProvider),
+                              primaryContactId:
+                                  ref.watch(splittedAccountBalanceProvider),
+                              transactionType:
+                                  ref.watch(transactionTypeProvider),
+                              timeOfTrans: ref.watch(dateProvider),
+                              billImage: ref.watch(imageProvider).path.isEmpty
+                                  ? null
+                                  : ref.watch(imageProvider),
+                              transactionId:
+                                  ref.watch(transactionIdProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionIdProvider),
+                              transactionDetails:
+                                  ref.watch(transactionDetailsProvider).isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                            ));
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () => BlocProvider.of<CustomerBloc>(context)
-                                  .add(const CustomerEvent.getCustomerList()),
+                                  .add(CustomerEvent.getCustomerList(
+                                ledgerId: ref.watch(currentLedgerIdProvider),
+                              )),
                             );
                           }
+                        } else if (isAddExpense &&
+                            ref.watch(expenseTypeProvider) ==
+                                ExpenseType.roll) {
+                          BlocProvider.of<RollingBloc>(context).add(
+                              RollingEvent.addRollingTransactions(
+                                  rollingAccountId:
+                                      ref.watch(toContactIdProvider),
+                                  splittingAccountId:
+                                      ref.watch(fromContactIdProvider),
+                                  splittingPrimaryAccountId:
+                                      ref.watch(splittedAccountBalanceProvider),
+                                  amountRolled: ref.watch(amountProvider),
+                                  transactionType:
+                                      ref.watch(transactionTypeProvider),
+                                  timeOfTrans: ref.watch(dateProvider),
+                                  billImage:
+                                      ref.watch(imageProvider).path.isEmpty
+                                          ? null
+                                          : ref.watch(imageProvider),
+                                  userTransactionId:
+                                      ref.watch(transactionIdProvider).isEmpty
+                                          ? null
+                                          : ref.watch(transactionIdProvider),
+                                  transactionDetails: ref
+                                          .watch(transactionDetailsProvider)
+                                          .isEmpty
+                                      ? null
+                                      : ref.watch(transactionDetailsProvider),
+                                  ledgerId:
+                                      ref.watch(currentLedgerIdProvider)));
                         } else if (isSplittingBalance) {
                           if (double.parse(splitAmount) >=
                               ref.watch(amountProvider)) {
                             BlocProvider.of<TransactionsBloc>(context)
                                 .add(TransactionsEvent.splittingBalanceAmount(
+                              ledgerId: ref.watch(currentLedgerIdProvider),
                               primaryContactId:
                                   ref.watch(fromContactIdProvider),
                               toContactId: ref.watch(toContactIdProvider),
@@ -787,7 +994,9 @@ class AddButton extends ConsumerWidget {
                             Future.delayed(
                               const Duration(milliseconds: 100),
                               () => BlocProvider.of<CustomerBloc>(context)
-                                  .add(const CustomerEvent.getCustomerList()),
+                                  .add(CustomerEvent.getCustomerList(
+                                ledgerId: ref.watch(currentLedgerIdProvider),
+                              )),
                             );
                           } else {
                             isToGoBack = false;
@@ -799,6 +1008,7 @@ class AddButton extends ConsumerWidget {
                       } else {
                         BlocProvider.of<TransactionsBloc>(context).add(
                             TransactionsEvent.editTransactions(
+                                ledgerId: ref.watch(currentLedgerIdProvider),
                                 amount: ref.watch(amountProvider),
                                 transactionRealId: transactionRealId,
                                 toId: ref.watch(toContactIdProvider),
@@ -818,11 +1028,13 @@ class AddButton extends ConsumerWidget {
                                         ? null
                                         : ref.watch(transactionIdProvider),
                                 primaryContactId: primaryContactId));
-                                  Future.delayed(
-                              const Duration(milliseconds: 100),
-                              () => BlocProvider.of<CustomerBloc>(context)
-                                  .add(const CustomerEvent.getCustomerList()),
-                            );
+                        Future.delayed(
+                          const Duration(milliseconds: 100),
+                          () => BlocProvider.of<CustomerBloc>(context)
+                              .add(CustomerEvent.getCustomerList(
+                            ledgerId: ref.watch(currentLedgerIdProvider),
+                          )),
+                        );
                         Navigator.pop(context);
                       }
                     }
@@ -938,6 +1150,194 @@ class TimeWidget extends ConsumerWidget {
     return Text(
       '${dateTime.day} ${LinqPeList.monthNames[dateTime.month - 1]} ${dateTime.year}',
       style: const TextStyle(fontWeight: FontWeight.w500),
+    );
+  }
+}
+
+class SplitListBalanceWidget extends ConsumerWidget {
+  const SplitListBalanceWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Size size = MediaQuery.of(context).size;
+    final fromId = ref.watch(fromContactIdProvider);
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  // if (ref.watch(expenseTypeProvider) ==
+  //                                     ExpenseType.roll) {
+  //                               addsplitttedAccountBalance(,ref);
+  //                             }
+
+  //   });
+
+    return BlocBuilder<SplittedBloc, SplittedState>(
+      builder: (context, state) {
+        List<SplittedAccountsModelDTO> splittedAccountsList = [];
+        List<SplittedAccountsModelDTO> splitList = [];
+
+        if (state is displaySplittedAccounts) {
+          splittedAccountsList = state.splittedAccountList;
+
+          if (fromId.isNotEmpty) {
+            splitList = splittedAccountsList
+                .where((element) => element.splittedAccountContactId == fromId)
+                .toList();
+          }
+        }
+
+        // if (splitList.isEmpty) {
+        //   return const SizedBox();
+        // }
+        return BlocBuilder<ContactsBloc, ContactsState>(
+          builder: (context, contactstate) {
+            List<ContactsDTO> contactList = [];
+            if (contactstate is displayContacts) {
+              contactList = contactstate.contactList;
+            }
+            //come here...
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+              child: Material(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                color: LinqPeColors.kWhiteColor,
+                shadowColor: LinqPeColors.kBlackColor,
+                elevation: 2,
+                child: Padding(
+                  padding: EdgeInsets.all(size.width * 0.02),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.4,
+                            child: Text(
+                              'From',
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  letterSpacing: .1,
+                                  fontSize: size.width * 0.04,
+                                  color: LinqPeColors.kGreyColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.3,
+                            child: Text(
+                              'Balance',
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  letterSpacing: .1,
+                                  fontSize: size.width * 0.04,
+                                  color: LinqPeColors.kGreyColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      ref.watch(expenseTypeProvider) == ExpenseType.roll
+                          ? const SizedBox()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.4,
+                                  child: Text(
+                                    'Primary Balance',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        letterSpacing: .1,
+                                        fontSize: size.width * 0.04,
+                                        color: LinqPeColors.kBlackColor,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                splitList.isEmpty
+                                    ? SizedBox(
+                                        width: size.width * 0.3,
+                                        child: Text(
+                                          ref
+                                              .watch(
+                                                  primaryPartyBalanceAmountProvider)
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: size.width * 0.05,
+                                              color: LinqPeColors.kBlackColor),
+                                        ),
+                                      )
+                                    : RadioBoxWidget(
+                                        transactionName: ref
+                                            .watch(
+                                                primaryPartyBalanceAmountProvider)
+                                            .toString(),
+                                        splittedAccountId: fromId,
+                                        isSplittedbalanceRadio: true,
+                                      )
+                              ],
+                            ),
+                      Column(
+                          children: List.generate(
+                              splitList.length,
+                              (index) => Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SizedBox(
+                                        width: size.width * 0.4,
+                                        child: Text(
+                                          contactList
+                                              .where((element) =>
+                                                  element.contactId ==
+                                                  splitList[index]
+                                                      .primaryAccountContactId)
+                                              .first
+                                              .displayName,
+                                          style: GoogleFonts.poppins(
+                                            textStyle: TextStyle(
+                                              letterSpacing: .1,
+                                              fontSize: size.width * 0.04,
+                                              color: LinqPeColors.kBlackColor,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      RadioBoxWidget(
+                                        transactionName: splitList[index]
+                                            .balanceAmt
+                                            .toString(),
+                                        splittedAccountId: splitList[index]
+                                            .primaryAccountContactId,
+                                        isSplittedbalanceRadio: true,
+                                      )
+                                      // Text(
+                                      //   splitList[index].balanceAmt.toString(),
+                                      //   style: GoogleFonts.roboto(
+                                      //     textStyle: TextStyle(
+                                      //       letterSpacing: .1,
+                                      //       fontSize: size.width * 0.04,
+                                      //       color: LinqPeColors.kBlackColor,
+                                      //       fontWeight: FontWeight.w500,
+                                      //     ),
+                                      //   ),
+                                      // )
+                                    ],
+                                  ))),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

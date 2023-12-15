@@ -16,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
             pinned: true,
             floating: true,
             delegate: SilverCommonAppbar(
+              titleSpacing: size.width * 0.15,
                 screenSize: size,
                 title: 'Settings',
                 onLeadingArrowPressed: () {

@@ -1,7 +1,18 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
+
+enum ExpenseType{pay,roll}
+final expenseTypeProvider=StateProvider(
+  (ref) {
+    return ExpenseType.pay;
+  },
+);
+addExpenseType(ExpenseType expenseType, WidgetRef ref) {
+    ref.read(expenseTypeProvider.notifier).state = expenseType;
+}
 
 final dateProvider = StateProvider(
   (ref) {
@@ -29,6 +40,7 @@ final fromContactIdProvider = StateProvider(
 );
 
 addfromContactId(String id, WidgetRef ref) {
+
   ref.read(fromContactIdProvider.notifier).state = id;
 }
 
@@ -41,6 +53,17 @@ final toContactIdProvider = StateProvider(
 addToContactId(String id, WidgetRef ref) {
   ref.read(toContactIdProvider.notifier).state = id;
 }
+
+final splittedAccountBalanceProvider = StateProvider(
+  (ref) {
+    return ref.read(fromContactIdProvider);
+  },
+);
+
+addsplitttedAccountBalance(String id, WidgetRef ref) {
+  ref.read(splittedAccountBalanceProvider.notifier).state = id;
+}
+
 
 final transactionTypeProvider = StateProvider(
   (ref) {
@@ -85,8 +108,8 @@ addTransactionId(String id, WidgetRef ref) {
 initialize(WidgetRef ref) {
   addTime(DateTime.now(), ref);
   addImage(File(''), ref);
-  
-  addToContactId('You', ref);
+
+  addToContactId('', ref);
   addTransactionType(TransactionTypes.cash, ref);
   addTransactionDetails('', ref);
   addAmount(-1.0, ref);

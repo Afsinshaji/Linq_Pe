@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 import 'package:linq_pe/presentation/screens/home/screen_home.dart';
+import 'package:linq_pe/presentation/screens/ledger/screen_ledger.dart';
 import 'package:linq_pe/utilities/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -30,10 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
-      if (permissionStatus == PermissionStatus.granted) {
-        BlocProvider.of<ContactsBloc>(context)
-            .add(const ContactsEvent.addContactsList());
-      }
+      if (permissionStatus == PermissionStatus.granted) {}
       return permissionStatus;
     } else {
       return permission;
@@ -59,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await askPermissions().then((value) => Navigator.pushReplacement(
             context,
             CupertinoPageRoute(
-              builder: (context) => const HomeScreen(),
+              builder: (context) => const LedgerScreen(),
             )));
       },
     );

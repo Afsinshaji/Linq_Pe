@@ -18,15 +18,18 @@ class CustomerModelAdapter extends TypeAdapter<CustomerModel> {
     };
     return CustomerModel(
       contactId: fields[0] as String,
+      ledgerId: fields[1] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CustomerModel obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.contactId);
+      ..write(obj.contactId)
+      ..writeByte(1)
+      ..write(obj.ledgerId);
   }
 
   @override

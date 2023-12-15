@@ -16,8 +16,12 @@ class PartyAccountsModel {
   final double balanceAmt;
   @HiveField(4)
   final List<TransactionModel>? transactionList;
+    @HiveField(5)
+  final String ledgerId;
+
 
   PartyAccountsModel({
+required  this.ledgerId,
     required this.contactId,
     required this.recievedAmt,
     required this.payedAmt,

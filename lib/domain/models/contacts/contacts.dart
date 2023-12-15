@@ -24,7 +24,13 @@ class ContactsModel {
   final double? receivedAmount;
   @HiveField(8)
   final DateTime? lastTimeOfTransfer;
+  @HiveField(9)
+  final double? nonSplittedBalance;
+  @HiveField(10)
+  final String ledgerId;
   ContactsModel({
+  
+    this.nonSplittedBalance,
     this.lastTimeOfTransfer,
     required this.contactId,
     required this.displayName,
@@ -34,6 +40,7 @@ class ContactsModel {
     this.receivedAmount,
     this.avatar,
     required this.initails,
+      required this. ledgerId,
   });
 }
 

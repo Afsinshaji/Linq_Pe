@@ -125,3 +125,33 @@ final secondaryContactIdProvider = StateProvider(
 addsecondaryContactId(String id, WidgetRef ref) {
   ref.read(secondaryContactIdProvider.notifier).state = id;
 }
+
+
+final repaySplittedContactIdProvider = StateProvider(
+  (ref) {
+    return '';
+  },
+);
+
+addRepaySplittedContactId(String id, WidgetRef ref) {
+  ref.read(repaySplittedContactIdProvider.notifier).state = id;
+}
+
+final repayPrimaryContactIdProvider = StateProvider(
+  (ref) {
+    return '';
+  },
+);
+
+addRepayPrimaryContactId(String id, WidgetRef ref) {
+  ref.read(repayPrimaryContactIdProvider.notifier).state = id;
+}
+final repayTotalAmountProvider = StateProvider(
+  (ref) {
+    return 0.0;
+  },
+);
+
+addrepayTotalAmount(double amount, WidgetRef ref) {
+  ref.read(repayTotalAmountProvider.notifier).state = amount;
+}

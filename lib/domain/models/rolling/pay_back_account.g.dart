@@ -17,6 +17,7 @@ class PayBackAccountModelAdapter extends TypeAdapter<PayBackAccountModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PayBackAccountModel(
+      payBackAmount: fields[2] as double,
       splittingAccountId: fields[0] as String,
       splittedPrimaryAccountId: fields[1] as String,
     );
@@ -25,11 +26,13 @@ class PayBackAccountModelAdapter extends TypeAdapter<PayBackAccountModel> {
   @override
   void write(BinaryWriter writer, PayBackAccountModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.splittingAccountId)
       ..writeByte(1)
-      ..write(obj.splittedPrimaryAccountId);
+      ..write(obj.splittedPrimaryAccountId)
+      ..writeByte(2)
+      ..write(obj.payBackAmount);
   }
 
   @override

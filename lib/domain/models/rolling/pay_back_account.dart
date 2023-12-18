@@ -10,7 +10,11 @@ class PayBackAccountModel {
   @HiveField(1)
   final String splittedPrimaryAccountId;
 
+  @HiveField(2)
+  final double payBackAmount;
+
   PayBackAccountModel({
+    required this.payBackAmount,
     required this.splittingAccountId,
     required this.splittedPrimaryAccountId,
   });

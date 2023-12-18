@@ -9,6 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
+import 'package:linq_pe/application/rolling/rolling_bloc.dart';
+import 'package:linq_pe/application/view_dto/rolling/rolling.dart';
+import 'package:linq_pe/presentation/screens/view_rolling/screen_view_rolling.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
@@ -20,7 +23,7 @@ import 'package:linq_pe/utilities/colors.dart';
 import 'package:motion/motion.dart';
 
 class RolledTabView extends StatefulWidget {
-  const RolledTabView({super.key,required this.ledgerId});
+  const RolledTabView({super.key, required this.ledgerId});
   final String ledgerId;
 
   @override
@@ -28,14 +31,14 @@ class RolledTabView extends StatefulWidget {
 }
 
 class _RolledTabViewState extends State<RolledTabView> {
-  List<ContactsDTO> partyList = [];
+  List<ContactsDTO> contactList = [];
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ContactsBloc>(context)
-        .add( ContactsEvent.getContacts(ledgerId: widget.ledgerId));
-    BlocProvider.of<CustomerBloc>(context)
-        .add( CustomerEvent.getCustomerList(ledgerId: widget.ledgerId));
+        .add(ContactsEvent.getContacts(ledgerId: widget.ledgerId));
+    BlocProvider.of<RollingBloc>(context)
+        .add(RollingEvent.gettingRollingAccountList(ledgerId: widget.ledgerId));
   }
 
   @override
@@ -77,10 +80,10 @@ class _RolledTabViewState extends State<RolledTabView> {
         ),
       ),
       backgroundColor: LinqPeColors.kPinkColor,
-      body: BlocBuilder<CustomerBloc, CustomerState>(
+      body: BlocBuilder<ContactsBloc, ContactsState>(
         builder: (context, state) {
-          if (state is displayCustomerList) {
-            partyList = state.customers;
+          if (state is displayContacts) {
+            contactList = state.contactList;
           }
 
           return Container(
@@ -112,7 +115,7 @@ class _RolledTabViewState extends State<RolledTabView> {
                           AmountNotifier(
                               iconColor: LinqPeColors.kBlueColor,
                               textSign: 'Your balance',
-                              amount: getTotalBalance(partyList)),
+                              amount: getTotalBalance(contactList)),
                           Container(
                             width: size.width * 0.001,
                             height: size.width * 0.15,
@@ -121,7 +124,7 @@ class _RolledTabViewState extends State<RolledTabView> {
                           AmountNotifier(
                               iconColor: LinqPeColors.kredColor,
                               textSign: 'You payed',
-                              amount: getTotalPayment(partyList))
+                              amount: getTotalPayment(contactList))
                         ],
                       ),
                     ),
@@ -131,7 +134,7 @@ class _RolledTabViewState extends State<RolledTabView> {
                   height: size.height * 0.01,
                 ),
                 SearchRow(size: size, color: LinqPeColors.kPinkColor),
-                partyList.isEmpty
+                contactList.isEmpty
                     ? Center(
                         child: Padding(
                           padding: EdgeInsets.only(top: size.height * 0.05),
@@ -140,8 +143,8 @@ class _RolledTabViewState extends State<RolledTabView> {
                         ),
                       )
                     : Expanded(
-                        child:
-                            HomePartyList(listOfParties: partyList, size: size),
+                        child: HomePartyList(
+                            listOfParties: contactList, size: size),
                       )
               ],
             ),
@@ -184,53 +187,68 @@ class HomePartyList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<RollingAccountsDTO> rollingAccountList = [];
     String search = ref.watch(homeSearchProvider);
-    List<ContactsDTO> partyList = listOfParties;
-    if (search.isNotEmpty) {
-      partyList = listOfParties
-          .where((element) => element.displayName
-              .toLowerCase()
-              .contains(search.toLowerCase().trim()))
-          .toList();
-    }
-    //sort according to time and reverse it
-    final List<ContactsDTO> sortingPartyList = List.from(partyList);
-    sortingPartyList.sort(
-        (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
-    partyList = sortingPartyList.reversed.toList();
-    return ListView.separated(
-      // shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return EachListTile(
-          ledgerId: partyList[index].ledgerId,
-          contactId: partyList[index].contactId,
-          lastTimeofTransaction: partyList[index].lastTimeOfTransaction,
-          avatar: partyList[index].avatar,
-          onTap: () {
-            contactSearch('', ref);
-            ref.read(fromContactIdProvider.notifier).state =
-                partyList[index].contactId;
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => ViewPartyScreen(
-                      contact: partyList[index], isExpense: false),
-                ));
+    List<ContactsDTO> partyList = [];
+    // if (search.isNotEmpty) {
+    //   partyList = listOfParties
+    //       .where((element) => element.displayName
+    //           .toLowerCase()
+    //           .contains(search.toLowerCase().trim()))
+    //       .toList();
+    // }
+    // //sort according to time and reverse it
+    // final List<ContactsDTO> sortingPartyList = List.from(partyList);
+    // sortingPartyList.sort(
+    //     (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
+    // partyList = sortingPartyList.reversed.toList();
+
+    return BlocBuilder<RollingBloc, RollingState>(
+      builder: (context, state) {
+        if (state is displayRollingAccounts) {
+          rollingAccountList = state.rollingAccountList;
+        }
+        for (var rolling in rollingAccountList) {
+          final partyIndex = listOfParties.indexWhere((element) =>
+              element.contactId == rolling.rollingAccountContactId);
+          if (partyIndex >= 0) {
+            partyList.add(listOfParties[partyIndex]);
+          }
+        }
+        return ListView.separated(
+          // shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return EachListTile(
+              ledgerId: partyList[index].ledgerId,
+              contactId: partyList[index].contactId,
+              lastTimeofTransaction: partyList[index].lastTimeOfTransaction,
+              avatar: partyList[index].avatar,
+              onTap: () {
+                // contactSearch('', ref);
+                // ref.read(fromContactIdProvider.notifier).state =
+                //     partyList[index].contactId;
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ViewRollingScreen(
+contact: partyList[index],rollingAccount: rollingAccountList[index] ,
+                         ),
+                    ));
+              },
+              size: size,
+              amount: rollingAccountList[index].balanceToPayAmt.toString(),
+              initials: partyList[index].initails,
+              name: partyList[index].displayName,
+            );
           },
-          size: size,
-          amount: partyList[index].blanceAmount != null
-              ? partyList[index].blanceAmount.toString()
-              : '0',
-          initials: partyList[index].initails,
-          name: partyList[index].displayName,
+          itemCount: rollingAccountList.length,
+          separatorBuilder: (context, index) => Divider(
+            color: LinqPeColors.kBlackColor,
+            height: size.height * 0.001,
+            thickness: size.height * 0.0001,
+          ),
         );
       },
-      itemCount: partyList.length,
-      separatorBuilder: (context, index) => Divider(
-        color: LinqPeColors.kBlackColor,
-        height: size.height * 0.001,
-        thickness: size.height * 0.0001,
-      ),
     );
   }
 }
@@ -403,7 +421,7 @@ class EachListTile extends StatelessWidget {
             ),
           ),
           Text(
-            'balance',
+            'balance to repay',
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 letterSpacing: .5,

@@ -32,5 +32,17 @@ class RollingBloc extends Bloc<RollingEvent, RollingState> {
 
       emit(displayRollingAccounts(rollingAccountList: rollingDTOList));
     });
+
+    on<rollingRepayments>((event, emit) async {
+      await RollingImplementation.instance.rollingRepayment(
+          rollingAccountId: event.rollingAccountId,
+          splittingAccountId: event.splittingAccountId,
+          splittingPrimaryAccountId: event.splittingPrimaryAccountId,
+          amountRepaying: event.amountRepaying,
+          transactionType: findTransactionType(event.transactionType),
+          timeOfTrans: event.timeOfTrans,
+          ledgerId: event.ledgerId);
+      add(RollingEvent.gettingRollingAccountList(ledgerId: event.ledgerId));
+    });
   }
 }

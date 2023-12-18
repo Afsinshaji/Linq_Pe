@@ -32,6 +32,18 @@ mixin _$RollingEvent {
             String ledgerId)
         addRollingTransactions,
     required TResult Function(String ledgerId) gettingRollingAccountList,
+    required TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)
+        rollingRepayments,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -49,6 +61,18 @@ mixin _$RollingEvent {
             String ledgerId)?
         addRollingTransactions,
     TResult? Function(String ledgerId)? gettingRollingAccountList,
+    TResult? Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -66,6 +90,18 @@ mixin _$RollingEvent {
             String ledgerId)?
         addRollingTransactions,
     TResult Function(String ledgerId)? gettingRollingAccountList,
+    TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -75,6 +111,7 @@ mixin _$RollingEvent {
         addRollingTransactions,
     required TResult Function(gettingRollingAccountList value)
         gettingRollingAccountList,
+    required TResult Function(rollingRepayments value) rollingRepayments,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -82,6 +119,7 @@ mixin _$RollingEvent {
     TResult? Function(addRollingTransactions value)? addRollingTransactions,
     TResult? Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult? Function(rollingRepayments value)? rollingRepayments,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -89,6 +127,7 @@ mixin _$RollingEvent {
     TResult Function(addRollingTransactions value)? addRollingTransactions,
     TResult Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult Function(rollingRepayments value)? rollingRepayments,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -327,6 +366,18 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
             String ledgerId)
         addRollingTransactions,
     required TResult Function(String ledgerId) gettingRollingAccountList,
+    required TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)
+        rollingRepayments,
   }) {
     return addRollingTransactions(
         rollingAccountId,
@@ -357,6 +408,18 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
             String ledgerId)?
         addRollingTransactions,
     TResult? Function(String ledgerId)? gettingRollingAccountList,
+    TResult? Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
   }) {
     return addRollingTransactions?.call(
         rollingAccountId,
@@ -387,6 +450,18 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
             String ledgerId)?
         addRollingTransactions,
     TResult Function(String ledgerId)? gettingRollingAccountList,
+    TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
     required TResult orElse(),
   }) {
     if (addRollingTransactions != null) {
@@ -412,6 +487,7 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
         addRollingTransactions,
     required TResult Function(gettingRollingAccountList value)
         gettingRollingAccountList,
+    required TResult Function(rollingRepayments value) rollingRepayments,
   }) {
     return addRollingTransactions(this);
   }
@@ -422,6 +498,7 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
     TResult? Function(addRollingTransactions value)? addRollingTransactions,
     TResult? Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult? Function(rollingRepayments value)? rollingRepayments,
   }) {
     return addRollingTransactions?.call(this);
   }
@@ -432,6 +509,7 @@ class _$addRollingTransactionsImpl implements addRollingTransactions {
     TResult Function(addRollingTransactions value)? addRollingTransactions,
     TResult Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult Function(rollingRepayments value)? rollingRepayments,
     required TResult orElse(),
   }) {
     if (addRollingTransactions != null) {
@@ -554,6 +632,18 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
             String ledgerId)
         addRollingTransactions,
     required TResult Function(String ledgerId) gettingRollingAccountList,
+    required TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)
+        rollingRepayments,
   }) {
     return gettingRollingAccountList(ledgerId);
   }
@@ -574,6 +664,18 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
             String ledgerId)?
         addRollingTransactions,
     TResult? Function(String ledgerId)? gettingRollingAccountList,
+    TResult? Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
   }) {
     return gettingRollingAccountList?.call(ledgerId);
   }
@@ -594,6 +696,18 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
             String ledgerId)?
         addRollingTransactions,
     TResult Function(String ledgerId)? gettingRollingAccountList,
+    TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
     required TResult orElse(),
   }) {
     if (gettingRollingAccountList != null) {
@@ -609,6 +723,7 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
         addRollingTransactions,
     required TResult Function(gettingRollingAccountList value)
         gettingRollingAccountList,
+    required TResult Function(rollingRepayments value) rollingRepayments,
   }) {
     return gettingRollingAccountList(this);
   }
@@ -619,6 +734,7 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
     TResult? Function(addRollingTransactions value)? addRollingTransactions,
     TResult? Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult? Function(rollingRepayments value)? rollingRepayments,
   }) {
     return gettingRollingAccountList?.call(this);
   }
@@ -629,6 +745,7 @@ class _$gettingRollingAccountListImpl implements gettingRollingAccountList {
     TResult Function(addRollingTransactions value)? addRollingTransactions,
     TResult Function(gettingRollingAccountList value)?
         gettingRollingAccountList,
+    TResult Function(rollingRepayments value)? rollingRepayments,
     required TResult orElse(),
   }) {
     if (gettingRollingAccountList != null) {
@@ -648,6 +765,383 @@ abstract class gettingRollingAccountList implements RollingEvent {
   @JsonKey(ignore: true)
   _$$gettingRollingAccountListImplCopyWith<_$gettingRollingAccountListImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$rollingRepaymentsImplCopyWith<$Res>
+    implements $RollingEventCopyWith<$Res> {
+  factory _$$rollingRepaymentsImplCopyWith(_$rollingRepaymentsImpl value,
+          $Res Function(_$rollingRepaymentsImpl) then) =
+      __$$rollingRepaymentsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String rollingAccountId,
+      String splittingAccountId,
+      String splittingPrimaryAccountId,
+      double amountRepaying,
+      TransactionTypes transactionType,
+      DateTime timeOfTrans,
+      File? billImage,
+      String? userTransactionId,
+      String? transactionDetails,
+      String ledgerId});
+}
+
+/// @nodoc
+class __$$rollingRepaymentsImplCopyWithImpl<$Res>
+    extends _$RollingEventCopyWithImpl<$Res, _$rollingRepaymentsImpl>
+    implements _$$rollingRepaymentsImplCopyWith<$Res> {
+  __$$rollingRepaymentsImplCopyWithImpl(_$rollingRepaymentsImpl _value,
+      $Res Function(_$rollingRepaymentsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rollingAccountId = null,
+    Object? splittingAccountId = null,
+    Object? splittingPrimaryAccountId = null,
+    Object? amountRepaying = null,
+    Object? transactionType = null,
+    Object? timeOfTrans = null,
+    Object? billImage = freezed,
+    Object? userTransactionId = freezed,
+    Object? transactionDetails = freezed,
+    Object? ledgerId = null,
+  }) {
+    return _then(_$rollingRepaymentsImpl(
+      rollingAccountId: null == rollingAccountId
+          ? _value.rollingAccountId
+          : rollingAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      splittingAccountId: null == splittingAccountId
+          ? _value.splittingAccountId
+          : splittingAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      splittingPrimaryAccountId: null == splittingPrimaryAccountId
+          ? _value.splittingPrimaryAccountId
+          : splittingPrimaryAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      amountRepaying: null == amountRepaying
+          ? _value.amountRepaying
+          : amountRepaying // ignore: cast_nullable_to_non_nullable
+              as double,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionTypes,
+      timeOfTrans: null == timeOfTrans
+          ? _value.timeOfTrans
+          : timeOfTrans // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      billImage: freezed == billImage
+          ? _value.billImage
+          : billImage // ignore: cast_nullable_to_non_nullable
+              as File?,
+      userTransactionId: freezed == userTransactionId
+          ? _value.userTransactionId
+          : userTransactionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      transactionDetails: freezed == transactionDetails
+          ? _value.transactionDetails
+          : transactionDetails // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ledgerId: null == ledgerId
+          ? _value.ledgerId
+          : ledgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$rollingRepaymentsImpl implements rollingRepayments {
+  const _$rollingRepaymentsImpl(
+      {required this.rollingAccountId,
+      required this.splittingAccountId,
+      required this.splittingPrimaryAccountId,
+      required this.amountRepaying,
+      required this.transactionType,
+      required this.timeOfTrans,
+      required this.billImage,
+      required this.userTransactionId,
+      required this.transactionDetails,
+      required this.ledgerId});
+
+  @override
+  final String rollingAccountId;
+  @override
+  final String splittingAccountId;
+  @override
+  final String splittingPrimaryAccountId;
+  @override
+  final double amountRepaying;
+  @override
+  final TransactionTypes transactionType;
+  @override
+  final DateTime timeOfTrans;
+  @override
+  final File? billImage;
+  @override
+  final String? userTransactionId;
+  @override
+  final String? transactionDetails;
+  @override
+  final String ledgerId;
+
+  @override
+  String toString() {
+    return 'RollingEvent.rollingRepayments(rollingAccountId: $rollingAccountId, splittingAccountId: $splittingAccountId, splittingPrimaryAccountId: $splittingPrimaryAccountId, amountRepaying: $amountRepaying, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails, ledgerId: $ledgerId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$rollingRepaymentsImpl &&
+            (identical(other.rollingAccountId, rollingAccountId) ||
+                other.rollingAccountId == rollingAccountId) &&
+            (identical(other.splittingAccountId, splittingAccountId) ||
+                other.splittingAccountId == splittingAccountId) &&
+            (identical(other.splittingPrimaryAccountId,
+                    splittingPrimaryAccountId) ||
+                other.splittingPrimaryAccountId == splittingPrimaryAccountId) &&
+            (identical(other.amountRepaying, amountRepaying) ||
+                other.amountRepaying == amountRepaying) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
+            (identical(other.timeOfTrans, timeOfTrans) ||
+                other.timeOfTrans == timeOfTrans) &&
+            (identical(other.billImage, billImage) ||
+                other.billImage == billImage) &&
+            (identical(other.userTransactionId, userTransactionId) ||
+                other.userTransactionId == userTransactionId) &&
+            (identical(other.transactionDetails, transactionDetails) ||
+                other.transactionDetails == transactionDetails) &&
+            (identical(other.ledgerId, ledgerId) ||
+                other.ledgerId == ledgerId));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      rollingAccountId,
+      splittingAccountId,
+      splittingPrimaryAccountId,
+      amountRepaying,
+      transactionType,
+      timeOfTrans,
+      billImage,
+      userTransactionId,
+      transactionDetails,
+      ledgerId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$rollingRepaymentsImplCopyWith<_$rollingRepaymentsImpl> get copyWith =>
+      __$$rollingRepaymentsImplCopyWithImpl<_$rollingRepaymentsImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)
+        addRollingTransactions,
+    required TResult Function(String ledgerId) gettingRollingAccountList,
+    required TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)
+        rollingRepayments,
+  }) {
+    return rollingRepayments(
+        rollingAccountId,
+        splittingAccountId,
+        splittingPrimaryAccountId,
+        amountRepaying,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails,
+        ledgerId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        addRollingTransactions,
+    TResult? Function(String ledgerId)? gettingRollingAccountList,
+    TResult? Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
+  }) {
+    return rollingRepayments?.call(
+        rollingAccountId,
+        splittingAccountId,
+        splittingPrimaryAccountId,
+        amountRepaying,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails,
+        ledgerId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        addRollingTransactions,
+    TResult Function(String ledgerId)? gettingRollingAccountList,
+    TResult Function(
+            String rollingAccountId,
+            String splittingAccountId,
+            String splittingPrimaryAccountId,
+            double amountRepaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails,
+            String ledgerId)?
+        rollingRepayments,
+    required TResult orElse(),
+  }) {
+    if (rollingRepayments != null) {
+      return rollingRepayments(
+          rollingAccountId,
+          splittingAccountId,
+          splittingPrimaryAccountId,
+          amountRepaying,
+          transactionType,
+          timeOfTrans,
+          billImage,
+          userTransactionId,
+          transactionDetails,
+          ledgerId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addRollingTransactions value)
+        addRollingTransactions,
+    required TResult Function(gettingRollingAccountList value)
+        gettingRollingAccountList,
+    required TResult Function(rollingRepayments value) rollingRepayments,
+  }) {
+    return rollingRepayments(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addRollingTransactions value)? addRollingTransactions,
+    TResult? Function(gettingRollingAccountList value)?
+        gettingRollingAccountList,
+    TResult? Function(rollingRepayments value)? rollingRepayments,
+  }) {
+    return rollingRepayments?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addRollingTransactions value)? addRollingTransactions,
+    TResult Function(gettingRollingAccountList value)?
+        gettingRollingAccountList,
+    TResult Function(rollingRepayments value)? rollingRepayments,
+    required TResult orElse(),
+  }) {
+    if (rollingRepayments != null) {
+      return rollingRepayments(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class rollingRepayments implements RollingEvent {
+  const factory rollingRepayments(
+      {required final String rollingAccountId,
+      required final String splittingAccountId,
+      required final String splittingPrimaryAccountId,
+      required final double amountRepaying,
+      required final TransactionTypes transactionType,
+      required final DateTime timeOfTrans,
+      required final File? billImage,
+      required final String? userTransactionId,
+      required final String? transactionDetails,
+      required final String ledgerId}) = _$rollingRepaymentsImpl;
+
+  String get rollingAccountId;
+  String get splittingAccountId;
+  String get splittingPrimaryAccountId;
+  double get amountRepaying;
+  TransactionTypes get transactionType;
+  DateTime get timeOfTrans;
+  File? get billImage;
+  String? get userTransactionId;
+  String? get transactionDetails;
+  @override
+  String get ledgerId;
+  @override
+  @JsonKey(ignore: true)
+  _$$rollingRepaymentsImplCopyWith<_$rollingRepaymentsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -147,6 +147,7 @@ class SecondaryPartyScreen extends ConsumerWidget {
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => AddAmountScreen(
+                                      isRepay: false,
                                       ledgerId:primaryContact.ledgerId ,
                                       isGive: false,
                                       splittedTransactionId: splittedTransactionId,

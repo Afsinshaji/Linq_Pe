@@ -137,6 +137,7 @@ class SplitAmountScreen extends ConsumerWidget {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => AddAmountScreen(
+                                  isRepay: false,
                                    ledgerId: ref.watch(currentLedgerIdProvider),
                                     isGive: false,
                                     transactionRealId: transaction.id,

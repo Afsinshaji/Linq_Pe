@@ -11,6 +11,7 @@ import 'package:linq_pe/application/contacts/contacts_bloc.dart';
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
 import 'package:linq_pe/application/splitted/splitted_bloc.dart';
 import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
+import 'package:linq_pe/presentation/screens/view_splitted_accounts/screen_each_primary_account.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
@@ -200,50 +201,70 @@ class HomePartyList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String search = ref.watch(homeSearchProvider);
-    List<ContactsDTO> partyList = [];
 
-    if (search.isNotEmpty) {
-      partyList = listOfParties
-          .where((element) => element.displayName
-              .toLowerCase()
-              .contains(search.toLowerCase().trim()))
-          .toList();
-    }
-    //sort according to time and reverse it
-    final List<ContactsDTO> sortingPartyList = List.from(partyList);
-    sortingPartyList.sort(
-        (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
-    partyList = sortingPartyList.reversed.toList();
+   
+
+    // if (search.isNotEmpty) {
+    //   partyList = listOfParties
+    //       .where((element) => element.displayName
+    //           .toLowerCase()
+    //           .contains(search.toLowerCase().trim()))
+    //       .toList();
+    // }
+    // //sort according to time and reverse it
+    // final List<ContactsDTO> sortingPartyList = List.from(partyList);
+    // sortingPartyList.sort(
+    //     (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
+    // partyList = sortingPartyList.reversed.toList();
     return BlocBuilder<SplittedBloc, SplittedState>(
       builder: (context, splitstate) {
+        
         return ListView.separated(
           // shrinkWrap: true,
           itemBuilder: (context, index) {
+            final splittedAccount = splittedAccountList[index];
+        final primaryContactIndex= listOfContacts.indexWhere((element) => element.contactId==
+        splittedAccount.primaryAccountContactId,);
+        final splittedContactIndex=listOfContacts.indexWhere((element) => element.contactId==
+        splittedAccount.splittedAccountContactId,);
             return EachListTile(
-              ledgerId: partyList[index].ledgerId,
-              contactId: partyList[index].contactId,
-              lastTimeofTransaction: partyList[index].lastTimeOfTransaction,
-              avatar: partyList[index].avatar,
+              primaryname:primaryContactIndex>=0?listOfContacts[primaryContactIndex].displayName:'' ,
+              splittedname: splittedContactIndex>=0?listOfContacts[splittedContactIndex].displayName:'' ,
+              
+              
+           primaryavatar:primaryContactIndex>=0?listOfContacts[primaryContactIndex].avatar:null ,
+            splittedavatar:  splittedContactIndex>=0?listOfContacts[splittedContactIndex].avatar:null,
+            primaryinitials:primaryContactIndex>=0?listOfContacts[primaryContactIndex].initails:'' , 
+            splittedinitials:  splittedContactIndex>=0?listOfContacts[splittedContactIndex].initails:'',
+
               onTap: () {
-                contactSearch('', ref);
-                ref.read(fromContactIdProvider.notifier).state =
-                    partyList[index].contactId;
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ViewPartyScreen(
-                          contact: partyList[index], isExpense: false),
-                    ));
+               /// contactSearch('', ref);
+                // ref.read(fromContactIdProvider.notifier).state =
+                //     partyList[index].contactId;
+                // Navigator.push(
+                //     context,
+                //     CupertinoPageRoute(
+                //       builder: (context) => ViewPartyScreen(
+                //           contact: partyList[index], isExpense: false),
+                //     ));
+
+                 Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          EachPrimaryAccountScreen(
+                                              contact: listOfContacts[splittedContactIndex],
+                                              splittedAccount:
+                                                  splittedAccount),
+                                    ));
               },
               size: size,
-              amount: partyList[index].blanceAmount != null
-                  ? partyList[index].blanceAmount.toString()
-                  : '0',
-              initials: partyList[index].initails,
-              name: partyList[index].displayName,
+              amount: splittedAccount.balanceAmt.toString(),
+              
+             
             );
           },
-          itemCount: partyList.length,
+          itemCount: splittedAccountList.length,
           separatorBuilder: (context, index) => Divider(
             color: LinqPeColors.kBlackColor,
             height: size.height * 0.001,
@@ -338,56 +359,90 @@ class EachListTile extends StatelessWidget {
   const EachListTile(
       {super.key,
       required this.size,
-      required this.initials,
-      required this.name,
+      required this.primaryinitials,
+      required this.splittedinitials,
+      required this.splittedname,
       required this.amount,
       required this.onTap,
-      required this.avatar,
-      required this.lastTimeofTransaction,
-      required this.contactId,
-      required this.ledgerId});
+      required this.splittedavatar,
+      required this.primaryavatar,
+     
+      required this.primaryname,
+     
+   });
 
   final Size size;
-  final String initials;
-  final String name;
+  final String primaryinitials;
+  final String splittedinitials;
+  final String splittedname;
+  final String primaryname;
   final String amount;
   final Function() onTap;
-  final Uint8List? avatar;
-  final DateTime? lastTimeofTransaction;
-  final String contactId;
-  final String ledgerId;
+  final Uint8List? splittedavatar;
+  final Uint8List? primaryavatar;
+
+  
+  
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onLongPress: () {
         log('look');
-        showPopupMenu(context, contactId, size, ledgerId);
+        // showPopupMenu(context, splitAccountId, size, ledgerId);
       },
       onTap: onTap,
-      leading: avatar != null && avatar!.isNotEmpty
-          ? CircleAvatar(backgroundImage: MemoryImage(avatar!))
-          : Container(
-              // padding: EdgeInsets.all(size.width * 0.025),
-              width: size.width * 0.1,
-              height: size.width * 0.1,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: LinqPeColors.kBlackColor.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(100)),
-              child: Text(
-                initials,
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    letterSpacing: .5,
-                    fontSize: size.width * 0.04,
-                    color: LinqPeColors.kPinkColor,
-                    fontWeight: FontWeight.w500,
+      minLeadingWidth: size.width*0.15,
+      leading:SizedBox(
+        width:size.width*0.15 ,
+        child: Stack(children:[     primaryavatar != null && primaryavatar!.isNotEmpty
+            ? CircleAvatar(backgroundImage: MemoryImage(primaryavatar!))
+            : Container(
+                // padding: EdgeInsets.all(size.width * 0.025),
+                width: size.width * 0.1,
+                height: size.width * 0.1,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: LinqPeColors.kBlackColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(100)),
+                child: Text(
+                  primaryinitials,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      letterSpacing: .5,
+                      fontSize: size.width * 0.04,
+                      color: LinqPeColors.kPinkColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              ) ,
+           Positioned  (
+        left: size.width*0.05,
+        child:splittedavatar != null && splittedavatar!.isNotEmpty
+            ? CircleAvatar(backgroundImage: MemoryImage(splittedavatar!))
+            : Container(
+                // padding: EdgeInsets.all(size.width * 0.025),
+                width: size.width * 0.1,
+                height: size.width * 0.1,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: LinqPeColors.kBlackColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(100)),
+                child: Text(
+                  splittedinitials,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      letterSpacing: .5,
+                      fontSize: size.width * 0.04,
+                      color: LinqPeColors.kPinkColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ))]),
+      ),
       title: Text(
-        name,
+        '$primaryname - $splittedname',
         style: GoogleFonts.poppins(
           textStyle: TextStyle(
             letterSpacing: .5,
@@ -397,17 +452,17 @@ class EachListTile extends StatelessWidget {
           ),
         ),
       ),
-      subtitle: Text(
-        latestTransactionTime(lastTimeofTransaction),
-        style: GoogleFonts.poppins(
-          textStyle: TextStyle(
-            letterSpacing: .5,
-            fontSize: size.width * 0.03,
-            color: LinqPeColors.kBlackColor.withOpacity(0.6),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
+      // subtitle: Text(
+      //   latestTransactionTime(lastTimeofTransaction),
+      //   style: GoogleFonts.poppins(
+      //     textStyle: TextStyle(
+      //       letterSpacing: .5,
+      //       fontSize: size.width * 0.03,
+      //       color: LinqPeColors.kBlackColor.withOpacity(0.6),
+      //       fontWeight: FontWeight.w400,
+      //     ),
+      //   ),
+      // ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

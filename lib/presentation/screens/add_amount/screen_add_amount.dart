@@ -14,6 +14,7 @@ import 'package:linq_pe/application/split_amount/split_amount_bloc.dart';
 import 'package:linq_pe/application/splitted/splitted_bloc.dart';
 import 'package:linq_pe/application/transactions/transactions_bloc.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
+import 'package:linq_pe/application/view_dto/rolling/rolling.dart';
 import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
@@ -48,6 +49,8 @@ class AddAmountScreen extends StatefulWidget {
     this.editTransaction = '',
     this.primaryContactId = '',
     required this.ledgerId,
+    required this.isRepay,
+    this.rollingAccountId = '',
   });
   final bool isPay;
   final bool isAddBalance;
@@ -60,12 +63,13 @@ class AddAmountScreen extends StatefulWidget {
   final String splittedTransactionId;
   final bool isGive;
   final bool isAddExpense;
+  final bool isRepay;
   final bool isSplittingBalance;
   final bool isEdit;
   final dynamic editTransaction;
   final String primaryContactId;
   final String ledgerId;
-
+  final String rollingAccountId;
   @override
   State<AddAmountScreen> createState() => _AddAmountScreenState();
 }
@@ -171,6 +175,8 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
           //   ),
           // ),
           AddButton(
+              rollingAccountId: widget.rollingAccountId,
+              isRepay: widget.isRepay,
               primaryContactId: widget.primaryContactId,
               isEdit: widget.isEdit,
               isAddExpense: widget.isAddExpense,
@@ -245,18 +251,23 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                   height: widget.isPay ||
                           widget.isSecondaryPay ||
                           widget.isSplit ||
-                          widget.isAddExpense
+                          widget.isAddExpense ||
+                          widget.isRepay
                       ? size.height * 0.03
                       : 0,
                 ),
                 widget.isPay ||
                         widget.isSecondaryPay ||
                         widget.isSplit ||
-                        widget.isAddExpense
+                        widget.isAddExpense ||
+                        widget.isRepay
                     ? Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                        child: const DropDownSearchTextField(
+                        child: DropDownSearchTextField(
+                          isRepay: widget.isRepay,
+                          rollingAccountId:
+                              widget.isRepay ? widget.rollingAccountId : '',
                           isFromField: false,
                           hintText: 'To whom',
                         ))
@@ -264,6 +275,13 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                 SizedBox(
                   height: size.height * 0.03,
                 ),
+
+                widget.isRepay ? const AmountToRepayWidget() : const SizedBox(),
+                widget.isRepay
+                    ? SizedBox(
+                        height: size.height * 0.03,
+                      )
+                    : const SizedBox(),
                 AddTextField(
                     textFieldType: TextFieldType.details,
                     controller: detailsController,
@@ -365,6 +383,53 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
   }
 }
 
+class AmountToRepayWidget extends ConsumerWidget {
+  const AmountToRepayWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+      height: size.height * 0.07,
+      margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+      decoration: BoxDecoration(
+          color: LinqPeColors.kWhiteColor,
+          borderRadius: BorderRadius.circular(5)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Amount to Repay',
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                letterSpacing: .1,
+                fontSize: size.width * 0.035,
+                color: LinqPeColors.kPinkColor.withOpacity(0.7),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Text(
+            ref.watch(repayTotalAmountProvider).toString(),
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                letterSpacing: .1,
+                fontSize: size.width * 0.045,
+                color: LinqPeColors.kBlackColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ExpenseRollRadioBoxWidget extends ConsumerWidget {
   const ExpenseRollRadioBoxWidget({
     super.key,
@@ -447,25 +512,27 @@ class ExpenseRollRadioBoxWidget extends ConsumerWidget {
 }
 
 class AddButton extends ConsumerWidget {
-  const AddButton({
-    super.key,
-    required this.isSplit,
-    required this.size,
-    required this.isAddBalance,
-    required this.isPay,
-    required this.isSecondaryPay,
-    required this.transactionRealId,
-    required this.splittedTransactionId,
-    required this.splitAmount,
-    required this.isGive,
-    required this.isAddExpense,
-    required this.isSplittingBalance,
-    required this.isEdit,
-    required this.primaryContactId,
-  });
+  const AddButton(
+      {super.key,
+      required this.isSplit,
+      required this.size,
+      required this.isAddBalance,
+      required this.isPay,
+      required this.isSecondaryPay,
+      required this.transactionRealId,
+      required this.splittedTransactionId,
+      required this.splitAmount,
+      required this.isGive,
+      required this.isAddExpense,
+      required this.isSplittingBalance,
+      required this.isEdit,
+      required this.primaryContactId,
+      required this.rollingAccountId,
+      required this.isRepay});
 
   final Size size;
   final bool isPay;
+  final bool isRepay;
   final bool isAddBalance;
   final bool isSecondaryPay;
   final bool isSplit;
@@ -477,6 +544,7 @@ class AddButton extends ConsumerWidget {
   final bool isSplittingBalance;
   final bool isEdit;
   final String primaryContactId;
+  final String rollingAccountId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BlocBuilder<SplitAmountBloc, SplitAmountState>(
@@ -506,6 +574,7 @@ class AddButton extends ConsumerWidget {
                     if (ref.watch(amountProvider) >= 0) {
                       if (!isEdit) {
                         if (!isAddBalance &&
+                            !isRepay &&
                             !isSecondaryPay &&
                             !isAddExpense &&
                             !isSplit &&
@@ -1004,6 +1073,49 @@ class AddButton extends ConsumerWidget {
                             alertSnackbar(
                                 context, 'You dont have enough Balance');
                           }
+                        } else if (isRepay) {
+                          if (ref
+                                  .watch(repaySplittedContactIdProvider)
+                                  .isNotEmpty &&
+                              ref
+                                  .watch(repayPrimaryContactIdProvider)
+                                  .isNotEmpty &&
+                              ref.watch(repayTotalAmountProvider) > 0.0) {
+                            if (ref.watch(repayTotalAmountProvider) <
+                                ref.watch(amountProvider)) {
+                              isToGoBack = false;
+                              //Give a toast that you dont have enough Balance
+                              alertSnackbar(context,
+                                  "Don't enter more than Total Repay Amount");
+                            } else {
+                              BlocProvider.of<RollingBloc>(context)
+                                  .add(RollingEvent.rollingRepayments(
+                                rollingAccountId: rollingAccountId,
+                                splittingAccountId:
+                                    ref.watch(repaySplittedContactIdProvider),
+                                splittingPrimaryAccountId:
+                                    ref.watch(repayPrimaryContactIdProvider),
+                                amountRepaying: ref.watch(amountProvider),
+                                transactionDetails: ref
+                                        .watch(transactionDetailsProvider)
+                                        .isEmpty
+                                    ? null
+                                    : ref.watch(transactionDetailsProvider),
+                                transactionType:
+                                    ref.watch(transactionTypeProvider),
+                                timeOfTrans: ref.watch(dateProvider),
+                                billImage: ref.watch(imageProvider).path.isEmpty
+                                    ? null
+                                    : ref.watch(imageProvider),
+                                userTransactionId:
+                                    ref.watch(transactionIdProvider).isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider),
+                                ledgerId: ref.watch(currentLedgerIdProvider),
+                              ));
+                              Navigator.pop(context);
+                            }
+                          }
                         }
                       } else {
                         BlocProvider.of<TransactionsBloc>(context).add(
@@ -1161,13 +1273,13 @@ class SplitListBalanceWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
     final fromId = ref.watch(fromContactIdProvider);
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  // if (ref.watch(expenseTypeProvider) ==
-  //                                     ExpenseType.roll) {
-  //                               addsplitttedAccountBalance(,ref);
-  //                             }
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    // if (ref.watch(expenseTypeProvider) ==
+    //                                     ExpenseType.roll) {
+    //                               addsplitttedAccountBalance(,ref);
+    //                             }
 
-  //   });
+    //   });
 
     return BlocBuilder<SplittedBloc, SplittedState>(
       builder: (context, state) {

@@ -146,6 +146,7 @@ class _ViewPartyScreenState extends State<ViewPartyScreen> {
                                                 CupertinoPageRoute(
                                                   builder: (context) =>
                                                       AddAmountScreen(
+                                                        isRepay: false,
                                                         ledgerId: widget.contact.ledgerId,
                                                     splitAmount:
                                                         (double.parse(balance) -
@@ -179,6 +180,7 @@ class _ViewPartyScreenState extends State<ViewPartyScreen> {
                                                 CupertinoPageRoute(
                                                   builder: (context) =>
                                                       AddAmountScreen(
+                                                         isRepay: false,
                                                         ledgerId: widget.contact.ledgerId,
                                                     isGive: false,
                                                     isSplit: false,
@@ -471,7 +473,7 @@ class ViewPartyBottomSheet extends ConsumerWidget {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => AddAmountScreen(
+                            builder: (context) => AddAmountScreen( isRepay: false,
                           ledgerId: ref.watch(currentLedgerIdProvider),
                               isGive: true,
                               isSplit: false,
@@ -495,6 +497,7 @@ class ViewPartyBottomSheet extends ConsumerWidget {
                           context,
                           CupertinoPageRoute(
                             builder: (context) => AddAmountScreen(
+                              isRepay: false,
                                ledgerId: ref.watch(currentLedgerIdProvider),
                               isGive: false,
                               isSplit: false,

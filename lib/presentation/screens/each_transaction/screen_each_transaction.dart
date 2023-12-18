@@ -549,6 +549,7 @@ class TransactionEditButton extends ConsumerWidget {
             context,
             CupertinoPageRoute(
               builder: (context) => AddAmountScreen(
+                isRepay: false,
                 ledgerId: ref.watch(currentLedgerIdProvider),
                 transactionRealId: transaction.id,
                 primaryContactId: contactId,

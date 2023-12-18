@@ -68,6 +68,7 @@ class FloatingAddButtonState extends ConsumerState<FloatingAddButton> {
               context,
               CupertinoPageRoute(
                 builder: (context) => AddAmountScreen(
+                  isRepay: false,
                     ledgerId: ref.watch(currentLedgerIdProvider),
                     isAddExpense: true,
                     isPay: false,

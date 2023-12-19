@@ -82,6 +82,8 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
               if (nameController.text.isNotEmpty &&
                   numberController.text.isNotEmpty) {
                 dynamic contacts;
+                  String time = DateTime.now().toIso8601String();
+                  final id='$time-${numberController.text}';
                 if (widget.contact != null) {
                   contacts = ContactsDTO(
                     ledgerId: widget.contact!.ledgerId,
@@ -100,10 +102,10 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
                         .add(ContactsEvent.addContact(contact: contacts));
                   }
                 } else {
-                  String time = DateTime.now().toIso8601String();
+                
                   contacts = ContactsDTO(
                     ledgerId: ref.watch(currentLedgerIdProvider),
-                    contactId: '$time-${numberController.text}',
+                    contactId: id,
                     displayName: nameController.text,
                     contactNumber: numberController.text,
                     avatar: null,
@@ -114,9 +116,13 @@ class AddPartyScreenState extends ConsumerState<AddPartyScreen> {
                 }
 
                 if (widget.partyType == 'Customer') {
-                  BlocProvider.of<CustomerBloc>(context).add(
+               if( widget.contact!=null)  { BlocProvider.of<CustomerBloc>(context).add(
                       CustomerEvent.addCustomers(ledgerId: widget.contact!.ledgerId,
-                          contactId: widget.contact!.contactId));
+                          contactId: widget.contact!.contactId));}else{
+                BlocProvider.of<CustomerBloc>(context).add(
+                      CustomerEvent.addCustomers(ledgerId:ref.watch(currentLedgerIdProvider),
+                          contactId: id));            
+                          }
                 }
 
                 ref.read(fromContactIdProvider.notifier).state =

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,7 +66,7 @@ class FloatingAddButtonState extends ConsumerState<FloatingAddButton> {
               context,
               CupertinoPageRoute(
                 builder: (context) => AddAmountScreen(
-                  isRepay: false,
+                    isRepay: false,
                     ledgerId: ref.watch(currentLedgerIdProvider),
                     isAddExpense: true,
                     isPay: false,
@@ -104,16 +102,33 @@ class FloatingAddButtonState extends ConsumerState<FloatingAddButton> {
               );
             },
           );
+        } else if (widget.partyType == 'Roll Ledger') {
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => AddAmountScreen(
+                    isPay: false,
+                    isLedgerRoll: true,
+                    isAddBalance: false,
+                    partyName: '',
+                    isSplit: false,
+                    isSecondaryPay: false,
+                    isGive: false,
+                    ledgerId: ref.watch(currentLedgerIdProvider),
+                    isRepay: false),
+              ));
         }
       },
       label: Row(
         children: [
           Icon(
-            widget.partyType == 'Ledger'
-                ? Icons.bookmark_add
-                : widget.partyType == 'Pay'
-                    ? Icons.currency_rupee
-                    : Icons.person_add,
+            widget.partyType == 'Roll Ledger'
+                ? Icons.recycling
+                : widget.partyType == 'Ledger'
+                    ? Icons.bookmark_add
+                    : widget.partyType == 'Pay'
+                        ? Icons.currency_rupee
+                        : Icons.person_add,
             color: LinqPeColors.kWhiteColor,
           ),
           SizedBox(
@@ -158,15 +173,17 @@ class AddLedgerWidgetState extends ConsumerState<AddLedgerWidget> {
     return Container(
       width: widget.size.width,
       height: ref.watch(ledgerNameTexfieldHeightProvider),
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         color: LinqPeColors.kPinkColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular( ref.watch(ledgerNameTexfieldHeightProvider) ==
-                    size.height * 0.25
-                ?0:150),
-          topRight: Radius.circular( ref.watch(ledgerNameTexfieldHeightProvider) ==
-                    size.height * 0.25
-                ?0:150),
+          topLeft: Radius.circular(
+              ref.watch(ledgerNameTexfieldHeightProvider) == size.height * 0.25
+                  ? 0
+                  : 150),
+          topRight: Radius.circular(
+              ref.watch(ledgerNameTexfieldHeightProvider) == size.height * 0.25
+                  ? 0
+                  : 150),
         ),
       ),
       child: Column(

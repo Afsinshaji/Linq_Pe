@@ -21,13 +21,19 @@ class LedgerModelAdapter extends TypeAdapter<LedgerModel> {
       ledgerId: fields[1] as String,
       totalBlanceAmount: fields[2] as double?,
       totalPayedAmount: fields[3] as double?,
+      rolledOutBalance: fields[4] as double?,
+      recievedRollingAmt: fields[5] as double?,
+      payedBackAmt: fields[6] as double?,
+      balanceToPayAmt: fields[7] as double?,
+      transactionList: (fields[8] as List?)?.cast<TransactionModel>(),
+      payBackLedgerList: (fields[9] as List?)?.cast<PayBackLedgerModel>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, LedgerModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.ledgerName)
       ..writeByte(1)
@@ -35,7 +41,19 @@ class LedgerModelAdapter extends TypeAdapter<LedgerModel> {
       ..writeByte(2)
       ..write(obj.totalBlanceAmount)
       ..writeByte(3)
-      ..write(obj.totalPayedAmount);
+      ..write(obj.totalPayedAmount)
+      ..writeByte(4)
+      ..write(obj.rolledOutBalance)
+      ..writeByte(5)
+      ..write(obj.recievedRollingAmt)
+      ..writeByte(6)
+      ..write(obj.payedBackAmt)
+      ..writeByte(7)
+      ..write(obj.balanceToPayAmt)
+      ..writeByte(8)
+      ..write(obj.transactionList)
+      ..writeByte(9)
+      ..write(obj.payBackLedgerList);
   }
 
   @override

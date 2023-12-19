@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
+import 'package:linq_pe/application/ledger/ledger_bloc.dart';
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
 import 'package:linq_pe/application/rolling/rolling_bloc.dart';
 import 'package:linq_pe/application/seondary_party/secondary_party_bloc.dart';
@@ -14,9 +15,10 @@ import 'package:linq_pe/application/split_amount/split_amount_bloc.dart';
 import 'package:linq_pe/application/splitted/splitted_bloc.dart';
 import 'package:linq_pe/application/transactions/transactions_bloc.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
-import 'package:linq_pe/application/view_dto/rolling/rolling.dart';
+import 'package:linq_pe/application/view_dto/ledger/ledger.dart';
 import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/application/view_dto/transaction/secondary_transaction_dto.dart';
+import 'package:linq_pe/domain/models/ledger/ledger.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/drop_down_search_text_field.dart';
 import 'package:linq_pe/presentation/screens/add_amount/widgets/radio_box_widget.dart';
@@ -51,6 +53,7 @@ class AddAmountScreen extends StatefulWidget {
     required this.ledgerId,
     required this.isRepay,
     this.rollingAccountId = '',
+    this.isLedgerRoll = false,
   });
   final bool isPay;
   final bool isAddBalance;
@@ -70,6 +73,7 @@ class AddAmountScreen extends StatefulWidget {
   final String primaryContactId;
   final String ledgerId;
   final String rollingAccountId;
+  final bool isLedgerRoll;
   @override
   State<AddAmountScreen> createState() => _AddAmountScreenState();
 }
@@ -175,6 +179,7 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
           //   ),
           // ),
           AddButton(
+              isLedgerRoll: widget.isLedgerRoll,
               rollingAccountId: widget.rollingAccountId,
               isRepay: widget.isRepay,
               primaryContactId: widget.primaryContactId,
@@ -220,27 +225,30 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                     isTextNumberType: true,
                     text: 'Enter amount',
                     fieldColor: LinqPeColors.kPinkColor),
-                widget.isAddExpense
+                widget.isAddExpense || widget.isLedgerRoll
                     ? SizedBox(
                         height: size.height * 0.03,
                       )
                     : const SizedBox(),
-                widget.isAddExpense
+                widget.isAddExpense || widget.isLedgerRoll
                     ? Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                        child: const DropDownSearchTextField(
+                        child: DropDownSearchTextField(
                           isFromField: true,
                           hintText: 'From who',
+                          isLedgerRoll: widget.isLedgerRoll,
                         ))
                     : const SizedBox(),
-                widget.isAddExpense
+                widget.isAddExpense || widget.isLedgerRoll
                     ? SizedBox(
                         height: size.height * 0.03,
                       )
                     : const SizedBox(),
-                widget.isAddExpense
-                    ? const SplitListBalanceWidget()
+                widget.isAddExpense || widget.isLedgerRoll
+                    ? SplitListBalanceWidget(
+                        isLedgerRoll: widget.isLedgerRoll,
+                      )
                     : const SizedBox(),
                 // widget.isAddExpense
                 //     ? SizedBox(
@@ -252,7 +260,8 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                           widget.isSecondaryPay ||
                           widget.isSplit ||
                           widget.isAddExpense ||
-                          widget.isRepay
+                          widget.isRepay ||
+                          widget.isLedgerRoll
                       ? size.height * 0.03
                       : 0,
                 ),
@@ -260,7 +269,8 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                         widget.isSecondaryPay ||
                         widget.isSplit ||
                         widget.isAddExpense ||
-                        widget.isRepay
+                        widget.isRepay ||
+                        widget.isLedgerRoll
                     ? Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * 0.03),
@@ -270,6 +280,7 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                               widget.isRepay ? widget.rollingAccountId : '',
                           isFromField: false,
                           hintText: 'To whom',
+                          isLedgerRoll: widget.isLedgerRoll,
                         ))
                     : const SizedBox(),
                 SizedBox(
@@ -528,7 +539,8 @@ class AddButton extends ConsumerWidget {
       required this.isEdit,
       required this.primaryContactId,
       required this.rollingAccountId,
-      required this.isRepay});
+      required this.isRepay,
+      required this.isLedgerRoll});
 
   final Size size;
   final bool isPay;
@@ -545,6 +557,7 @@ class AddButton extends ConsumerWidget {
   final bool isEdit;
   final String primaryContactId;
   final String rollingAccountId;
+  final bool isLedgerRoll;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BlocBuilder<SplitAmountBloc, SplitAmountState>(
@@ -579,6 +592,7 @@ class AddButton extends ConsumerWidget {
                             !isAddExpense &&
                             !isSplit &&
                             !isSplittingBalance &&
+                            !isLedgerRoll &&
                             !isGive) {
                           log('Recalled');
                           if (isPay &&
@@ -1116,6 +1130,27 @@ class AddButton extends ConsumerWidget {
                               Navigator.pop(context);
                             }
                           }
+                        } else if (isLedgerRoll) {
+                          BlocProvider.of<LedgerBloc>(context)
+                              .add(LedgerEvent.addLedgerRollingTransactions(
+                            rolledToLedgerId: ref.watch(toContactIdProvider),
+                            rolledFromLedgerId:
+                                ref.watch(fromContactIdProvider),
+                            amountRolled: ref.watch(amountProvider),
+                            transactionDetails:
+                                ref.watch(transactionDetailsProvider).isEmpty
+                                    ? null
+                                    : ref.watch(transactionDetailsProvider),
+                            transactionType: ref.watch(transactionTypeProvider),
+                            timeOfTrans: ref.watch(dateProvider),
+                            billImage: ref.watch(imageProvider).path.isEmpty
+                                ? null
+                                : ref.watch(imageProvider),
+                            userTransactionId:
+                                ref.watch(transactionIdProvider).isEmpty
+                                    ? null
+                                    : ref.watch(transactionIdProvider),
+                          ));
                         }
                       } else {
                         BlocProvider.of<TransactionsBloc>(context).add(
@@ -1267,7 +1302,8 @@ class TimeWidget extends ConsumerWidget {
 }
 
 class SplitListBalanceWidget extends ConsumerWidget {
-  const SplitListBalanceWidget({super.key});
+  const SplitListBalanceWidget({super.key, required this.isLedgerRoll});
+  final bool isLedgerRoll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1281,171 +1317,201 @@ class SplitListBalanceWidget extends ConsumerWidget {
 
     //   });
 
-    return BlocBuilder<SplittedBloc, SplittedState>(
-      builder: (context, state) {
-        List<SplittedAccountsModelDTO> splittedAccountsList = [];
-        List<SplittedAccountsModelDTO> splitList = [];
-
-        if (state is displaySplittedAccounts) {
-          splittedAccountsList = state.splittedAccountList;
-
-          if (fromId.isNotEmpty) {
-            splitList = splittedAccountsList
-                .where((element) => element.splittedAccountContactId == fromId)
-                .toList();
-          }
+    return BlocBuilder<LedgerBloc, LedgerState>(
+      builder: (context, ledgerstate) {
+        List<LedgerDTO> ledgerList = [];
+        if (ledgerstate is displayLedgers) {
+          ledgerList = ledgerstate.ledgerList;
         }
+        return BlocBuilder<SplittedBloc, SplittedState>(
+          builder: (context, state) {
+            List<SplittedAccountsModelDTO> splittedAccountsList = [];
+            List<SplittedAccountsModelDTO> splitList = [];
 
-        // if (splitList.isEmpty) {
-        //   return const SizedBox();
-        // }
-        return BlocBuilder<ContactsBloc, ContactsState>(
-          builder: (context, contactstate) {
-            List<ContactsDTO> contactList = [];
-            if (contactstate is displayContacts) {
-              contactList = contactstate.contactList;
+            if (state is displaySplittedAccounts) {
+              splittedAccountsList = state.splittedAccountList;
+
+              if (fromId.isNotEmpty) {
+                splitList = splittedAccountsList
+                    .where(
+                        (element) => element.splittedAccountContactId == fromId)
+                    .toList();
+              }
             }
-            //come here...
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
-              child: Material(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                color: LinqPeColors.kWhiteColor,
-                shadowColor: LinqPeColors.kBlackColor,
-                elevation: 2,
-                child: Padding(
-                  padding: EdgeInsets.all(size.width * 0.02),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+            // if (splitList.isEmpty) {
+            //   return const SizedBox();
+            // }
+            return BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (context, contactstate) {
+                List<ContactsDTO> contactList = [];
+                if (contactstate is displayContacts) {
+                  contactList = contactstate.contactList;
+                }
+                //come here...
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                  child: Material(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    color: LinqPeColors.kWhiteColor,
+                    shadowColor: LinqPeColors.kBlackColor,
+                    elevation: 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(size.width * 0.02),
+                      child: Column(
                         children: [
-                          SizedBox(
-                            width: size.width * 0.4,
-                            child: Text(
-                              'From',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                  letterSpacing: .1,
-                                  fontSize: size.width * 0.04,
-                                  color: LinqPeColors.kGreyColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.3,
-                            child: Text(
-                              'Balance',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                  letterSpacing: .1,
-                                  fontSize: size.width * 0.04,
-                                  color: LinqPeColors.kGreyColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      ref.watch(expenseTypeProvider) == ExpenseType.roll
-                          ? const SizedBox()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  width: size.width * 0.4,
-                                  child: Text(
-                                    'Primary Balance',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                        letterSpacing: .1,
-                                        fontSize: size.width * 0.04,
-                                        color: LinqPeColors.kBlackColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                width: size.width * 0.4,
+                                child: Text(
+                                  'From',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      letterSpacing: .1,
+                                      fontSize: size.width * 0.04,
+                                      color: LinqPeColors.kGreyColor,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
-                                splitList.isEmpty
-                                    ? SizedBox(
-                                        width: size.width * 0.3,
-                                        child: Text(
-                                          ref
-                                              .watch(
-                                                  primaryPartyBalanceAmountProvider)
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: size.width * 0.05,
-                                              color: LinqPeColors.kBlackColor),
-                                        ),
-                                      )
-                                    : RadioBoxWidget(
-                                        transactionName: ref
-                                            .watch(
-                                                primaryPartyBalanceAmountProvider)
-                                            .toString(),
-                                        splittedAccountId: fromId,
-                                        isSplittedbalanceRadio: true,
-                                      )
-                              ],
-                            ),
-                      Column(
-                          children: List.generate(
-                              splitList.length,
-                              (index) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SizedBox(
-                                        width: size.width * 0.4,
-                                        child: Text(
-                                          contactList
-                                              .where((element) =>
-                                                  element.contactId ==
-                                                  splitList[index]
-                                                      .primaryAccountContactId)
-                                              .first
-                                              .displayName,
-                                          style: GoogleFonts.poppins(
-                                            textStyle: TextStyle(
-                                              letterSpacing: .1,
-                                              fontSize: size.width * 0.04,
-                                              color: LinqPeColors.kBlackColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.3,
+                                child: Text(
+                                  'Balance',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      letterSpacing: .1,
+                                      fontSize: size.width * 0.04,
+                                      color: LinqPeColors.kGreyColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          ref.watch(expenseTypeProvider) == ExpenseType.roll
+                              ? const SizedBox()
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.4,
+                                      child: Text(
+                                        isLedgerRoll
+                                            ? 'Balance'
+                                            : 'Primary Balance',
+                                        style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                            letterSpacing: .1,
+                                            fontSize: size.width * 0.04,
+                                            color: LinqPeColors.kBlackColor,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
-                                      RadioBoxWidget(
-                                        transactionName: splitList[index]
-                                            .balanceAmt
-                                            .toString(),
-                                        splittedAccountId: splitList[index]
-                                            .primaryAccountContactId,
-                                        isSplittedbalanceRadio: true,
-                                      )
-                                      // Text(
-                                      //   splitList[index].balanceAmt.toString(),
-                                      //   style: GoogleFonts.roboto(
-                                      //     textStyle: TextStyle(
-                                      //       letterSpacing: .1,
-                                      //       fontSize: size.width * 0.04,
-                                      //       color: LinqPeColors.kBlackColor,
-                                      //       fontWeight: FontWeight.w500,
-                                      //     ),
-                                      //   ),
-                                      // )
-                                    ],
-                                  ))),
-                    ],
+                                    ),
+                                    splitList.isEmpty
+                                        ? SizedBox(
+                                            width: size.width * 0.3,
+                                            child: Text(
+                                              isLedgerRoll
+                                                  ? ledgerList.indexWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .ledgerId ==
+                                                                  fromId) <
+                                                          0
+                                                      ? '0.0'
+                                                      : ledgerList[ledgerList
+                                                              .indexWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .ledgerId ==
+                                                                      fromId)]
+                                                          .totalBlanceAmount
+                                                          .toString()
+                                                  : ref
+                                                      .watch(
+                                                          primaryPartyBalanceAmountProvider)
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: size.width * 0.05,
+                                                  color:
+                                                      LinqPeColors.kBlackColor),
+                                            ),
+                                          )
+                                        : RadioBoxWidget(
+                                            transactionName: ref
+                                                .watch(
+                                                    primaryPartyBalanceAmountProvider)
+                                                .toString(),
+                                            splittedAccountId: fromId,
+                                            isSplittedbalanceRadio: true,
+                                          )
+                                  ],
+                                ),
+                          Column(
+                              children: List.generate(
+                                  splitList.length,
+                                  (index) => Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            width: size.width * 0.4,
+                                            child: Text(
+                                              contactList
+                                                  .where((element) =>
+                                                      element.contactId ==
+                                                      splitList[index]
+                                                          .primaryAccountContactId)
+                                                  .first
+                                                  .displayName,
+                                              style: GoogleFonts.poppins(
+                                                textStyle: TextStyle(
+                                                  letterSpacing: .1,
+                                                  fontSize: size.width * 0.04,
+                                                  color:
+                                                      LinqPeColors.kBlackColor,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          RadioBoxWidget(
+                                            transactionName: splitList[index]
+                                                .balanceAmt
+                                                .toString(),
+                                            splittedAccountId: splitList[index]
+                                                .primaryAccountContactId,
+                                            isSplittedbalanceRadio: true,
+                                          )
+                                          // Text(
+                                          //   splitList[index].balanceAmt.toString(),
+                                          //   style: GoogleFonts.roboto(
+                                          //     textStyle: TextStyle(
+                                          //       letterSpacing: .1,
+                                          //       fontSize: size.width * 0.04,
+                                          //       color: LinqPeColors.kBlackColor,
+                                          //       fontWeight: FontWeight.w500,
+                                          //     ),
+                                          //   ),
+                                          // )
+                                        ],
+                                      ))),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         );

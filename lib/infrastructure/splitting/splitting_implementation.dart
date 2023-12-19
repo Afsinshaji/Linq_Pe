@@ -6,6 +6,7 @@ import 'package:linq_pe/domain/models/splitted/splitted_accounts.dart';
 import 'package:linq_pe/domain/models/transactions/secondary_transactions.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_model.dart';
 import 'package:linq_pe/domain/repositories/splitting/splitting.dart';
+import 'package:linq_pe/infrastructure/ledger/ledger_implementation.dart';
 import 'package:linq_pe/infrastructure/transactions/transactions_implementation.dart';
 
 class SplittingImplementation extends SplittingRepository {
@@ -30,14 +31,14 @@ class SplittingImplementation extends SplittingRepository {
       required TransactionType transactionType,
       required DateTime timeOfTrans,
       required String ledgerId,
-
       File? billImage,
       String? userTransactionId,
       String? transactionDetails}) async {
     final splittedAccountsList = splittingBox.values.toList();
     final splittedIndex = splittedAccountsList.indexWhere((element) =>
         element.primaryAccountContactId == primaryAccountId &&
-        element.splittedAccountContactId == splittedAccountId&& element.ledgerId==ledgerId);
+        element.splittedAccountContactId == splittedAccountId &&
+        element.ledgerId == ledgerId);
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     double balanceAmount = 0.0;
     double payedAmount = 0.0;
@@ -47,13 +48,11 @@ class SplittingImplementation extends SplittingRepository {
       balanceAmount = amountSplitted;
       payedAmount = 0.0;
       receivedAmount = amountSplitted;
-      transactionList.add(TransactionModel(transactionId: id,ledgerId:ledgerId ));
-
-
+      transactionList
+          .add(TransactionModel(transactionId: id, ledgerId: ledgerId));
 
       await splittingBox.add(SplittedAccountsModel(
-ledgerId: ledgerId,
-      
+          ledgerId: ledgerId,
           primaryAccountContactId: primaryAccountId,
           splittedAccountContactId: splittedAccountId,
           recievedAmt: receivedAmount,
@@ -69,12 +68,13 @@ ledgerId: ledgerId,
       if (splittedAccountsList[splittedIndex].transactionList != null) {
         transactionList = splittedAccountsList[splittedIndex].transactionList!;
       }
-      transactionList.add(TransactionModel(transactionId: id, ledgerId:ledgerId ));
+      transactionList
+          .add(TransactionModel(transactionId: id, ledgerId: ledgerId));
 
       await splittingBox.putAt(
           splittedIndex,
           SplittedAccountsModel(
-        ledgerId: ledgerId,
+            ledgerId: ledgerId,
             primaryAccountContactId: primaryAccountId,
             splittedAccountContactId: splittedAccountId,
             recievedAmt: receivedAmount,
@@ -83,12 +83,14 @@ ledgerId: ledgerId,
             transactionList: transactionList,
           ));
     }
+    await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: amountSplitted, payedAmt: 0.0, ledgerId: ledgerId);
 
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
-          billImage: await convertToUni8List(billImage),
-          transactionDetails:transactionDetails ,
-          transactionId: userTransactionId,
+            billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: primaryAccountId,
@@ -106,9 +108,14 @@ ledgerId: ledgerId,
             givenAmt: amountSplitted,
             fromContactId: 'You'));
   }
- @override
-  List<SplittedAccountsModel> getSplittedAccountList({  required String ledgerId})  {
-    final listOfSplittedAccountsList = splittingBox.values.toList().where((element) => element.ledgerId==ledgerId).toList();
+
+  @override
+  List<SplittedAccountsModel> getSplittedAccountList(
+      {required String ledgerId}) {
+    final listOfSplittedAccountsList = splittingBox.values
+        .toList()
+        .where((element) => element.ledgerId == ledgerId)
+        .toList();
     return listOfSplittedAccountsList;
   }
 }

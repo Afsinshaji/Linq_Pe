@@ -13,6 +13,7 @@ import 'package:linq_pe/application/rolling/rolling_bloc.dart';
 import 'package:linq_pe/application/view_dto/rolling/rolling.dart';
 import 'package:linq_pe/presentation/screens/view_rolling/screen_view_rolling.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
@@ -95,41 +96,7 @@ class _RolledTabViewState extends State<RolledTabView> {
             ),
             child: Column(
               children: [
-                Motion(
-                  shadow: const ShadowConfiguration(
-                    color: LinqPeColors.kPinkColor,
-                    blurRadius: 0,
-                  ),
-                  child: Material(
-                    shadowColor: LinqPeColors.kPinkColor,
-                    elevation: 7,
-                    color: LinqPeColors.kPinkColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(size.width * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          AmountNotifier(
-                              iconColor: LinqPeColors.kBlueColor,
-                              textSign: 'Your balance',
-                              amount: getTotalBalance(contactList)),
-                          Container(
-                            width: size.width * 0.001,
-                            height: size.width * 0.15,
-                            color: LinqPeColors.kWhiteColor,
-                          ),
-                          AmountNotifier(
-                              iconColor: LinqPeColors.kredColor,
-                              textSign: 'You payed',
-                              amount: getTotalPayment(contactList))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                AmountNotifierRowMotionWidget(size: size),
                 SizedBox(
                   height: size.height * 0.01,
                 ),
@@ -175,6 +142,54 @@ class _RolledTabViewState extends State<RolledTabView> {
   }
 }
 
+class AmountNotifierRowMotionWidget extends ConsumerWidget {
+  const AmountNotifierRowMotionWidget({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Motion(
+      shadow: const ShadowConfiguration(
+        color: LinqPeColors.kPinkColor,
+        blurRadius: 0,
+      ),
+      child: Material(
+        shadowColor: LinqPeColors.kPinkColor,
+        elevation: 7,
+        color: LinqPeColors.kPinkColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(size.width * 0.01),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              AmountNotifier(
+                  iconColor: LinqPeColors.kBlueColor,
+                  textSign: 'Your balance',
+                  amount: ref.watch(totalBalanceAmountProvider)),
+              Container(
+                width: size.width * 0.001,
+                height: size.width * 0.15,
+                color: LinqPeColors.kWhiteColor,
+              ),
+              AmountNotifier(
+                  iconColor: LinqPeColors.kredColor,
+                  textSign: 'You payed',
+                  amount: ref.watch(totalPayedAmountProvider))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class HomePartyList extends ConsumerWidget {
   const HomePartyList({
     super.key,
@@ -188,7 +203,7 @@ class HomePartyList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<RollingAccountsDTO> rollingAccountList = [];
-    String search = ref.watch(homeSearchProvider);
+    String search = ref.watch(rolledSearchProvider);
     List<ContactsDTO> partyList = [];
     // if (search.isNotEmpty) {
     //   partyList = listOfParties
@@ -215,6 +230,14 @@ class HomePartyList extends ConsumerWidget {
             partyList.add(listOfParties[partyIndex]);
           }
         }
+        partyList = partyList.reversed.toList();
+        if (search.isNotEmpty) {
+          partyList = partyList
+              .where((element) => element.displayName
+                  .toLowerCase()
+                  .contains(search.toLowerCase().trim()))
+              .toList();
+        }
         return ListView.separated(
           // shrinkWrap: true,
           itemBuilder: (context, index) {
@@ -231,8 +254,9 @@ class HomePartyList extends ConsumerWidget {
                     context,
                     CupertinoPageRoute(
                       builder: (context) => ViewRollingScreen(
-contact: partyList[index],rollingAccount: rollingAccountList[index] ,
-                         ),
+                        contact: partyList[index],
+                        rollingAccount: rollingAccountList[index],
+                      ),
                     ));
               },
               size: size,
@@ -278,7 +302,7 @@ class SearchRow extends ConsumerWidget {
                   )),
               child: TextField(
                 onChanged: (value) {
-                  homeSearch(value, ref);
+                  rolledSearch(value, ref);
                 },
                 // controller: searchController,
 

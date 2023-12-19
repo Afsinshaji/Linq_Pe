@@ -7,9 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
+import 'package:linq_pe/application/ledger/ledger_bloc.dart';
 
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
+import 'package:linq_pe/application/splitted/splitted_bloc.dart';
+import 'package:linq_pe/application/view_dto/ledger/ledger.dart';
+import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
@@ -20,7 +26,7 @@ import 'package:linq_pe/utilities/colors.dart';
 import 'package:motion/motion.dart';
 
 class PartyTabView extends StatefulWidget {
-  const PartyTabView({super.key,required this.ledgerId});
+  const PartyTabView({super.key, required this.ledgerId});
   final String ledgerId;
 
   @override
@@ -33,9 +39,11 @@ class _PartyTabViewState extends State<PartyTabView> {
   void initState() {
     super.initState();
     BlocProvider.of<ContactsBloc>(context)
-        .add( ContactsEvent.getContacts(ledgerId: widget.ledgerId));
+        .add(ContactsEvent.getContacts(ledgerId: widget.ledgerId));
     BlocProvider.of<CustomerBloc>(context)
-        .add( CustomerEvent.getCustomerList(ledgerId: widget.ledgerId));
+        .add(CustomerEvent.getCustomerList(ledgerId: widget.ledgerId));
+    BlocProvider.of<SplittedBloc>(context)
+        .add(SplittedEvent.getSplittedList(ledgerId: widget.ledgerId));
   }
 
   @override
@@ -77,96 +85,158 @@ class _PartyTabViewState extends State<PartyTabView> {
         ),
       ),
       backgroundColor: LinqPeColors.kPinkColor,
-      body: BlocBuilder<CustomerBloc, CustomerState>(
-        builder: (context, state) {
-          if (state is displayCustomerList) {
-            partyList = state.customers;
+      body: BlocBuilder<SplittedBloc, SplittedState>(
+        builder: (context, splittedstate) {
+          List<SplittedAccountsModelDTO> splittedAccountList = [];
+          if (splittedstate is displaySplittedAccounts) {
+            splittedAccountList = splittedstate.splittedAccountList;
           }
+          return BlocBuilder<CustomerBloc, CustomerState>(
+            builder: (context, state) {
+              if (state is displayCustomerList) {
+                partyList = state.customers;
+              }
 
-          return Container(
-            // margin: EdgeInsets.all(size.width * 0.03),
-            padding: EdgeInsets.all(size.width * 0.03),
-            decoration: const BoxDecoration(
-              color: LinqPeColors.kWhiteColor,
-              // borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                Motion(
-                  shadow: const ShadowConfiguration(
-                    color: LinqPeColors.kPinkColor,
-                    blurRadius: 0,
-                  ),
-                  child: Material(
-                    shadowColor: LinqPeColors.kPinkColor,
-                    elevation: 7,
-                    color: LinqPeColors.kPinkColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(size.width * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          AmountNotifier(
-                              iconColor: LinqPeColors.kBlueColor,
-                              textSign: 'Your balance',
-                              amount: getTotalBalance(partyList)),
-                          Container(
-                            width: size.width * 0.001,
-                            height: size.width * 0.15,
-                            color: LinqPeColors.kWhiteColor,
-                          ),
-                          AmountNotifier(
-                              iconColor: LinqPeColors.kredColor,
-                              textSign: 'You payed',
-                              amount: getTotalPayment(partyList))
-                        ],
-                      ),
-                    ),
-                  ),
+              return Container(
+                // margin: EdgeInsets.all(size.width * 0.03),
+                padding: EdgeInsets.all(size.width * 0.03),
+                decoration: const BoxDecoration(
+                  color: LinqPeColors.kWhiteColor,
+                  // borderRadius: BorderRadius.circular(30),
                 ),
-                SizedBox(
-                  height: size.height * 0.01,
+                child: Column(
+                  children: [
+                    AmountNotifierRowMotionWidget(
+                        splittedAccountList: splittedAccountList,
+                        size: size,
+                        partyList: partyList),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    SearchRow(size: size, color: LinqPeColors.kPinkColor),
+                    partyList.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: size.height * 0.05),
+                              child: Image.asset(
+                                  'assets/gif/dazzle-online-banking.gif'),
+                            ),
+                          )
+                        : Expanded(
+                            child: HomePartyList(
+                                listOfParties: partyList, size: size),
+                          )
+                  ],
                 ),
-                SearchRow(size: size, color: LinqPeColors.kPinkColor),
-                partyList.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: size.height * 0.05),
-                          child: Image.asset(
-                              'assets/gif/dazzle-online-banking.gif'),
-                        ),
-                      )
-                    : Expanded(
-                        child:
-                            HomePartyList(listOfParties: partyList, size: size),
-                      )
-              ],
-            ),
+              );
+            },
           );
         },
       ),
     );
   }
+}
 
-  String getTotalBalance(List<ContactsDTO> partyList) {
+class AmountNotifierRowMotionWidget extends ConsumerWidget {
+  const AmountNotifierRowMotionWidget(
+      {super.key,
+      required this.size,
+      required this.partyList,
+      required this.splittedAccountList});
+  final List<SplittedAccountsModelDTO> splittedAccountList;
+
+  final Size size;
+  final List<ContactsDTO> partyList;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    String balance = '0.0';
+    // getTotalBalance(partyList, splittedAccountList);
+    String payed = '0.0';
+    // getTotalPayment(partyList, splittedAccountList);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      addTotalBalanceAmount(balance, ref);
+      addTotalPayedAmount(payed, ref);
+    });
+    return BlocBuilder<LedgerBloc, LedgerState>(
+      builder: (context, ledgerstate) {
+        List<LedgerDTO> ledgerList = [];
+        if (ledgerstate is displayLedgers) {
+          ledgerList = ledgerstate.ledgerList;
+        }
+        final ledgerIndex = ledgerList.indexWhere((element) =>
+            element.ledgerId == ref.watch(currentLedgerIdProvider));
+        if (ledgerIndex >= 0) {
+          if (ledgerList[ledgerIndex].totalBlanceAmount != null) {
+            balance = ledgerList[ledgerIndex].totalBlanceAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].totalPayedAmount != null) {
+            payed = ledgerList[ledgerIndex].totalPayedAmount.toString();
+          }
+        }
+        return Motion(
+          shadow: const ShadowConfiguration(
+            color: LinqPeColors.kPinkColor,
+            blurRadius: 0,
+          ),
+          child: Material(
+            shadowColor: LinqPeColors.kPinkColor,
+            elevation: 7,
+            color: LinqPeColors.kPinkColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(size.width * 0.01),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kBlueColor,
+                      textSign: 'Your balance',
+                      amount: balance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kredColor,
+                      textSign: 'You payed',
+                      amount: payed)
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String getTotalBalance(List<ContactsDTO> partyList,
+      List<SplittedAccountsModelDTO> splittedAccountList) {
     double balance = 0.0;
     for (var party in partyList) {
       if (party.blanceAmount != null) {
         balance = balance + party.blanceAmount!;
       }
     }
+    for (var split in splittedAccountList) {
+      balance = balance + split.balanceAmt;
+    }
     return balance.toString();
   }
 
-  String getTotalPayment(List<ContactsDTO> partyList) {
+  String getTotalPayment(List<ContactsDTO> partyList,
+      List<SplittedAccountsModelDTO> splittedAccountList) {
     double payment = 0.0;
     for (var party in partyList) {
       if (party.payedAmount != null) {
         payment = payment + party.payedAmount!;
       }
+    }
+    for (var split in splittedAccountList) {
+      payment = payment + split.balanceAmt;
     }
     return payment.toString();
   }

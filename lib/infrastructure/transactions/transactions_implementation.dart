@@ -10,6 +10,7 @@ import 'package:linq_pe/domain/models/transactions/party_account_model.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_model.dart';
 import 'package:linq_pe/domain/repositories/transactions/transactions_repository.dart';
 import 'package:linq_pe/infrastructure/contacts/contacts_implementation.dart';
+import 'package:linq_pe/infrastructure/ledger/ledger_implementation.dart';
 import 'package:linq_pe/infrastructure/party/party_implementation.dart';
 import 'package:linq_pe/infrastructure/splitting/splitting_implementation.dart';
 
@@ -40,10 +41,12 @@ class TransactionsImplementation extends TransactionsRepository {
     expenseBox = await Hive.openBox("expenseBox");
   }
 
-  Future<void> deletePartyAccount({required String contactId, required String ledgerId}) async {
+  Future<void> deletePartyAccount(
+      {required String contactId, required String ledgerId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == contactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == contactId && element.ledgerId == ledgerId);
     if (transactedAccountIndex >= 0) {
       await partyAccountsBox.deleteAt(transactedAccountIndex);
     }
@@ -56,9 +59,8 @@ class TransactionsImplementation extends TransactionsRepository {
       required double amount,
       required String primaryContactId,
       required TransactionType transactionType,
-        required String ledgerId,
+      required String ledgerId,
       required DateTime timeOfTrans,
-      
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
@@ -66,14 +68,13 @@ class TransactionsImplementation extends TransactionsRepository {
     final splittingAccountsList =
         SplittingImplementation.instance.splittingBox.values.toList();
     final splittedAccountIndex = splittingAccountsList.indexWhere((element) =>
-    element.ledgerId==ledgerId&&
+        element.ledgerId == ledgerId &&
         element.splittedAccountContactId == fromContactId &&
         element.primaryAccountContactId == primaryContactId);
     final contactsList =
         ContactsImplementation.instance.contactsBox.values.toList();
-    final contactIndex = contactsList
-        .indexWhere((element) => element.contactId == primaryContactId&&
-        element.ledgerId==ledgerId);
+    final contactIndex = contactsList.indexWhere((element) =>
+        element.contactId == primaryContactId && element.ledgerId == ledgerId);
     // final contact = contactsList[contactIndex];
     // final partyList = partyAccountsBox.values.toList();
     // final partyIndex = partyList
@@ -103,8 +104,9 @@ class TransactionsImplementation extends TransactionsRepository {
       transactionList = splittedAccount.transactionList!;
     }
 
-    transactionList.add(TransactionModel(transactionId: id,
-    ledgerId: ledgerId,
+    transactionList.add(TransactionModel(
+      transactionId: id,
+      ledgerId: ledgerId,
     ));
 
     await SplittingImplementation.instance.splittingBox.putAt(
@@ -118,6 +120,9 @@ class TransactionsImplementation extends TransactionsRepository {
           balanceAmt: splittedAccount.balanceAmt - amount,
           transactionList: transactionList,
         ));
+
+    await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: -amount, payedAmt: amount, ledgerId: ledgerId);
 
     await transactionBox.add(SecondaryTransactionsModel(
         isExpense: true,
@@ -147,10 +152,10 @@ class TransactionsImplementation extends TransactionsRepository {
     //     contactId: primaryContactId);
 
     await recepientTransaction(
-      billImage: billImage,
-      transactionDetails: transactionDetails,
-      transactionId: transactionId,
-      ledgerId: ledgerId,
+        billImage: billImage,
+        transactionDetails: transactionDetails,
+        transactionId: transactionId,
+        ledgerId: ledgerId,
         isExpenseAccount: true,
         fromContactId: fromContactId,
         toContactId: toContactId,
@@ -170,26 +175,27 @@ class TransactionsImplementation extends TransactionsRepository {
       required String fromContactId,
       required String toContactId,
       required double amount,
-        required String ledgerId,
+      required String ledgerId,
       required bool isPayed,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
+      bool isFromRecepient = false,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     log('pay$isPayed');
 
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == fromContactId
-        && element.ledgerId==ledgerId
-        );
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == fromContactId && element.ledgerId == ledgerId);
 
     if (transactedAccountIndex < 0) {
       //come
 
       await createNewTransaction(
-        ledgerId:ledgerId ,
+        isFromRecepient: isFromRecepient,
+        ledgerId: ledgerId,
         isExpenseAccount: isExpenseAccount,
         primaryContactId: fromContactId,
         isGive: false,
@@ -223,7 +229,8 @@ class TransactionsImplementation extends TransactionsRepository {
       //     ]));
     } else {
       await updateExistingTransaction(
-        ledgerId: ledgerId,
+          isFromRecepient: isFromRecepient,
+          ledgerId: ledgerId,
           isExpenseAccount: isExpenseAccount,
           isSecondaryPay: false,
           primaryContactId: fromContactId,
@@ -318,7 +325,8 @@ class TransactionsImplementation extends TransactionsRepository {
       required bool isGive,
       required String primaryContactId,
       required bool isExpenseAccount,
-       required String ledgerId,
+      required String ledgerId,
+      bool isFromRecepient = false,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
@@ -352,23 +360,31 @@ class TransactionsImplementation extends TransactionsRepository {
     }
 
     await partyAccountsBox.add(PartyAccountsModel(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         contactId: fromContactId,
         recievedAmt: isAddBalance || isGive ? 0 : amount,
         payedAmt: isPayed || isGive ? amount : 0,
         balanceAmt: isGive ? -amount : amount,
         transactionList: [
-          TransactionModel(transactionId: id, transactionsList: [],
-          ledgerId:ledgerId ,
+          TransactionModel(
+            transactionId: id,
+            transactionsList: [],
+            ledgerId: ledgerId,
           ),
         ]));
 
     await ContactsImplementation.instance.updateContactAmounts(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         balanceAmount: isGive ? -amount : amount,
         receivedAmount: isAddBalance || isGive ? 0 : amount,
         payedAmount: isPayed || isGive ? amount : 0,
         contactId: isAddBalance || isGive ? toContactId : fromContactId);
+    if (isFromRecepient == false) {
+      await LedgerImplementation.instance.addLedgerAmounts(
+          blanceAmt: isGive ? -amount : amount,
+          payedAmt: isPayed || isGive ? amount : 0,
+          ledgerId: ledgerId);
+    }
   }
 
   updateExistingTransaction(
@@ -376,7 +392,8 @@ class TransactionsImplementation extends TransactionsRepository {
       required String toContactId,
       String? transactionDetails,
       required double amount,
-      required bool isPayed,  required String ledgerId,
+      required bool isPayed,
+      required String ledgerId,
       required List<PartyAccountsModel> transactedAccountsList,
       required int transactedAccountIndex,
       required TransactionType transactionType,
@@ -387,6 +404,7 @@ class TransactionsImplementation extends TransactionsRepository {
       required String primaryContactId,
       required bool isSecondaryPay,
       required bool isExpenseAccount,
+      bool isFromRecepient = false,
       File? billImage,
       String? transactionId}) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
@@ -423,9 +441,7 @@ class TransactionsImplementation extends TransactionsRepository {
       log('kiki');
       if (!isPayed) {
         final lastIndex = secondaryList
-            .lastIndexWhere((element) => element.toContactId == toContactId
-         
-            );
+            .lastIndexWhere((element) => element.toContactId == toContactId);
         if (lastIndex < 0) {
           await transactionBox.add(transactionModel);
         } else {
@@ -465,14 +481,14 @@ class TransactionsImplementation extends TransactionsRepository {
       await transactionBox.add(transactionModel);
     }
     transactionIdList!.add(TransactionModel(
-      ledgerId:ledgerId ,
+      ledgerId: ledgerId,
       transactionId: id,
     ));
     log('Giving:${transaction.recievedAmt}');
     await partyAccountsBox.putAt(
         transactedAccountIndex,
         PartyAccountsModel(
-          ledgerId: ledgerId,
+            ledgerId: ledgerId,
             contactId: transaction.contactId,
             recievedAmt: isAddBalance || isPayed || isGive
                 ? transaction.recievedAmt
@@ -487,7 +503,7 @@ class TransactionsImplementation extends TransactionsRepository {
             // secondaryTransaction: secondaryList,
             ));
     await ContactsImplementation.instance.updateContactAmounts(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         balanceAmount: isPayed || isGive
             ? transaction.balanceAmt - amount
             : transaction.balanceAmt + amount,
@@ -498,10 +514,16 @@ class TransactionsImplementation extends TransactionsRepository {
             ? transaction.payedAmt + amount
             : transaction.payedAmt,
         contactId: isAddBalance || isGive ? toContactId : fromContactId);
+    if (isFromRecepient == false) {
+      await LedgerImplementation.instance.addLedgerAmounts(
+          blanceAmt: isPayed || isGive ? -amount : amount,
+          payedAmt: isPayed || isGive ? amount : 0.0,
+          ledgerId: ledgerId);
+    }
 
     if (isPayed) {
       await recepientTransaction(
-        ledgerId: ledgerId,
+          ledgerId: ledgerId,
           isExpenseAccount: true,
           fromContactId: fromContactId,
           toContactId: toContactId,
@@ -529,27 +551,29 @@ class TransactionsImplementation extends TransactionsRepository {
       required bool isGive,
       required String primaryContactId,
       required bool isExpenseAccount,
-        required String ledgerId,
+      required String ledgerId,
       File? billImage,
       String? transactionId}) async {
     if (isExpenseAccount) {
       final expenseAccountList = expenseBox.values.toList();
-      final expenseAccountIndex = expenseAccountList
-          .indexWhere((element) => element.contactId == toContactId && element.ledgerId==ledgerId);
+      final expenseAccountIndex = expenseAccountList.indexWhere((element) =>
+          element.contactId == toContactId && element.ledgerId == ledgerId);
       if (expenseAccountIndex < 0) {
-        await expenseBox.add(ExpenseAccountModel(
-          ledgerId: ledgerId,
-          contactId: toContactId));
+        await expenseBox.add(
+            ExpenseAccountModel(ledgerId: ledgerId, contactId: toContactId));
       }
     } else {
       final transactedAccountsList = partyAccountsBox.values.toList();
-      final transactedAccountIndex = transactedAccountsList
-          .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
+      final transactedAccountIndex = transactedAccountsList.indexWhere(
+          (element) =>
+              element.contactId == toContactId && element.ledgerId == ledgerId);
       if (transactedAccountIndex < 0) {
-        await PartyImplementation.instance.addCustomer(contactId: toContactId,ledgerId: ledgerId);
+        await PartyImplementation.instance
+            .addCustomer(contactId: toContactId, ledgerId: ledgerId);
       }
     }
     await addGetTransction(
+      isFromRecepient: true,
       ledgerId: ledgerId,
       isExpenseAccount: isExpenseAccount,
       fromContactId: toContactId,
@@ -571,13 +595,14 @@ class TransactionsImplementation extends TransactionsRepository {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
-        required String ledgerId,
+      required String ledgerId,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == toContactId && element.ledgerId == ledgerId);
     if (transactedAccountIndex < 0) {
       await createNewTransaction(
         ledgerId: ledgerId,
@@ -598,7 +623,7 @@ class TransactionsImplementation extends TransactionsRepository {
       );
     } else {
       await updateExistingTransaction(
-        ledgerId: ledgerId,
+          ledgerId: ledgerId,
           isExpenseAccount: false,
           isSecondaryPay: false,
           primaryContactId: toContactId,
@@ -626,16 +651,17 @@ class TransactionsImplementation extends TransactionsRepository {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
-        required String ledgerId,
+      required String ledgerId,
       String? transactionDetails,
       File? billImage,
       String? transactionId}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == toContactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == toContactId && element.ledgerId == ledgerId);
     if (transactedAccountIndex < 0) {
       createNewTransaction(
-        ledgerId: ledgerId,
+          ledgerId: ledgerId,
           isExpenseAccount: false,
           billImage: billImage,
           transactionDetails: transactionDetails,
@@ -652,7 +678,7 @@ class TransactionsImplementation extends TransactionsRepository {
           isGive: true);
     } else {
       await updateExistingTransaction(
-        ledgerId: ledgerId,
+          ledgerId: ledgerId,
           isExpenseAccount: false,
           isSecondaryPay: false,
           primaryContactId: toContactId,
@@ -674,10 +700,16 @@ class TransactionsImplementation extends TransactionsRepository {
   }
 
   @override
-  PartyAccountsModel? getAccountDetails({required String contactId,  required String ledgerId,}) {
+  PartyAccountsModel? getAccountDetails({
+    required String contactId,
+    required String ledgerId,
+  }) {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == contactId&&element.ledgerId==ledgerId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == contactId &&
+            element.ledgerId == ledgerId &&
+            element.ledgerId == ledgerId);
     if (transactedAccountIndex < 0) {
       return null;
     } else {
@@ -715,15 +747,17 @@ class TransactionsImplementation extends TransactionsRepository {
       required double amountPayed,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
-        required String ledgerId,
+      required String ledgerId,
       File? billImage,
       String? transactionId,
       String? transactionDetails}) async {
     // Step 1: Retrieve Transacted Accounts
     final transactedAccountsList = partyAccountsBox.values.toList();
     // Step 2: Find Primary Transaction
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == primaryContactId &&
+            element.ledgerId == ledgerId);
     if (transactedAccountIndex < 0) {
       // If primary transaction not found, return
       return;
@@ -742,8 +776,9 @@ class TransactionsImplementation extends TransactionsRepository {
         List<SecondaryTransactionsModel> listOfSecondaryTransactions = [];
 
         final transactionIdIndex =
-            listOfPrimeSecondaryTransactionIds.indexWhere(
-                (element) => element.transactionId == splittedTransactionId&& element.ledgerId==ledgerId);
+            listOfPrimeSecondaryTransactionIds.indexWhere((element) =>
+                element.transactionId == splittedTransactionId &&
+                element.ledgerId == ledgerId);
         if (transactionIdIndex < 0) {
           return;
         }
@@ -779,8 +814,9 @@ class TransactionsImplementation extends TransactionsRepository {
             return;
           }
 
-          final idIndex = splittedIdList.indexWhere(
-              (element) => element.transactionId == transactionRealId&& element.ledgerId==ledgerId);
+          final idIndex = splittedIdList.indexWhere((element) =>
+              element.transactionId == transactionRealId &&
+              element.ledgerId == ledgerId);
           if (idIndex < 0) {
             return;
           }
@@ -808,14 +844,14 @@ class TransactionsImplementation extends TransactionsRepository {
             }
           }
 
-          idList.add(TransactionModel(transactionId: id,ledgerId: ledgerId));
+          idList.add(TransactionModel(transactionId: id, ledgerId: ledgerId));
           splittedIdList[idIndex] = TransactionModel(
-            ledgerId: ledgerId,
+              ledgerId: ledgerId,
               transactionId: splittedIdList[idIndex].transactionId,
               transactionsList: idList);
           listOfPrimeSecondaryTransactionIds[transactionIdIndex] =
               TransactionModel(
-                ledgerId: ledgerId,
+                  ledgerId: ledgerId,
                   transactionId:
                       listOfPrimeSecondaryTransactionIds[transactionIdIndex]
                           .transactionId,
@@ -823,7 +859,7 @@ class TransactionsImplementation extends TransactionsRepository {
           await partyAccountsBox.putAt(
               transactedAccountIndex,
               PartyAccountsModel(
-                ledgerId: primaryTransaction.ledgerId,
+                  ledgerId: primaryTransaction.ledgerId,
                   contactId: primaryTransaction.contactId,
                   recievedAmt: primaryTransaction.recievedAmt,
                   payedAmt: primaryTransaction.payedAmt + amountPayed,
@@ -959,11 +995,14 @@ class TransactionsImplementation extends TransactionsRepository {
 // // Update the primary transaction in the data store
 //         transactionBox.putAt(transactedAccountIndex, renewedPrimaryTransaction);
         await ContactsImplementation.instance.updateContactAmounts(
-          ledgerId: ledgerId,
+            ledgerId: ledgerId,
             balanceAmount: primaryTransaction.balanceAmt - amountPayed,
             receivedAmount: primaryTransaction.recievedAmt,
             payedAmount: primaryTransaction.payedAmt + amountPayed,
             contactId: primaryTransaction.contactId);
+
+        await LedgerImplementation.instance.addLedgerAmounts(
+            blanceAmt: -amountPayed, payedAmt: amountPayed, ledgerId: ledgerId);
 //         // }
 //       }
       }
@@ -976,7 +1015,8 @@ class TransactionsImplementation extends TransactionsRepository {
 
   @override
   Future<void> splitBalanceAmount(
-      {required String primaryContactId,  required String ledgerId,
+      {required String primaryContactId,
+      required String ledgerId,
       required String toContactId,
       required double splitAmount,
       required TransactionType transactionType,
@@ -985,8 +1025,10 @@ class TransactionsImplementation extends TransactionsRepository {
       String? userTransactionId,
       String? transactionDetails}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == primaryContactId &&
+            element.ledgerId == ledgerId);
 
     if (transactedAccountIndex < 0) {
       return;
@@ -1016,11 +1058,12 @@ class TransactionsImplementation extends TransactionsRepository {
         isPayed: false,
         givenAmt: splitAmount,
         fromContactId: 'You'));
-    primaryAccount.transactionList!.add(TransactionModel(transactionId: id,ledgerId: ledgerId));
+    primaryAccount.transactionList!
+        .add(TransactionModel(transactionId: id, ledgerId: ledgerId));
     await partyAccountsBox.putAt(transactedAccountIndex, primaryAccount);
 
     await recepientTransaction(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         isExpenseAccount: false,
         fromContactId: primaryContactId,
         toContactId: toContactId,
@@ -1045,14 +1088,16 @@ class TransactionsImplementation extends TransactionsRepository {
       required double splitAmount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
-        required String ledgerId,
+      required String ledgerId,
       required String id,
       File? billImage,
       String? userTransactionId,
       String? transactionDetails}) async {
     final transactedAccountsList = partyAccountsBox.values.toList();
-    final transactedAccountIndex = transactedAccountsList
-        .indexWhere((element) => element.contactId == primaryContactId&& element.ledgerId==ledgerId);
+    final transactedAccountIndex = transactedAccountsList.indexWhere(
+        (element) =>
+            element.contactId == primaryContactId &&
+            element.ledgerId == ledgerId);
 
     if (transactedAccountIndex < 0) {
       return;
@@ -1063,8 +1108,8 @@ class TransactionsImplementation extends TransactionsRepository {
     if (transactionsIdList == null) {
       return;
     }
-    final transactionIndex = transactionsIdList
-        .indexWhere((element) => element.transactionId == transactionId&& element.ledgerId==ledgerId);
+    final transactionIndex = transactionsIdList.indexWhere((element) =>
+        element.transactionId == transactionId && element.ledgerId == ledgerId);
     if (transactionIndex < 0) {
       return;
     }
@@ -1158,7 +1203,7 @@ class TransactionsImplementation extends TransactionsRepository {
   @override
   Future<void> deleteTransaction({
     required String transactionRealId,
-      required String ledgerId,
+    required String ledgerId,
   }) async {
     final listOfAllTransactions = transactionBox.values.toList();
     final transactionIndex = listOfAllTransactions
@@ -1168,8 +1213,9 @@ class TransactionsImplementation extends TransactionsRepository {
     }
     final transaction = listOfAllTransactions[transactionIndex];
     final partyAccountList = partyAccountsBox.values.toList();
-    final partyIndex = partyAccountList.indexWhere(
-        (element) => element.contactId == transaction.primaryAccountId&& element.ledgerId==ledgerId);
+    final partyIndex = partyAccountList.indexWhere((element) =>
+        element.contactId == transaction.primaryAccountId &&
+        element.ledgerId == ledgerId);
     final partyAccount = partyAccountList[partyIndex];
 
     await partyAccountsBox.putAt(
@@ -1203,7 +1249,7 @@ class TransactionsImplementation extends TransactionsRepository {
           // secondaryTransaction: secondaryList,
         ));
     await ContactsImplementation.instance.updateContactAmounts(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         balanceAmount: transaction.isPayed || transaction.isGive
             ? partyAccount.balanceAmt + transaction.givenAmt
             : partyAccount.balanceAmt - transaction.givenAmt,
@@ -1216,6 +1262,14 @@ class TransactionsImplementation extends TransactionsRepository {
         contactId: transaction.isAddBalance || transaction.isGive
             ? transaction.toContactId
             : transaction.fromContactId);
+    await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: transaction.isPayed || transaction.isGive
+            ? transaction.givenAmt
+            : -transaction.givenAmt,
+        payedAmt: transaction.isPayed || transaction.isGive
+            ? -transaction.givenAmt
+            : 0.0,
+        ledgerId: ledgerId);
 
     await transactionBox.deleteAt(transactionIndex);
   }
@@ -1227,7 +1281,7 @@ class TransactionsImplementation extends TransactionsRepository {
       required double amount,
       required TransactionType transactionType,
       required DateTime timeOfTrans,
-        required String ledgerId,
+      required String ledgerId,
       File? billImage,
       String? transactionId,
       String? transactionDetails}) async {
@@ -1239,8 +1293,9 @@ class TransactionsImplementation extends TransactionsRepository {
     }
     final transaction = listOfAllTransactions[transactionIndex];
     final partyAccountList = partyAccountsBox.values.toList();
-    final partyIndex = partyAccountList.indexWhere(
-        (element) => element.contactId == transaction.primaryAccountId&& element.ledgerId==ledgerId);
+    final partyIndex = partyAccountList.indexWhere((element) =>
+        element.contactId == transaction.primaryAccountId &&
+        element.ledgerId == ledgerId);
     final partyAccount = partyAccountList[partyIndex];
 
     await partyAccountsBox.putAt(
@@ -1272,7 +1327,7 @@ class TransactionsImplementation extends TransactionsRepository {
           // secondaryTransaction: secondaryList,
         ));
     await ContactsImplementation.instance.updateContactAmounts(
-      ledgerId: ledgerId,
+        ledgerId: ledgerId,
         balanceAmount: transaction.isPayed || transaction.isGive
             ? (partyAccount.balanceAmt + transaction.givenAmt) - amount
             : (partyAccount.balanceAmt - transaction.givenAmt) + amount,
@@ -1288,6 +1343,14 @@ class TransactionsImplementation extends TransactionsRepository {
         contactId: transaction.isAddBalance || transaction.isGive
             ? transaction.toContactId
             : transaction.fromContactId);
+    await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: transaction.isPayed || transaction.isGive
+            ? transaction.givenAmt - amount
+            : (amount - transaction.givenAmt),
+        payedAmt: transaction.isPayed || transaction.isGive
+            ? (amount - transaction.givenAmt)
+            : 0.0,
+        ledgerId: ledgerId);
 
     await transactionBox.putAt(
         transactionIndex,

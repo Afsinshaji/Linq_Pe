@@ -9,7 +9,6 @@ import 'package:linq_pe/presentation/screens/home/widgets/tab_views/splitted_tab
 import 'package:linq_pe/presentation/screens/settings/screen_settings.dart';
 import 'package:linq_pe/presentation/screens/view_splitted_accounts/screen_view_splitted_accounts.dart';
 import 'package:linq_pe/utilities/colors.dart';
-import 'package:linq_pe/utilities/strings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.ledgerId});

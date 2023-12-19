@@ -20,6 +20,9 @@ class RollingBloc extends Bloc<RollingEvent, RollingState> {
           splittingPrimaryAccountId: event.splittingPrimaryAccountId,
           amountRolled: event.amountRolled,
           transactionType: findTransactionType(event.transactionType),
+          billImage: event.billImage,
+          transactionDetails: event.transactionDetails,
+          userTransactionId: event.userTransactionId,
           timeOfTrans: event.timeOfTrans,
           ledgerId: event.ledgerId);
       add(RollingEvent.gettingRollingAccountList(ledgerId: event.ledgerId));
@@ -40,6 +43,9 @@ class RollingBloc extends Bloc<RollingEvent, RollingState> {
           splittingPrimaryAccountId: event.splittingPrimaryAccountId,
           amountRepaying: event.amountRepaying,
           transactionType: findTransactionType(event.transactionType),
+          billImage: event.billImage,
+          transactionDetails: event.transactionDetails,
+          userTransactionId: event.userTransactionId,
           timeOfTrans: event.timeOfTrans,
           ledgerId: event.ledgerId);
       add(RollingEvent.gettingRollingAccountList(ledgerId: event.ledgerId));

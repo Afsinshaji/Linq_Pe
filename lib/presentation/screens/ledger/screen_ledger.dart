@@ -45,12 +45,27 @@ class _LedgerScreenState extends State<LedgerScreen> {
         backgroundColor: LinqPeColors.kPinkColor,
         shadowColor: LinqPeColors.kBlackColor,
       ),
-      floatingActionButton: FloatingAddButton(
-        buttonName: 'Add Ledger',
-        heroTag: 'heroTagLedger',
-        partyType: 'Ledger',
-        partyColor: LinqPeColors.kPinkColor,
-        paddingHorizontal: size.width * 0.05,
+      floatingActionButton: Padding(
+        padding:  EdgeInsets.only(top: size.height*0.85),
+        child: Column(
+          children: [
+            FloatingAddButton(
+              buttonName: 'Add Ledger',
+              heroTag: 'heroTagLedger',
+              partyType: 'Ledger',
+              partyColor: LinqPeColors.kPinkColor,
+              paddingHorizontal: size.width * 0.05,
+            ),
+            SizedBox(height: size.height*0.01,),
+             FloatingAddButton(
+              buttonName: 'Roll Ledger',
+              heroTag: 'heroTagRollLedger',
+              partyType: 'Roll Ledger',
+              partyColor: LinqPeColors.kPinkColor,
+              paddingHorizontal: size.width * 0.05,
+            ),
+          ],
+        ),
       ),
       body: BlocBuilder<LedgerBloc, LedgerState>(
         builder: (context, state) {

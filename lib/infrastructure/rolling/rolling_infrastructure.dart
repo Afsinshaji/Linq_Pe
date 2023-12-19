@@ -55,6 +55,9 @@ class RollingImplementation extends RollingRepository {
         '${DateTime.now().millisecondsSinceEpoch.toString()}--$rollingAccountId';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
+              billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: splittingPrimaryAccountId,
@@ -68,9 +71,7 @@ class RollingImplementation extends RollingRepository {
             toContactId: rollingAccountId,
             payedAmt: 0,
             balanceAmt: amountRolled,
-            billImage: await convertToUni8List(billImage),
-            transactionDetails: transactionDetails,
-            transactionId: userTransactionId,
+          
             isPayed: false,
             givenAmt: amountRolled,
             fromContactId: splittingAccountId));
@@ -136,6 +137,9 @@ class RollingImplementation extends RollingRepository {
         '${DateTime.now().millisecondsSinceEpoch.toString()}-${splitAccount.splittedAccountContactId}';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
+              billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: splittingPrimaryAccountId,
@@ -208,6 +212,9 @@ class RollingImplementation extends RollingRepository {
         '${DateTime.now().millisecondsSinceEpoch.toString()}--$rollingAccountId';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
+              billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: splittingPrimaryAccountId,
@@ -221,9 +228,7 @@ class RollingImplementation extends RollingRepository {
             toContactId: splittingAccountId,
             payedAmt: 0,
             balanceAmt: amountRepaying,
-            billImage: await convertToUni8List(billImage),
-            transactionDetails: transactionDetails,
-            transactionId: userTransactionId,
+  
             isPayed: true,
             givenAmt: amountRepaying,
             fromContactId: rollingAccountId));
@@ -273,6 +278,9 @@ class RollingImplementation extends RollingRepository {
         '${DateTime.now().millisecondsSinceEpoch.toString()}-${splitAccount.splittedAccountContactId}';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
+              billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: splittingPrimaryAccountId,

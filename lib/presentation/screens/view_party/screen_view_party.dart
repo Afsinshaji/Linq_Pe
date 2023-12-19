@@ -113,127 +113,13 @@ class _ViewPartyScreenState extends State<ViewPartyScreen> {
                 actions: widget.isExpense
                     ? null
                     : [
-                        IconButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(100),
-                                    topRight: Radius.circular(100),
-                                  ),
-                                ),
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    width: size.width,
-                                    height: size.height * 0.3,
-                                    decoration: const BoxDecoration(
-                                      color: LinqPeColors.kPinkColor,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(100),
-                                        topRight: Radius.circular(100),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ClickButton(
-                                          textColor: LinqPeColors.kPinkColor,
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      AddAmountScreen(
-                                                        isRepay: false,
-                                                        ledgerId: widget.contact.ledgerId,
-                                                    splitAmount:
-                                                        (double.parse(balance) -
-                                                                splittedAmount)
-                                                            .toString(),
-                                                    isSplittingBalance: true,
-                                                    isGive: false,
-                                                    isSplit: true,
-                                                    isSecondaryPay: false,
-                                                    isPay: false,
-                                                    isAddBalance: false,
-                                                    partyName: widget
-                                                        .contact.displayName,
-                                                  ),
-                                                ));
-                                          },
-                                          width: size.width * 0.7,
-                                          text: 'SPLIT BALANCE ₹',
-                                          radius: 5,
-                                          backGroundColor:
-                                              LinqPeColors.kWhiteColor,
-                                          changeColor: LinqPeColors.kWhiteColor
-                                              .withOpacity(0.5),
-                                        ),
+                      //MenuIconPopupButton
+                        // MenuIconButtonWidget(size: size,
+                        //  widget: widget, balance: balance, 
+                        //  splittedAmount: splittedAmount, )
+//----------------------------------------------------------------------
 
-                                        ClickButton(
-                                          textColor: LinqPeColors.kPinkColor,
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      AddAmountScreen(
-                                                         isRepay: false,
-                                                        ledgerId: widget.contact.ledgerId,
-                                                    isGive: false,
-                                                    isSplit: false,
-                                                    isSecondaryPay: false,
-                                                    isPay: true,
-                                                    isAddBalance: false,
-                                                    partyName: widget
-                                                        .contact.displayName,
-                                                  ),
-                                                ));
-                                          },
-                                          width: size.width * 0.7,
-                                          text:
-                                              'PAY FOR ${widget.contact.displayName.toUpperCase()} ₹',
-                                          radius: 5,
-                                          backGroundColor:
-                                              LinqPeColors.kWhiteColor,
-                                          changeColor: LinqPeColors.kWhiteColor
-                                              .withOpacity(0.5),
-                                        ),
-                                        // ClickButton(
-                                        //   textColor: LinqPeColors.kPinkColor,
-                                        //   onTap: () {
-                                        //     Navigator.push(
-                                        //         context,
-                                        //         CupertinoPageRoute(
-                                        //           builder: (context) =>
-                                        //               AddAmountScreen(
-                                        //             isGive: false,
-                                        //             isSplit: false,
-                                        //             isSecondaryPay: false,
-                                        //             isPay: false,
-                                        //             isAddBalance: true,
-                                        //             partyName:
-                                        //                 widget.contact.displayName,
-                                        //           ),
-                                        //         ));
-                                        //   },
-                                        //   width: size.width * 0.7,
-                                        //   text: 'ADD BALANCE ₹',
-                                        //   radius: 5,
-                                        //   backGroundColor: LinqPeColors.kWhiteColor,
-                                        //   changeColor: LinqPeColors.kWhiteColor
-                                        //       .withOpacity(0.5),
-                                        // ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            color: LinqPeColors.kWhiteColor,
-                            icon: const Icon(Icons.menu))
+
                         // ClickButton(
                         //   textColor: LinqPeColors.kPinkColor,
                         //   onTap: () {
@@ -256,7 +142,7 @@ class _ViewPartyScreenState extends State<ViewPartyScreen> {
                         //   backGroundColor: LinqPeColors.kWhiteColor,
                         //   changeColor: LinqPeColors.kWhiteColor.withOpacity(0.5),
                         // ),
-                        ,
+                        //,
                         SizedBox(
                           width: size.width * 0.05,
                         )
@@ -421,6 +307,149 @@ class _ViewPartyScreenState extends State<ViewPartyScreen> {
           : ViewPartyBottomSheet(
               size: size, displayName: widget.contact.displayName),
     );
+  }
+}
+
+class MenuIconButtonWidget extends StatelessWidget {
+  const MenuIconButtonWidget({
+    super.key,
+    required this.size,
+    required this.widget,
+    required this.balance,
+    required this.splittedAmount,
+ 
+  });
+
+  final Size size;
+  final ViewPartyScreen widget;
+  final String balance;
+  final double splittedAmount;
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          showModalBottomSheet(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(100),
+                topRight: Radius.circular(100),
+              ),
+            ),
+            context: context,
+            builder: (context) {
+              return Container(
+                width: size.width,
+                height: size.height * 0.3,
+                decoration: const BoxDecoration(
+                  color: LinqPeColors.kPinkColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100),
+                    topRight: Radius.circular(100),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
+                  children: [
+                    ClickButton(
+                      textColor: LinqPeColors.kPinkColor,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  AddAmountScreen(
+                                    isRepay: false,
+                                    ledgerId: widget.contact.ledgerId,
+                                splitAmount:
+                                    (double.parse(balance) -
+                                            splittedAmount)
+                                        .toString(),
+                                isSplittingBalance: true,
+                                isGive: false,
+                                isSplit: true,
+                                isSecondaryPay: false,
+                                isPay: false,
+                                isAddBalance: false,
+                                partyName: widget
+                                    .contact.displayName,
+                              ),
+                            ));
+                      },
+                      width: size.width * 0.7,
+                      text: 'SPLIT BALANCE ₹',
+                      radius: 5,
+                      backGroundColor:
+                          LinqPeColors.kWhiteColor,
+                      changeColor: LinqPeColors.kWhiteColor
+                          .withOpacity(0.5),
+                    ),
+
+                    ClickButton(
+                      textColor: LinqPeColors.kPinkColor,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  AddAmountScreen(
+                                     isRepay: false,
+                                    ledgerId: widget.contact.ledgerId,
+                                isGive: false,
+                                isSplit: false,
+                                isSecondaryPay: false,
+                                isPay: true,
+                                isAddBalance: false,
+                                partyName: widget
+                                    .contact.displayName,
+                              ),
+                            ));
+                      },
+                      width: size.width * 0.7,
+                      text:
+                          'PAY FOR ${widget.contact.displayName.toUpperCase()} ₹',
+                      radius: 5,
+                      backGroundColor:
+                          LinqPeColors.kWhiteColor,
+                      changeColor: LinqPeColors.kWhiteColor
+                          .withOpacity(0.5),
+                    ),
+                    // ClickButton(
+                    //   textColor: LinqPeColors.kPinkColor,
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         CupertinoPageRoute(
+                    //           builder: (context) =>
+                    //               AddAmountScreen(
+                    //             isGive: false,
+                    //             isSplit: false,
+                    //             isSecondaryPay: false,
+                    //             isPay: false,
+                    //             isAddBalance: true,
+                    //             partyName:
+                    //                 widget.contact.displayName,
+                    //           ),
+                    //         ));
+                    //   },
+                    //   width: size.width * 0.7,
+                    //   text: 'ADD BALANCE ₹',
+                    //   radius: 5,
+                    //   backGroundColor: LinqPeColors.kWhiteColor,
+                    //   changeColor: LinqPeColors.kWhiteColor
+                    //       .withOpacity(0.5),
+                    // ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        color: LinqPeColors.kWhiteColor,
+        icon: const Icon(Icons.menu));
   }
 }
 
@@ -625,91 +654,91 @@ class EachTransactionContainer extends ConsumerWidget {
             }
           },
           onTap: () {
-            if (isSecondaryParty) {
-              log(transactionList[index].balanceAmt.toString());
-              log(transactionList[index].givenAmt.toString());
-              log(transactionList[index].payedAmt.toString());
-              ref.read(secondaryContactIdProvider.notifier).state =
-                  transactionList[index].toContactId;
-              final transactionListOfSecondaryParty = transactionList
-                  .where((element) =>
-                      element.isPayed == false &&
-                      element.toContactId == transactionList[index].toContactId)
-                  .toList();
-              double recievedAmount = 0;
-              log(transactionListOfSecondaryParty.length.toString());
-              for (var element in transactionListOfSecondaryParty) {
-                recievedAmount = recievedAmount + element.givenAmt;
-              }
-              double balanceAmount = transactionListOfSecondaryParty[
-                      transactionListOfSecondaryParty.length - 1]
-                  .balanceAmt;
-              double payedAmt = transactionListOfSecondaryParty[
-                      transactionListOfSecondaryParty.length - 1]
-                  .payedAmt;
-              log(recievedAmount.toString());
-              if (transactionListOfSecondaryParty[
-                              transactionListOfSecondaryParty.length - 1]
-                          .secondaryList !=
-                      null &&
-                  transactionListOfSecondaryParty[
-                          transactionListOfSecondaryParty.length - 1]
-                      .secondaryList!
-                      .isNotEmpty) {
-                BlocProvider.of<SecondaryPartyBloc>(context).add(
-                    SecondaryPartyEvent.addSecondaryPartyList(
-                        transactionList: transactionListOfSecondaryParty[
-                                transactionListOfSecondaryParty.length - 1]
-                            .secondaryList!));
+            // if (isSecondaryParty) {
+            //   log(transactionList[index].balanceAmt.toString());
+            //   log(transactionList[index].givenAmt.toString());
+            //   log(transactionList[index].payedAmt.toString());
+            //   ref.read(secondaryContactIdProvider.notifier).state =
+            //       transactionList[index].toContactId;
+            //   final transactionListOfSecondaryParty = transactionList
+            //       .where((element) =>
+            //           element.isPayed == false &&
+            //           element.toContactId == transactionList[index].toContactId)
+            //       .toList();
+            //   double recievedAmount = 0;
+            //   log(transactionListOfSecondaryParty.length.toString());
+            //   for (var element in transactionListOfSecondaryParty) {
+            //     recievedAmount = recievedAmount + element.givenAmt;
+            //   }
+            //   double balanceAmount = transactionListOfSecondaryParty[
+            //           transactionListOfSecondaryParty.length - 1]
+            //       .balanceAmt;
+            //   double payedAmt = transactionListOfSecondaryParty[
+            //           transactionListOfSecondaryParty.length - 1]
+            //       .payedAmt;
+            //   log(recievedAmount.toString());
+            //   if (transactionListOfSecondaryParty[
+            //                   transactionListOfSecondaryParty.length - 1]
+            //               .secondaryList !=
+            //           null &&
+            //       transactionListOfSecondaryParty[
+            //               transactionListOfSecondaryParty.length - 1]
+            //           .secondaryList!
+            //           .isNotEmpty) {
+            //     BlocProvider.of<SecondaryPartyBloc>(context).add(
+            //         SecondaryPartyEvent.addSecondaryPartyList(
+            //             transactionList: transactionListOfSecondaryParty[
+            //                     transactionListOfSecondaryParty.length - 1]
+            //                 .secondaryList!));
 
-                // addSecondaryPartyList(
-                // transactionListOfSecondaryParty[
-                //         transactionListOfSecondaryParty.length - 1]
-                //     .secondaryTransaction!,
-                //     ref);
-              } else {
-                BlocProvider.of<SecondaryPartyBloc>(context).add(
-                    const SecondaryPartyEvent.addSecondaryPartyList(
-                        transactionList: []));
-              }
-              addSecondaryBalanceAmount(balanceAmount, ref);
-              addSecondaryReceivedAmount(recievedAmount, ref);
-              addSecondaryPayedAmount(payedAmt, ref);
+            //     // addSecondaryPartyList(
+            //     // transactionListOfSecondaryParty[
+            //     //         transactionListOfSecondaryParty.length - 1]
+            //     //     .secondaryTransaction!,
+            //     //     ref);
+            //   } else {
+            //     BlocProvider.of<SecondaryPartyBloc>(context).add(
+            //         const SecondaryPartyEvent.addSecondaryPartyList(
+            //             transactionList: []));
+            //   }
+            //   addSecondaryBalanceAmount(balanceAmount, ref);
+            //   addSecondaryReceivedAmount(recievedAmount, ref);
+            //   addSecondaryPayedAmount(payedAmt, ref);
 
-              Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => SecondaryPartyScreen(
-                      splittedTransactionId: '',
-                      transactionRealId: '',
-                      primaryContact: contact,
-                      secondaryTransactionDTO: PartyAccountDTO(
-                        balanceAmt: balanceAmount,
-                        contactId: transactionList[index].toContactId,
-                        payedAmt: payedAmt,
-                        recievedAmt: recievedAmount,
-                        // secondaryTransaction: transactionListOfSecondaryParty[
-                        //         transactionListOfSecondaryParty.length - 1]
-                        //     .secondaryTransaction,
-                      ),
-                    ),
-                  ));
-            } else if (isGet) {
-              if (transactionList[index].secondaryList != null) {
-                BlocProvider.of<SplitAmountBloc>(context).add(
-                    SplitAmountEvent.addSplitAmountList(
-                        transactionList:
-                            transactionList[index].secondaryList!));
-              }
-              Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => SplitAmountScreen(
-                            contact: contact,
-                            displayName: displayName,
-                            transaction: transactionList[index],
-                          )));
-            } else {
+            //   Navigator.push(
+            //       context,
+            //       CupertinoPageRoute(
+            //         builder: (context) => SecondaryPartyScreen(
+            //           splittedTransactionId: '',
+            //           transactionRealId: '',
+            //           primaryContact: contact,
+            //           secondaryTransactionDTO: PartyAccountDTO(
+            //             balanceAmt: balanceAmount,
+            //             contactId: transactionList[index].toContactId,
+            //             payedAmt: payedAmt,
+            //             recievedAmt: recievedAmount,
+            //             // secondaryTransaction: transactionListOfSecondaryParty[
+            //             //         transactionListOfSecondaryParty.length - 1]
+            //             //     .secondaryTransaction,
+            //           ),
+            //         ),
+            //       ));
+            // } else if (isGet) {
+            //   if (transactionList[index].secondaryList != null) {
+            //     BlocProvider.of<SplitAmountBloc>(context).add(
+            //         SplitAmountEvent.addSplitAmountList(
+            //             transactionList:
+            //                 transactionList[index].secondaryList!));
+            //   }
+            //   Navigator.push(
+            //       context,
+            //       CupertinoPageRoute(
+            //           builder: (context) => SplitAmountScreen(
+            //                 contact: contact,
+            //                 displayName: displayName,
+            //                 transaction: transactionList[index],
+            //               )));
+            // } else {
               Navigator.push(
                   context,
                   CupertinoPageRoute(
@@ -718,7 +747,7 @@ class EachTransactionContainer extends ConsumerWidget {
                         transaction: transactionList[index],
                         contact: contact),
                   ));
-            }
+         //   }
           },
           child: Row(
             //  mainAxisAlignment: MainAxisAlignment.spaceBetween,

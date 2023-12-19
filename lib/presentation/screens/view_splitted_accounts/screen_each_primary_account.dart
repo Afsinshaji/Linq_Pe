@@ -198,7 +198,7 @@ class _EachPrimaryAccountScreenState extends State<EachPrimaryAccountScreen> {
                       toName = contactList
                           .firstWhere((element) =>
                               element.contactId ==
-                              transactionList[index].toContactId)
+                              transactionList[index].fromContactId)
                           .displayName;
                       transaction =
                           //${widget.contact.displayName}

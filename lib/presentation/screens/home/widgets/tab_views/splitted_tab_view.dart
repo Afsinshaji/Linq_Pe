@@ -13,6 +13,7 @@ import 'package:linq_pe/application/splitted/splitted_bloc.dart';
 import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/presentation/screens/view_splitted_accounts/screen_each_primary_account.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
+import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
@@ -102,41 +103,7 @@ class _SplittedTabViewState extends State<SplittedTabView> {
                 ),
                 child: Column(
                   children: [
-                    Motion(
-                      shadow: const ShadowConfiguration(
-                        color: LinqPeColors.kPinkColor,
-                        blurRadius: 0,
-                      ),
-                      child: Material(
-                        shadowColor: LinqPeColors.kPinkColor,
-                        elevation: 7,
-                        color: LinqPeColors.kPinkColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(size.width * 0.01),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const AmountNotifier(
-                                  iconColor: LinqPeColors.kBlueColor,
-                                  textSign: 'Your balance',
-                                  amount: ''),
-                              Container(
-                                width: size.width * 0.001,
-                                height: size.width * 0.15,
-                                color: LinqPeColors.kWhiteColor,
-                              ),
-                              const AmountNotifier(
-                                  iconColor: LinqPeColors.kredColor,
-                                  textSign: 'You payed',
-                                  amount: '')
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    AmountNotifierRowMotionWidget(size: size),
                     SizedBox(
                       height: size.height * 0.01,
                     ),
@@ -151,7 +118,7 @@ class _SplittedTabViewState extends State<SplittedTabView> {
                           )
                         : Expanded(
                             child: HomePartyList(
-                                splittedAccountList: splittedAccountList,
+                                splittedAccountsList: splittedAccountList,
                                 listOfContacts: contactList,
                                 size: size),
                           )
@@ -186,23 +153,69 @@ class _SplittedTabViewState extends State<SplittedTabView> {
   }
 }
 
+class AmountNotifierRowMotionWidget extends ConsumerWidget {
+  const AmountNotifierRowMotionWidget({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Motion(
+      shadow: const ShadowConfiguration(
+        color: LinqPeColors.kPinkColor,
+        blurRadius: 0,
+      ),
+      child: Material(
+        shadowColor: LinqPeColors.kPinkColor,
+        elevation: 7,
+        color: LinqPeColors.kPinkColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(size.width * 0.01),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              AmountNotifier(
+                  iconColor: LinqPeColors.kBlueColor,
+                  textSign: 'Your balance',
+                  amount: ref.watch(totalBalanceAmountProvider)),
+              Container(
+                width: size.width * 0.001,
+                height: size.width * 0.15,
+                color: LinqPeColors.kWhiteColor,
+              ),
+              AmountNotifier(
+                  iconColor: LinqPeColors.kredColor,
+                  textSign: 'You payed',
+                  amount: ref.watch(totalPayedAmountProvider))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class HomePartyList extends ConsumerWidget {
   const HomePartyList({
     super.key,
     required this.listOfContacts,
     required this.size,
-    required this.splittedAccountList,
+    required this.splittedAccountsList,
   });
 
   final List<ContactsDTO> listOfContacts;
-  final List<SplittedAccountsModelDTO> splittedAccountList;
+  final List<SplittedAccountsModelDTO> splittedAccountsList;
   final Size size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String search = ref.watch(homeSearchProvider);
-
-   
+    String search = ref.watch(splittedSearchProvider);
 
     // if (search.isNotEmpty) {
     //   partyList = listOfParties
@@ -218,27 +231,51 @@ class HomePartyList extends ConsumerWidget {
     // partyList = sortingPartyList.reversed.toList();
     return BlocBuilder<SplittedBloc, SplittedState>(
       builder: (context, splitstate) {
-        
+     
+        List<SplittedAccountsModelDTO> splittedAccountList = splittedAccountsList.reversed.toList();
+           if (search.isNotEmpty) {
+      splittedAccountList = splittedAccountsList
+          .where((element) =>listOfContacts.firstWhere((elements) => 
+          element.primaryAccountContactId==elements.contactId).displayName 
+              .toLowerCase()
+              .contains(search.toLowerCase().trim()))
+          .toList().reversed.toList();
+    }
+      
+      
         return ListView.separated(
           // shrinkWrap: true,
           itemBuilder: (context, index) {
             final splittedAccount = splittedAccountList[index];
-        final primaryContactIndex= listOfContacts.indexWhere((element) => element.contactId==
-        splittedAccount.primaryAccountContactId,);
-        final splittedContactIndex=listOfContacts.indexWhere((element) => element.contactId==
-        splittedAccount.splittedAccountContactId,);
+            final primaryContactIndex = listOfContacts.indexWhere(
+              (element) =>
+                  element.contactId == splittedAccount.primaryAccountContactId,
+            );
+            final splittedContactIndex = listOfContacts.indexWhere(
+              (element) =>
+                  element.contactId == splittedAccount.splittedAccountContactId,
+            );
             return EachListTile(
-              primaryname:primaryContactIndex>=0?listOfContacts[primaryContactIndex].displayName:'' ,
-              splittedname: splittedContactIndex>=0?listOfContacts[splittedContactIndex].displayName:'' ,
-              
-              
-           primaryavatar:primaryContactIndex>=0?listOfContacts[primaryContactIndex].avatar:null ,
-            splittedavatar:  splittedContactIndex>=0?listOfContacts[splittedContactIndex].avatar:null,
-            primaryinitials:primaryContactIndex>=0?listOfContacts[primaryContactIndex].initails:'' , 
-            splittedinitials:  splittedContactIndex>=0?listOfContacts[splittedContactIndex].initails:'',
-
+              primaryname: primaryContactIndex >= 0
+                  ? listOfContacts[primaryContactIndex].displayName
+                  : '',
+              splittedname: splittedContactIndex >= 0
+                  ? listOfContacts[splittedContactIndex].displayName
+                  : '',
+              primaryavatar: primaryContactIndex >= 0
+                  ? listOfContacts[primaryContactIndex].avatar
+                  : null,
+              splittedavatar: splittedContactIndex >= 0
+                  ? listOfContacts[splittedContactIndex].avatar
+                  : null,
+              primaryinitials: primaryContactIndex >= 0
+                  ? listOfContacts[primaryContactIndex].initails
+                  : '',
+              splittedinitials: splittedContactIndex >= 0
+                  ? listOfContacts[splittedContactIndex].initails
+                  : '',
               onTap: () {
-               /// contactSearch('', ref);
+                /// contactSearch('', ref);
                 // ref.read(fromContactIdProvider.notifier).state =
                 //     partyList[index].contactId;
                 // Navigator.push(
@@ -248,20 +285,16 @@ class HomePartyList extends ConsumerWidget {
                 //           contact: partyList[index], isExpense: false),
                 //     ));
 
-                 Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) =>
-                                          EachPrimaryAccountScreen(
-                                              contact: listOfContacts[splittedContactIndex],
-                                              splittedAccount:
-                                                  splittedAccount),
-                                    ));
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => EachPrimaryAccountScreen(
+                          contact: listOfContacts[splittedContactIndex],
+                          splittedAccount: splittedAccount),
+                    ));
               },
               size: size,
               amount: splittedAccount.balanceAmt.toString(),
-              
-             
             );
           },
           itemCount: splittedAccountList.length,
@@ -301,7 +334,7 @@ class SearchRow extends ConsumerWidget {
                   )),
               child: TextField(
                 onChanged: (value) {
-                  homeSearch(value, ref);
+                  splittedSearch(value, ref);
                 },
                 // controller: searchController,
 
@@ -356,20 +389,18 @@ class SearchRow extends ConsumerWidget {
 }
 
 class EachListTile extends StatelessWidget {
-  const EachListTile(
-      {super.key,
-      required this.size,
-      required this.primaryinitials,
-      required this.splittedinitials,
-      required this.splittedname,
-      required this.amount,
-      required this.onTap,
-      required this.splittedavatar,
-      required this.primaryavatar,
-     
-      required this.primaryname,
-     
-   });
+  const EachListTile({
+    super.key,
+    required this.size,
+    required this.primaryinitials,
+    required this.splittedinitials,
+    required this.splittedname,
+    required this.amount,
+    required this.onTap,
+    required this.splittedavatar,
+    required this.primaryavatar,
+    required this.primaryname,
+  });
 
   final Size size;
   final String primaryinitials;
@@ -381,8 +412,6 @@ class EachListTile extends StatelessWidget {
   final Uint8List? splittedavatar;
   final Uint8List? primaryavatar;
 
-  
-  
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -391,55 +420,57 @@ class EachListTile extends StatelessWidget {
         // showPopupMenu(context, splitAccountId, size, ledgerId);
       },
       onTap: onTap,
-      minLeadingWidth: size.width*0.15,
-      leading:SizedBox(
-        width:size.width*0.15 ,
-        child: Stack(children:[     primaryavatar != null && primaryavatar!.isNotEmpty
-            ? CircleAvatar(backgroundImage: MemoryImage(primaryavatar!))
-            : Container(
-                // padding: EdgeInsets.all(size.width * 0.025),
-                width: size.width * 0.1,
-                height: size.width * 0.1,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: LinqPeColors.kBlackColor.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(100)),
-                child: Text(
-                  primaryinitials,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      letterSpacing: .5,
-                      fontSize: size.width * 0.04,
-                      color: LinqPeColors.kPinkColor,
-                      fontWeight: FontWeight.w500,
+      minLeadingWidth: size.width * 0.15,
+      leading: SizedBox(
+        width: size.width * 0.15,
+        child: Stack(children: [
+          primaryavatar != null && primaryavatar!.isNotEmpty
+              ? CircleAvatar(backgroundImage: MemoryImage(primaryavatar!))
+              : Container(
+                  // padding: EdgeInsets.all(size.width * 0.025),
+                  width: size.width * 0.1,
+                  height: size.width * 0.1,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: LinqPeColors.kBlackColor.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(100)),
+                  child: Text(
+                    primaryinitials,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        letterSpacing: .5,
+                        fontSize: size.width * 0.04,
+                        color: LinqPeColors.kPinkColor,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ) ,
-           Positioned  (
-        left: size.width*0.05,
-        child:splittedavatar != null && splittedavatar!.isNotEmpty
-            ? CircleAvatar(backgroundImage: MemoryImage(splittedavatar!))
-            : Container(
-                // padding: EdgeInsets.all(size.width * 0.025),
-                width: size.width * 0.1,
-                height: size.width * 0.1,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: LinqPeColors.kBlackColor.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(100)),
-                child: Text(
-                  splittedinitials,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      letterSpacing: .5,
-                      fontSize: size.width * 0.04,
-                      color: LinqPeColors.kPinkColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ))]),
+          Positioned(
+              left: size.width * 0.05,
+              child: splittedavatar != null && splittedavatar!.isNotEmpty
+                  ? CircleAvatar(backgroundImage: MemoryImage(splittedavatar!))
+                  : Container(
+                      // padding: EdgeInsets.all(size.width * 0.025),
+                      width: size.width * 0.1,
+                      height: size.width * 0.1,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: LinqPeColors.kBlackColor.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(100)),
+                      child: Text(
+                        splittedinitials,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            letterSpacing: .5,
+                            fontSize: size.width * 0.04,
+                            color: LinqPeColors.kPinkColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ))
+        ]),
       ),
       title: Text(
         '$primaryname - $splittedname',

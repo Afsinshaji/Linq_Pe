@@ -21,6 +21,26 @@ mixin _$LedgerEvent {
     required TResult Function(String ledgerName) addLedgers,
     required TResult Function(String ledgerId) deleteLedgers,
     required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +48,26 @@ mixin _$LedgerEvent {
     TResult? Function(String ledgerName)? addLedgers,
     TResult? Function(String ledgerId)? deleteLedgers,
     TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +75,26 @@ mixin _$LedgerEvent {
     TResult Function(String ledgerName)? addLedgers,
     TResult Function(String ledgerId)? deleteLedgers,
     TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +103,10 @@ mixin _$LedgerEvent {
     required TResult Function(addLedgers value) addLedgers,
     required TResult Function(deleteLedgers value) deleteLedgers,
     required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +114,9 @@ mixin _$LedgerEvent {
     TResult? Function(addLedgers value)? addLedgers,
     TResult? Function(deleteLedgers value)? deleteLedgers,
     TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +124,9 @@ mixin _$LedgerEvent {
     TResult Function(addLedgers value)? addLedgers,
     TResult Function(deleteLedgers value)? deleteLedgers,
     TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -148,6 +218,26 @@ class _$addLedgersImpl implements addLedgers {
     required TResult Function(String ledgerName) addLedgers,
     required TResult Function(String ledgerId) deleteLedgers,
     required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
   }) {
     return addLedgers(ledgerName);
   }
@@ -158,6 +248,26 @@ class _$addLedgersImpl implements addLedgers {
     TResult? Function(String ledgerName)? addLedgers,
     TResult? Function(String ledgerId)? deleteLedgers,
     TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
   }) {
     return addLedgers?.call(ledgerName);
   }
@@ -168,6 +278,26 @@ class _$addLedgersImpl implements addLedgers {
     TResult Function(String ledgerName)? addLedgers,
     TResult Function(String ledgerId)? deleteLedgers,
     TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (addLedgers != null) {
@@ -182,6 +312,10 @@ class _$addLedgersImpl implements addLedgers {
     required TResult Function(addLedgers value) addLedgers,
     required TResult Function(deleteLedgers value) deleteLedgers,
     required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
   }) {
     return addLedgers(this);
   }
@@ -192,6 +326,9 @@ class _$addLedgersImpl implements addLedgers {
     TResult? Function(addLedgers value)? addLedgers,
     TResult? Function(deleteLedgers value)? deleteLedgers,
     TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
   }) {
     return addLedgers?.call(this);
   }
@@ -202,6 +339,9 @@ class _$addLedgersImpl implements addLedgers {
     TResult Function(addLedgers value)? addLedgers,
     TResult Function(deleteLedgers value)? deleteLedgers,
     TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (addLedgers != null) {
@@ -289,6 +429,26 @@ class _$deleteLedgersImpl implements deleteLedgers {
     required TResult Function(String ledgerName) addLedgers,
     required TResult Function(String ledgerId) deleteLedgers,
     required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
   }) {
     return deleteLedgers(ledgerId);
   }
@@ -299,6 +459,26 @@ class _$deleteLedgersImpl implements deleteLedgers {
     TResult? Function(String ledgerName)? addLedgers,
     TResult? Function(String ledgerId)? deleteLedgers,
     TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
   }) {
     return deleteLedgers?.call(ledgerId);
   }
@@ -309,6 +489,26 @@ class _$deleteLedgersImpl implements deleteLedgers {
     TResult Function(String ledgerName)? addLedgers,
     TResult Function(String ledgerId)? deleteLedgers,
     TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (deleteLedgers != null) {
@@ -323,6 +523,10 @@ class _$deleteLedgersImpl implements deleteLedgers {
     required TResult Function(addLedgers value) addLedgers,
     required TResult Function(deleteLedgers value) deleteLedgers,
     required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
   }) {
     return deleteLedgers(this);
   }
@@ -333,6 +537,9 @@ class _$deleteLedgersImpl implements deleteLedgers {
     TResult? Function(addLedgers value)? addLedgers,
     TResult? Function(deleteLedgers value)? deleteLedgers,
     TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
   }) {
     return deleteLedgers?.call(this);
   }
@@ -343,6 +550,9 @@ class _$deleteLedgersImpl implements deleteLedgers {
     TResult Function(addLedgers value)? addLedgers,
     TResult Function(deleteLedgers value)? deleteLedgers,
     TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (deleteLedgers != null) {
@@ -403,6 +613,26 @@ class _$getLedgersImpl implements getLedgers {
     required TResult Function(String ledgerName) addLedgers,
     required TResult Function(String ledgerId) deleteLedgers,
     required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
   }) {
     return getLedgers();
   }
@@ -413,6 +643,26 @@ class _$getLedgersImpl implements getLedgers {
     TResult? Function(String ledgerName)? addLedgers,
     TResult? Function(String ledgerId)? deleteLedgers,
     TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
   }) {
     return getLedgers?.call();
   }
@@ -423,6 +673,26 @@ class _$getLedgersImpl implements getLedgers {
     TResult Function(String ledgerName)? addLedgers,
     TResult Function(String ledgerId)? deleteLedgers,
     TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (getLedgers != null) {
@@ -437,6 +707,10 @@ class _$getLedgersImpl implements getLedgers {
     required TResult Function(addLedgers value) addLedgers,
     required TResult Function(deleteLedgers value) deleteLedgers,
     required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
   }) {
     return getLedgers(this);
   }
@@ -447,6 +721,9 @@ class _$getLedgersImpl implements getLedgers {
     TResult? Function(addLedgers value)? addLedgers,
     TResult? Function(deleteLedgers value)? deleteLedgers,
     TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
   }) {
     return getLedgers?.call(this);
   }
@@ -457,6 +734,9 @@ class _$getLedgersImpl implements getLedgers {
     TResult Function(addLedgers value)? addLedgers,
     TResult Function(deleteLedgers value)? deleteLedgers,
     TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
     required TResult orElse(),
   }) {
     if (getLedgers != null) {
@@ -468,6 +748,691 @@ class _$getLedgersImpl implements getLedgers {
 
 abstract class getLedgers implements LedgerEvent {
   const factory getLedgers() = _$getLedgersImpl;
+}
+
+/// @nodoc
+abstract class _$$ledgerRollingRepaymentsImplCopyWith<$Res> {
+  factory _$$ledgerRollingRepaymentsImplCopyWith(
+          _$ledgerRollingRepaymentsImpl value,
+          $Res Function(_$ledgerRollingRepaymentsImpl) then) =
+      __$$ledgerRollingRepaymentsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String rollPayToLedgerId,
+      String rollPayFromLedgerId,
+      double amountPaying,
+      TransactionTypes transactionType,
+      DateTime timeOfTrans,
+      File? billImage,
+      String? userTransactionId,
+      String? transactionDetails});
+}
+
+/// @nodoc
+class __$$ledgerRollingRepaymentsImplCopyWithImpl<$Res>
+    extends _$LedgerEventCopyWithImpl<$Res, _$ledgerRollingRepaymentsImpl>
+    implements _$$ledgerRollingRepaymentsImplCopyWith<$Res> {
+  __$$ledgerRollingRepaymentsImplCopyWithImpl(
+      _$ledgerRollingRepaymentsImpl _value,
+      $Res Function(_$ledgerRollingRepaymentsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rollPayToLedgerId = null,
+    Object? rollPayFromLedgerId = null,
+    Object? amountPaying = null,
+    Object? transactionType = null,
+    Object? timeOfTrans = null,
+    Object? billImage = freezed,
+    Object? userTransactionId = freezed,
+    Object? transactionDetails = freezed,
+  }) {
+    return _then(_$ledgerRollingRepaymentsImpl(
+      rollPayToLedgerId: null == rollPayToLedgerId
+          ? _value.rollPayToLedgerId
+          : rollPayToLedgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      rollPayFromLedgerId: null == rollPayFromLedgerId
+          ? _value.rollPayFromLedgerId
+          : rollPayFromLedgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      amountPaying: null == amountPaying
+          ? _value.amountPaying
+          : amountPaying // ignore: cast_nullable_to_non_nullable
+              as double,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionTypes,
+      timeOfTrans: null == timeOfTrans
+          ? _value.timeOfTrans
+          : timeOfTrans // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      billImage: freezed == billImage
+          ? _value.billImage
+          : billImage // ignore: cast_nullable_to_non_nullable
+              as File?,
+      userTransactionId: freezed == userTransactionId
+          ? _value.userTransactionId
+          : userTransactionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      transactionDetails: freezed == transactionDetails
+          ? _value.transactionDetails
+          : transactionDetails // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ledgerRollingRepaymentsImpl implements ledgerRollingRepayments {
+  const _$ledgerRollingRepaymentsImpl(
+      {required this.rollPayToLedgerId,
+      required this.rollPayFromLedgerId,
+      required this.amountPaying,
+      required this.transactionType,
+      required this.timeOfTrans,
+      required this.billImage,
+      required this.userTransactionId,
+      required this.transactionDetails});
+
+  @override
+  final String rollPayToLedgerId;
+  @override
+  final String rollPayFromLedgerId;
+  @override
+  final double amountPaying;
+  @override
+  final TransactionTypes transactionType;
+  @override
+  final DateTime timeOfTrans;
+  @override
+  final File? billImage;
+  @override
+  final String? userTransactionId;
+  @override
+  final String? transactionDetails;
+
+  @override
+  String toString() {
+    return 'LedgerEvent.ledgerRollingRepayments(rollPayToLedgerId: $rollPayToLedgerId, rollPayFromLedgerId: $rollPayFromLedgerId, amountPaying: $amountPaying, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ledgerRollingRepaymentsImpl &&
+            (identical(other.rollPayToLedgerId, rollPayToLedgerId) ||
+                other.rollPayToLedgerId == rollPayToLedgerId) &&
+            (identical(other.rollPayFromLedgerId, rollPayFromLedgerId) ||
+                other.rollPayFromLedgerId == rollPayFromLedgerId) &&
+            (identical(other.amountPaying, amountPaying) ||
+                other.amountPaying == amountPaying) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
+            (identical(other.timeOfTrans, timeOfTrans) ||
+                other.timeOfTrans == timeOfTrans) &&
+            (identical(other.billImage, billImage) ||
+                other.billImage == billImage) &&
+            (identical(other.userTransactionId, userTransactionId) ||
+                other.userTransactionId == userTransactionId) &&
+            (identical(other.transactionDetails, transactionDetails) ||
+                other.transactionDetails == transactionDetails));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      rollPayToLedgerId,
+      rollPayFromLedgerId,
+      amountPaying,
+      transactionType,
+      timeOfTrans,
+      billImage,
+      userTransactionId,
+      transactionDetails);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ledgerRollingRepaymentsImplCopyWith<_$ledgerRollingRepaymentsImpl>
+      get copyWith => __$$ledgerRollingRepaymentsImplCopyWithImpl<
+          _$ledgerRollingRepaymentsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String ledgerName) addLedgers,
+    required TResult Function(String ledgerId) deleteLedgers,
+    required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
+  }) {
+    return ledgerRollingRepayments(
+        rollPayToLedgerId,
+        rollPayFromLedgerId,
+        amountPaying,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String ledgerName)? addLedgers,
+    TResult? Function(String ledgerId)? deleteLedgers,
+    TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
+  }) {
+    return ledgerRollingRepayments?.call(
+        rollPayToLedgerId,
+        rollPayFromLedgerId,
+        amountPaying,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String ledgerName)? addLedgers,
+    TResult Function(String ledgerId)? deleteLedgers,
+    TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
+    required TResult orElse(),
+  }) {
+    if (ledgerRollingRepayments != null) {
+      return ledgerRollingRepayments(
+          rollPayToLedgerId,
+          rollPayFromLedgerId,
+          amountPaying,
+          transactionType,
+          timeOfTrans,
+          billImage,
+          userTransactionId,
+          transactionDetails);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addLedgers value) addLedgers,
+    required TResult Function(deleteLedgers value) deleteLedgers,
+    required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
+  }) {
+    return ledgerRollingRepayments(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addLedgers value)? addLedgers,
+    TResult? Function(deleteLedgers value)? deleteLedgers,
+    TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
+  }) {
+    return ledgerRollingRepayments?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addLedgers value)? addLedgers,
+    TResult Function(deleteLedgers value)? deleteLedgers,
+    TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
+    required TResult orElse(),
+  }) {
+    if (ledgerRollingRepayments != null) {
+      return ledgerRollingRepayments(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ledgerRollingRepayments implements LedgerEvent {
+  const factory ledgerRollingRepayments(
+          {required final String rollPayToLedgerId,
+          required final String rollPayFromLedgerId,
+          required final double amountPaying,
+          required final TransactionTypes transactionType,
+          required final DateTime timeOfTrans,
+          required final File? billImage,
+          required final String? userTransactionId,
+          required final String? transactionDetails}) =
+      _$ledgerRollingRepaymentsImpl;
+
+  String get rollPayToLedgerId;
+  String get rollPayFromLedgerId;
+  double get amountPaying;
+  TransactionTypes get transactionType;
+  DateTime get timeOfTrans;
+  File? get billImage;
+  String? get userTransactionId;
+  String? get transactionDetails;
+  @JsonKey(ignore: true)
+  _$$ledgerRollingRepaymentsImplCopyWith<_$ledgerRollingRepaymentsImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$addLedgerRollingTransactionsImplCopyWith<$Res> {
+  factory _$$addLedgerRollingTransactionsImplCopyWith(
+          _$addLedgerRollingTransactionsImpl value,
+          $Res Function(_$addLedgerRollingTransactionsImpl) then) =
+      __$$addLedgerRollingTransactionsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String rolledToLedgerId,
+      String rolledFromLedgerId,
+      double amountRolled,
+      TransactionTypes transactionType,
+      DateTime timeOfTrans,
+      File? billImage,
+      String? userTransactionId,
+      String? transactionDetails});
+}
+
+/// @nodoc
+class __$$addLedgerRollingTransactionsImplCopyWithImpl<$Res>
+    extends _$LedgerEventCopyWithImpl<$Res, _$addLedgerRollingTransactionsImpl>
+    implements _$$addLedgerRollingTransactionsImplCopyWith<$Res> {
+  __$$addLedgerRollingTransactionsImplCopyWithImpl(
+      _$addLedgerRollingTransactionsImpl _value,
+      $Res Function(_$addLedgerRollingTransactionsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rolledToLedgerId = null,
+    Object? rolledFromLedgerId = null,
+    Object? amountRolled = null,
+    Object? transactionType = null,
+    Object? timeOfTrans = null,
+    Object? billImage = freezed,
+    Object? userTransactionId = freezed,
+    Object? transactionDetails = freezed,
+  }) {
+    return _then(_$addLedgerRollingTransactionsImpl(
+      rolledToLedgerId: null == rolledToLedgerId
+          ? _value.rolledToLedgerId
+          : rolledToLedgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      rolledFromLedgerId: null == rolledFromLedgerId
+          ? _value.rolledFromLedgerId
+          : rolledFromLedgerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      amountRolled: null == amountRolled
+          ? _value.amountRolled
+          : amountRolled // ignore: cast_nullable_to_non_nullable
+              as double,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionTypes,
+      timeOfTrans: null == timeOfTrans
+          ? _value.timeOfTrans
+          : timeOfTrans // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      billImage: freezed == billImage
+          ? _value.billImage
+          : billImage // ignore: cast_nullable_to_non_nullable
+              as File?,
+      userTransactionId: freezed == userTransactionId
+          ? _value.userTransactionId
+          : userTransactionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      transactionDetails: freezed == transactionDetails
+          ? _value.transactionDetails
+          : transactionDetails // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$addLedgerRollingTransactionsImpl
+    implements addLedgerRollingTransactions {
+  const _$addLedgerRollingTransactionsImpl(
+      {required this.rolledToLedgerId,
+      required this.rolledFromLedgerId,
+      required this.amountRolled,
+      required this.transactionType,
+      required this.timeOfTrans,
+      required this.billImage,
+      required this.userTransactionId,
+      required this.transactionDetails});
+
+  @override
+  final String rolledToLedgerId;
+  @override
+  final String rolledFromLedgerId;
+  @override
+  final double amountRolled;
+  @override
+  final TransactionTypes transactionType;
+  @override
+  final DateTime timeOfTrans;
+  @override
+  final File? billImage;
+  @override
+  final String? userTransactionId;
+  @override
+  final String? transactionDetails;
+
+  @override
+  String toString() {
+    return 'LedgerEvent.addLedgerRollingTransactions(rolledToLedgerId: $rolledToLedgerId, rolledFromLedgerId: $rolledFromLedgerId, amountRolled: $amountRolled, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, userTransactionId: $userTransactionId, transactionDetails: $transactionDetails)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$addLedgerRollingTransactionsImpl &&
+            (identical(other.rolledToLedgerId, rolledToLedgerId) ||
+                other.rolledToLedgerId == rolledToLedgerId) &&
+            (identical(other.rolledFromLedgerId, rolledFromLedgerId) ||
+                other.rolledFromLedgerId == rolledFromLedgerId) &&
+            (identical(other.amountRolled, amountRolled) ||
+                other.amountRolled == amountRolled) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
+            (identical(other.timeOfTrans, timeOfTrans) ||
+                other.timeOfTrans == timeOfTrans) &&
+            (identical(other.billImage, billImage) ||
+                other.billImage == billImage) &&
+            (identical(other.userTransactionId, userTransactionId) ||
+                other.userTransactionId == userTransactionId) &&
+            (identical(other.transactionDetails, transactionDetails) ||
+                other.transactionDetails == transactionDetails));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      rolledToLedgerId,
+      rolledFromLedgerId,
+      amountRolled,
+      transactionType,
+      timeOfTrans,
+      billImage,
+      userTransactionId,
+      transactionDetails);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$addLedgerRollingTransactionsImplCopyWith<
+          _$addLedgerRollingTransactionsImpl>
+      get copyWith => __$$addLedgerRollingTransactionsImplCopyWithImpl<
+          _$addLedgerRollingTransactionsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String ledgerName) addLedgers,
+    required TResult Function(String ledgerId) deleteLedgers,
+    required TResult Function() getLedgers,
+    required TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        ledgerRollingRepayments,
+    required TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)
+        addLedgerRollingTransactions,
+  }) {
+    return addLedgerRollingTransactions(
+        rolledToLedgerId,
+        rolledFromLedgerId,
+        amountRolled,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String ledgerName)? addLedgers,
+    TResult? Function(String ledgerId)? deleteLedgers,
+    TResult? Function()? getLedgers,
+    TResult? Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult? Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
+  }) {
+    return addLedgerRollingTransactions?.call(
+        rolledToLedgerId,
+        rolledFromLedgerId,
+        amountRolled,
+        transactionType,
+        timeOfTrans,
+        billImage,
+        userTransactionId,
+        transactionDetails);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String ledgerName)? addLedgers,
+    TResult Function(String ledgerId)? deleteLedgers,
+    TResult Function()? getLedgers,
+    TResult Function(
+            String rollPayToLedgerId,
+            String rollPayFromLedgerId,
+            double amountPaying,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        ledgerRollingRepayments,
+    TResult Function(
+            String rolledToLedgerId,
+            String rolledFromLedgerId,
+            double amountRolled,
+            TransactionTypes transactionType,
+            DateTime timeOfTrans,
+            File? billImage,
+            String? userTransactionId,
+            String? transactionDetails)?
+        addLedgerRollingTransactions,
+    required TResult orElse(),
+  }) {
+    if (addLedgerRollingTransactions != null) {
+      return addLedgerRollingTransactions(
+          rolledToLedgerId,
+          rolledFromLedgerId,
+          amountRolled,
+          transactionType,
+          timeOfTrans,
+          billImage,
+          userTransactionId,
+          transactionDetails);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(addLedgers value) addLedgers,
+    required TResult Function(deleteLedgers value) deleteLedgers,
+    required TResult Function(getLedgers value) getLedgers,
+    required TResult Function(ledgerRollingRepayments value)
+        ledgerRollingRepayments,
+    required TResult Function(addLedgerRollingTransactions value)
+        addLedgerRollingTransactions,
+  }) {
+    return addLedgerRollingTransactions(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(addLedgers value)? addLedgers,
+    TResult? Function(deleteLedgers value)? deleteLedgers,
+    TResult? Function(getLedgers value)? getLedgers,
+    TResult? Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult? Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
+  }) {
+    return addLedgerRollingTransactions?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(addLedgers value)? addLedgers,
+    TResult Function(deleteLedgers value)? deleteLedgers,
+    TResult Function(getLedgers value)? getLedgers,
+    TResult Function(ledgerRollingRepayments value)? ledgerRollingRepayments,
+    TResult Function(addLedgerRollingTransactions value)?
+        addLedgerRollingTransactions,
+    required TResult orElse(),
+  }) {
+    if (addLedgerRollingTransactions != null) {
+      return addLedgerRollingTransactions(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class addLedgerRollingTransactions implements LedgerEvent {
+  const factory addLedgerRollingTransactions(
+          {required final String rolledToLedgerId,
+          required final String rolledFromLedgerId,
+          required final double amountRolled,
+          required final TransactionTypes transactionType,
+          required final DateTime timeOfTrans,
+          required final File? billImage,
+          required final String? userTransactionId,
+          required final String? transactionDetails}) =
+      _$addLedgerRollingTransactionsImpl;
+
+  String get rolledToLedgerId;
+  String get rolledFromLedgerId;
+  double get amountRolled;
+  TransactionTypes get transactionType;
+  DateTime get timeOfTrans;
+  File? get billImage;
+  String? get userTransactionId;
+  String? get transactionDetails;
+  @JsonKey(ignore: true)
+  _$$addLedgerRollingTransactionsImplCopyWith<
+          _$addLedgerRollingTransactionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

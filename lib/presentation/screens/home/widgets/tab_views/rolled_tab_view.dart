@@ -81,40 +81,49 @@ class _RolledTabViewState extends State<RolledTabView> {
         ),
       ),
       backgroundColor: LinqPeColors.kPinkColor,
-      body: BlocBuilder<ContactsBloc, ContactsState>(
-        builder: (context, state) {
-          if (state is displayContacts) {
-            contactList = state.contactList;
+      body: BlocBuilder<RollingBloc, RollingState>(
+        builder: (context, rollingstate) {
+          List<RollingAccountsDTO> rollingAccountList = [];
+          if (rollingstate is displayRollingAccounts) {
+          rollingAccountList=  rollingstate.rollingAccountList;
           }
+          return BlocBuilder<ContactsBloc, ContactsState>(
+            builder: (context, state) {
+              if (state is displayContacts) {
+                contactList = state.contactList;
+              }
 
-          return Container(
-            // margin: EdgeInsets.all(size.width * 0.03),
-            padding: EdgeInsets.all(size.width * 0.03),
-            decoration: const BoxDecoration(
-              color: LinqPeColors.kWhiteColor,
-              // borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                AmountNotifierRowMotionWidget(size: size),
-                SizedBox(
-                  height: size.height * 0.01,
+              return Container(
+                // margin: EdgeInsets.all(size.width * 0.03),
+                padding: EdgeInsets.all(size.width * 0.03),
+                decoration: const BoxDecoration(
+                  color: LinqPeColors.kWhiteColor,
+                  // borderRadius: BorderRadius.circular(30),
                 ),
-                SearchRow(size: size, color: LinqPeColors.kPinkColor),
-                contactList.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: size.height * 0.05),
-                          child: Image.asset(
-                              'assets/gif/dazzle-online-banking.gif'),
-                        ),
-                      )
-                    : Expanded(
-                        child: HomePartyList(
-                            listOfParties: contactList, size: size),
-                      )
-              ],
-            ),
+                child: Column(
+                  children: [
+                    AmountNotifierRowMotionWidget(size: size),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    SearchRow(size: size, color: LinqPeColors.kPinkColor),
+                    rollingAccountList.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: size.height * 0.05),
+                              child: Image.asset(
+                                  'assets/gif/dazzle-online-banking.gif'),
+                            ),
+                          )
+                        : Expanded(
+                            child: HomePartyList(
+                              rollingAccountList: rollingAccountList,
+                                listOfParties: contactList, size: size),
+                          )
+                  ],
+                ),
+              );
+            },
           );
         },
       ),
@@ -170,8 +179,17 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               AmountNotifier(
+                  iconColor: LinqPeColors.kGreenColor,
+                  textSign: 'Total balance',
+                  amount: ref.watch(rolledOutBalanceAmountProvider)),
+              Container(
+                width: size.width * 0.001,
+                height: size.width * 0.15,
+                color: LinqPeColors.kWhiteColor,
+              ),
+              AmountNotifier(
                   iconColor: LinqPeColors.kBlueColor,
-                  textSign: 'Your balance',
+                  textSign: 'Actual balance',
                   amount: ref.watch(totalBalanceAmountProvider)),
               Container(
                 width: size.width * 0.001,
@@ -180,7 +198,7 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
               ),
               AmountNotifier(
                   iconColor: LinqPeColors.kredColor,
-                  textSign: 'You payed',
+                  textSign: 'Total payed',
                   amount: ref.watch(totalPayedAmountProvider))
             ],
           ),
@@ -195,14 +213,15 @@ class HomePartyList extends ConsumerWidget {
     super.key,
     required this.listOfParties,
     required this.size,
+    required this.rollingAccountList,
   });
-
+ final List<RollingAccountsDTO> rollingAccountList ;
   final List<ContactsDTO> listOfParties;
   final Size size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<RollingAccountsDTO> rollingAccountList = [];
+   
     String search = ref.watch(rolledSearchProvider);
     List<ContactsDTO> partyList = [];
     // if (search.isNotEmpty) {
@@ -217,13 +236,7 @@ class HomePartyList extends ConsumerWidget {
     // sortingPartyList.sort(
     //     (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
     // partyList = sortingPartyList.reversed.toList();
-
-    return BlocBuilder<RollingBloc, RollingState>(
-      builder: (context, state) {
-        if (state is displayRollingAccounts) {
-          rollingAccountList = state.rollingAccountList;
-        }
-        for (var rolling in rollingAccountList) {
+ for (var rolling in rollingAccountList) {
           final partyIndex = listOfParties.indexWhere((element) =>
               element.contactId == rolling.rollingAccountContactId);
           if (partyIndex >= 0) {
@@ -238,41 +251,40 @@ class HomePartyList extends ConsumerWidget {
                   .contains(search.toLowerCase().trim()))
               .toList();
         }
-        return ListView.separated(
-          // shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return EachListTile(
-              ledgerId: partyList[index].ledgerId,
-              contactId: partyList[index].contactId,
-              lastTimeofTransaction: partyList[index].lastTimeOfTransaction,
-              avatar: partyList[index].avatar,
-              onTap: () {
-                // contactSearch('', ref);
-                // ref.read(fromContactIdProvider.notifier).state =
-                //     partyList[index].contactId;
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ViewRollingScreen(
-                        contact: partyList[index],
-                        rollingAccount: rollingAccountList[index],
-                      ),
-                    ));
-              },
-              size: size,
-              amount: rollingAccountList[index].balanceToPayAmt.toString(),
-              initials: partyList[index].initails,
-              name: partyList[index].displayName,
-            );
+    return ListView.separated(
+      // shrinkWrap: true,
+       itemCount: partyList.length,
+      itemBuilder: (context, index) {
+        return EachListTile(
+          ledgerId: partyList[index].ledgerId,
+          contactId: partyList[index].contactId,
+          lastTimeofTransaction: partyList[index].lastTimeOfTransaction,
+          avatar: partyList[index].avatar,
+          onTap: () {
+            // contactSearch('', ref);
+            // ref.read(fromContactIdProvider.notifier).state =
+            //     partyList[index].contactId;
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => ViewRollingScreen(
+                    contact: partyList[index],
+                    rollingAccount: rollingAccountList[index],
+                  ),
+                ));
           },
-          itemCount: rollingAccountList.length,
-          separatorBuilder: (context, index) => Divider(
-            color: LinqPeColors.kBlackColor,
-            height: size.height * 0.001,
-            thickness: size.height * 0.0001,
-          ),
+          size: size,
+          amount: rollingAccountList[index].balanceToPayAmt.toString(),
+          initials: partyList[index].initails,
+          name: partyList[index].displayName,
         );
       },
+     
+      separatorBuilder: (context, index) => Divider(
+        color: LinqPeColors.kBlackColor,
+        height: size.height * 0.001,
+        thickness: size.height * 0.0001,
+      ),
     );
   }
 }
@@ -301,6 +313,9 @@ class SearchRow extends ConsumerWidget {
                     color: LinqPeColors.kBlackColor.withOpacity(0.4),
                   )),
               child: TextField(
+                 onTap: (){
+                  addpageValue(ref.watch(tabValueProvider), ref);
+                },
                 onChanged: (value) {
                   rolledSearch(value, ref);
                 },
@@ -515,13 +530,14 @@ class AmountNotifier extends StatelessWidget {
             color: iconColor,
             borderRadius: BorderRadius.circular(100),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.currency_rupee,
             color: LinqPeColors.kWhiteColor,
+            size: size.width * 0.05,
           ),
         ),
         SizedBox(
-          width: size.width * 0.02,
+          width: size.width * 0.01,
         ),
         Column(
           children: [
@@ -530,7 +546,7 @@ class AmountNotifier extends StatelessWidget {
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   letterSpacing: .5,
-                  fontSize: size.width * 0.03,
+                  fontSize: size.width * 0.02,
                   color: LinqPeColors.kWhiteColor.withOpacity(0.9),
                   fontWeight: FontWeight.w500,
                 ),
@@ -541,7 +557,7 @@ class AmountNotifier extends StatelessWidget {
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   letterSpacing: .5,
-                  fontSize: size.width * 0.045,
+                  fontSize: size.width * 0.04,
                   color: LinqPeColors.kWhiteColor.withOpacity(0.9),
                   fontWeight: FontWeight.w700,
                 ),

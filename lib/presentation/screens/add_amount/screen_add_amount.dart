@@ -209,8 +209,10 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                 SizedBox(
                   height: widget.isAddExpense ? 0.0 : size.height * 0.02,
                 ),
-                widget.isAddExpense
-                    ? const ExpenseRollRadioBoxWidget()
+                widget.isAddExpense || widget.isLedgerRoll
+                    ? ExpenseRollRadioBoxWidget(
+                        isLedgerRoll: widget.isLedgerRoll,
+                      )
                     : const SizedBox(),
 
                 AddTextField(
@@ -235,6 +237,7 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                         padding:
                             EdgeInsets.symmetric(horizontal: size.width * 0.03),
                         child: DropDownSearchTextField(
+                          isFromExpense: widget.isAddExpense,
                           isFromField: true,
                           hintText: 'From who',
                           isLedgerRoll: widget.isLedgerRoll,
@@ -271,23 +274,17 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
                         widget.isAddExpense ||
                         widget.isRepay ||
                         widget.isLedgerRoll
-                    ? Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                        child: DropDownSearchTextField(
-                          isRepay: widget.isRepay,
-                          rollingAccountId:
-                              widget.isRepay ? widget.rollingAccountId : '',
-                          isFromField: false,
-                          hintText: 'To whom',
-                          isLedgerRoll: widget.isLedgerRoll,
-                        ))
+                    ? ToWhomDropdown(size: size, widget: widget)
                     : const SizedBox(),
                 SizedBox(
                   height: size.height * 0.03,
                 ),
 
-                widget.isRepay ? const AmountToRepayWidget() : const SizedBox(),
+                widget.isRepay || widget.isLedgerRoll
+                    ? AmountToRepayWidget(
+                        isLedgerRoll: widget.isLedgerRoll,
+                      )
+                    : const SizedBox(),
                 widget.isRepay
                     ? SizedBox(
                         height: size.height * 0.03,
@@ -394,57 +391,132 @@ class _AddAmountScreenState extends State<AddAmountScreen> {
   }
 }
 
-class AmountToRepayWidget extends ConsumerWidget {
-  const AmountToRepayWidget({
+class ToWhomDropdown extends ConsumerWidget {
+  const ToWhomDropdown({
     super.key,
+    required this.size,
+    required this.widget,
   });
+
+  final Size size;
+  final AddAmountScreen widget;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // if (widget.isLedgerRoll &&
+    //     ref.watch(rollTypeProvider) == RollType.repayment) {
+    //   return const SizedBox();
+    // }
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+        child: DropDownSearchTextField(
+          isFromExpense: widget.isAddExpense,
+          isRepay: widget.isRepay,
+          rollingAccountId: widget.isRepay ? widget.rollingAccountId : '',
+          isFromField: false,
+          hintText: 'To whom',
+          isLedgerRoll: widget.isLedgerRoll,
+        ));
+  }
+}
+
+class AmountToRepayWidget extends ConsumerWidget {
+  const AmountToRepayWidget({super.key, required this.isLedgerRoll});
+  final bool isLedgerRoll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    if (isLedgerRoll && ref.watch(rollTypeProvider) == RollType.roll) {
+      return const SizedBox();
+    }
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-      height: size.height * 0.07,
-      margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
-      decoration: BoxDecoration(
-          color: LinqPeColors.kWhiteColor,
-          borderRadius: BorderRadius.circular(5)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Amount to Repay',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                letterSpacing: .1,
-                fontSize: size.width * 0.035,
-                color: LinqPeColors.kPinkColor.withOpacity(0.7),
-                fontWeight: FontWeight.w500,
+    return BlocBuilder<LedgerBloc, LedgerState>(
+      builder: (context, ledgerstate) {
+        List<LedgerDTO> ledgerList = [];
+        double payBackLedgerAmount = 0.0;
+        if (isLedgerRoll && ledgerstate is displayLedgers) {
+          ledgerList = ledgerstate.ledgerList;
+          final fromId = ref.watch(fromContactIdProvider);
+          final toId = ref.watch(toContactIdProvider);
+          if (fromId.isNotEmpty && toId.isNotEmpty) {
+            final fromIndex =
+                ledgerList.indexWhere((element) => element.ledgerId == fromId);
+
+            if (fromIndex >= 0) {
+              final ledger = ledgerList[fromIndex];
+              final payBackList = ledger.payBackLedgerList;
+              if (payBackList != null && payBackList.isNotEmpty) {
+                final payBackIndex = payBackList
+                    .indexWhere((element) => element.ledgerId == toId);
+                if (payBackIndex >= 0) {
+                  payBackLedgerAmount = payBackList[payBackIndex].payBackAmount;
+                }
+              }
+            }
+          }
+        }
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          addtoLedgerRepayAmount(payBackLedgerAmount, ref);
+        });
+        return Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+              height: size.height * 0.07,
+              margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+              decoration: BoxDecoration(
+                  color: LinqPeColors.kWhiteColor,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Amount to Repay',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        letterSpacing: .1,
+                        fontSize: size.width * 0.035,
+                        color: LinqPeColors.kPinkColor.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    isLedgerRoll
+                        ? payBackLedgerAmount.toString()
+                        : ref.watch(repayTotalAmountProvider).toString(),
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        letterSpacing: .1,
+                        fontSize: size.width * 0.045,
+                        color: LinqPeColors.kBlackColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          Text(
-            ref.watch(repayTotalAmountProvider).toString(),
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                letterSpacing: .1,
-                fontSize: size.width * 0.045,
-                color: LinqPeColors.kBlackColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
+            SizedBox(
+              height: isLedgerRoll &&
+                      ref.watch(rollTypeProvider) == RollType.repayment
+                  ? size.height * 0.03
+                  : 0,
+            )
+          ],
+        );
+      },
     );
   }
 }
 
 class ExpenseRollRadioBoxWidget extends ConsumerWidget {
   const ExpenseRollRadioBoxWidget({
+    required this.isLedgerRoll,
     super.key,
   });
+  final bool isLedgerRoll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -458,28 +530,41 @@ class ExpenseRollRadioBoxWidget extends ConsumerWidget {
             alignment: Alignment.center,
             width: size.width * 0.4,
             decoration: BoxDecoration(
-                color: ref.watch(expenseTypeProvider) == ExpenseType.roll
-                    ? LinqPeColors.kLightBluwWhite
-                    : LinqPeColors.kPinkColor,
+                color: isLedgerRoll
+                    ? ref.watch(rollTypeProvider) == RollType.repayment
+                        ? LinqPeColors.kLightBluwWhite
+                        : LinqPeColors.kPinkColor
+                    : ref.watch(expenseTypeProvider) == ExpenseType.roll
+                        ? LinqPeColors.kLightBluwWhite
+                        : LinqPeColors.kPinkColor,
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Pay',
+                Text(isLedgerRoll ? 'Roll' : 'Pay',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: size.width * 0.05,
-                        color:
-                            ref.watch(expenseTypeProvider) == ExpenseType.roll
+                        color: isLedgerRoll
+                            ? ref.watch(rollTypeProvider) == RollType.repayment
+                                ? LinqPeColors.kBlackColor
+                                : LinqPeColors.kWhiteColor
+                            : ref.watch(expenseTypeProvider) == ExpenseType.roll
                                 ? LinqPeColors.kBlackColor
                                 : LinqPeColors.kWhiteColor)),
                 Radio(
                     activeColor: LinqPeColors.kWhiteColor,
-                    groupValue: ref.watch(expenseTypeProvider),
-                    value: ExpenseType.pay,
+                    groupValue: isLedgerRoll
+                        ? ref.watch(rollTypeProvider)
+                        : ref.watch(expenseTypeProvider),
+                    value: isLedgerRoll ? RollType.roll : ExpenseType.pay,
                     onChanged: (value) {
                       if (value != null) {
-                        addExpenseType(value, ref);
+                        if (!isLedgerRoll && value is ExpenseType) {
+                          addExpenseType(value, ref);
+                        } else if (value is RollType) {
+                          addRollType(value, ref);
+                        }
                       }
                     })
               ],
@@ -489,28 +574,41 @@ class ExpenseRollRadioBoxWidget extends ConsumerWidget {
             alignment: Alignment.center,
             width: size.width * 0.4,
             decoration: BoxDecoration(
-                color: ref.watch(expenseTypeProvider) == ExpenseType.roll
-                    ? LinqPeColors.kPinkColor
-                    : LinqPeColors.kLightBluwWhite,
+                color: isLedgerRoll
+                    ? ref.watch(rollTypeProvider) == RollType.roll
+                        ? LinqPeColors.kLightBluwWhite
+                        : LinqPeColors.kPinkColor
+                    : ref.watch(expenseTypeProvider) == ExpenseType.roll
+                        ? LinqPeColors.kPinkColor
+                        : LinqPeColors.kLightBluwWhite,
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Roll',
+                Text(isLedgerRoll ? 'Repay' : 'Roll',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: size.width * 0.05,
-                        color:
-                            ref.watch(expenseTypeProvider) == ExpenseType.roll
+                        color: isLedgerRoll
+                            ? ref.watch(rollTypeProvider) == RollType.roll
+                                ? LinqPeColors.kBlackColor
+                                : LinqPeColors.kWhiteColor
+                            : ref.watch(expenseTypeProvider) == ExpenseType.roll
                                 ? LinqPeColors.kWhiteColor
                                 : LinqPeColors.kBlackColor)),
                 Radio(
                     activeColor: LinqPeColors.kWhiteColor,
-                    groupValue: ref.watch(expenseTypeProvider),
-                    value: ExpenseType.roll,
+                    groupValue: isLedgerRoll
+                        ? ref.watch(rollTypeProvider)
+                        : ref.watch(expenseTypeProvider),
+                    value: isLedgerRoll ? RollType.repayment : ExpenseType.roll,
                     onChanged: (value) {
                       if (value != null) {
-                        addExpenseType(value, ref);
+                        if (isLedgerRoll && value is ExpenseType) {
+                          addExpenseType(value, ref);
+                        } else if (value is RollType) {
+                          addRollType(value, ref);
+                        }
                       }
                     })
               ],
@@ -1131,26 +1229,71 @@ class AddButton extends ConsumerWidget {
                             }
                           }
                         } else if (isLedgerRoll) {
-                          BlocProvider.of<LedgerBloc>(context)
-                              .add(LedgerEvent.addLedgerRollingTransactions(
-                            rolledToLedgerId: ref.watch(toContactIdProvider),
-                            rolledFromLedgerId:
-                                ref.watch(fromContactIdProvider),
-                            amountRolled: ref.watch(amountProvider),
-                            transactionDetails:
-                                ref.watch(transactionDetailsProvider).isEmpty
+                          if (ref.watch(rollTypeProvider) == RollType.roll) {
+                            if (ref.watch(amountProvider) > 0 &&
+                                ref.watch(fromLedgerBalanceProvider) >=
+                                    ref.watch(amountProvider)) {
+                              BlocProvider.of<LedgerBloc>(context)
+                                  .add(LedgerEvent.addLedgerRollingTransactions(
+                                rolledToLedgerId:
+                                    ref.watch(toContactIdProvider),
+                                rolledFromLedgerId:
+                                    ref.watch(fromContactIdProvider),
+                                amountRolled: ref.watch(amountProvider),
+                                transactionDetails: ref
+                                        .watch(transactionDetailsProvider)
+                                        .isEmpty
                                     ? null
                                     : ref.watch(transactionDetailsProvider),
-                            transactionType: ref.watch(transactionTypeProvider),
-                            timeOfTrans: ref.watch(dateProvider),
-                            billImage: ref.watch(imageProvider).path.isEmpty
-                                ? null
-                                : ref.watch(imageProvider),
-                            userTransactionId:
-                                ref.watch(transactionIdProvider).isEmpty
+                                transactionType:
+                                    ref.watch(transactionTypeProvider),
+                                timeOfTrans: ref.watch(dateProvider),
+                                billImage: ref.watch(imageProvider).path.isEmpty
                                     ? null
-                                    : ref.watch(transactionIdProvider),
-                          ));
+                                    : ref.watch(imageProvider),
+                                userTransactionId:
+                                    ref.watch(transactionIdProvider).isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider),
+                              ));
+                            }
+                          } else if (ref.watch(rollTypeProvider) ==
+                              RollType.repayment) {
+                            log( ref.watch(fromLedgerBalanceProvider).toString());
+                             log( ref.watch(amountProvider).toString());
+                              log( ref.watch(toLedgerRepayAmountProvider).toString());
+                            if (ref.watch(amountProvider) > 0 &&
+                                ref.watch(fromLedgerBalanceProvider) >=
+                                    ref.watch(amountProvider) &&
+                                ref.watch(toLedgerRepayAmountProvider) >=
+                                    ref.watch(amountProvider)) {
+                              BlocProvider.of<LedgerBloc>(context)
+                                  .add(LedgerEvent.ledgerRollingRepayments(
+                                rollPayToLedgerId:
+                                    ref.watch(toContactIdProvider),
+                                rollPayFromLedgerId:
+                                    ref.watch(fromContactIdProvider),
+                                amountPaying: ref.watch(amountProvider),
+                                transactionDetails: ref
+                                        .watch(transactionDetailsProvider)
+                                        .isEmpty
+                                    ? null
+                                    : ref.watch(transactionDetailsProvider),
+                                transactionType:
+                                    ref.watch(transactionTypeProvider),
+                                timeOfTrans: ref.watch(dateProvider),
+                                billImage: ref.watch(imageProvider).path.isEmpty
+                                    ? null
+                                    : ref.watch(imageProvider),
+                                userTransactionId:
+                                    ref.watch(transactionIdProvider).isEmpty
+                                        ? null
+                                        : ref.watch(transactionIdProvider),
+                              ));
+                            } else {
+                              isToGoBack = false;
+                            }
+                          }
                         }
                       } else {
                         BlocProvider.of<TransactionsBloc>(context).add(
@@ -1338,7 +1481,19 @@ class SplitListBalanceWidget extends ConsumerWidget {
                     .toList();
               }
             }
+            if (isLedgerRoll) {
+              final balances = ledgerList
+                          .indexWhere((element) => element.ledgerId == fromId) <
+                      0
+                  ? 0.0
+                  : ledgerList[ledgerList
+                          .indexWhere((element) => element.ledgerId == fromId)]
+                      .totalBlanceAmount;
 
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                addfromLedgerBalance(balances ?? 0.0, ref);
+              });
+            }
             // if (splitList.isEmpty) {
             //   return const SizedBox();
             // }

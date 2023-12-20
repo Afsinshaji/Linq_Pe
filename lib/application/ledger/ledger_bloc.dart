@@ -23,9 +23,10 @@ class LedgerBloc extends Bloc<LedgerEvent, LedgerState> {
           .deleteLedger(ledgerId: event.ledgerId);
       add(const LedgerEvent.getLedgers());
     });
-    on<getLedgers>((event, emit) {
+    on<getLedgers>((event, emit) async {
       final ledgerList = LedgerImplementation.instance.getLedgerList();
-      emit(displayLedgers(ledgerList: convertLedgerModelToDTO(ledgerList)));
+      emit(displayLedgers(
+          ledgerList: await convertLedgerModelToDTO(ledgerList)));
     });
     on<addLedgerRollingTransactions>((event, emit) async {
       await LedgerImplementation.instance.addLedgerRollingTransaction(

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:hive/hive.dart';
@@ -45,6 +46,10 @@ class LedgerImplementation extends LedgerRepository {
       await ledgerBox.putAt(
           ledgerIndex,
           LedgerModel(
+            rolledOutBalance:(ledger.rolledOutBalance == null
+                    ? 0.0
+                    : ledger.rolledOutBalance!) +
+                blanceAmt ,
             ledgerName: ledger.ledgerName,
             ledgerId: ledger.ledgerId,
             totalBlanceAmount: (ledger.totalBlanceAmount == null
@@ -73,7 +78,8 @@ class LedgerImplementation extends LedgerRepository {
   List<LedgerModel> getLedgerList() {
     return ledgerBox.values.toList();
   }
-@override
+
+  @override
   Future<void> addLedgerRollingTransaction({
     required String rolledToLedgerId,
     required String rolledFromLedgerId,
@@ -119,14 +125,14 @@ class LedgerImplementation extends LedgerRepository {
             isPayed: true,
             givenAmt: amountRolled,
             fromContactId: rolledFromLedgerId));
-
+    log('here...1');
     List<TransactionModel> transactionFromList = [];
     if (ledgerList[ledgerFromIndex].transactionList != null) {
       transactionFromList = ledgerList[ledgerFromIndex].transactionList!;
     }
     transactionFromList.add(TransactionModel(
         transactionId: rollPayId, ledgerId: rolledFromLedgerId));
-
+log('here...2');
     await ledgerBox.putAt(
         ledgerFromIndex,
         LedgerModel(
@@ -212,8 +218,8 @@ class LedgerImplementation extends LedgerRepository {
           transactionList: transactionToList,
         ));
   }
-  
-@override
+
+  @override
   Future<void> ledgerRollingRepayment({
     required String rollPayToLedgerId,
     required String rollPayFromLedgerId,

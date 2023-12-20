@@ -150,14 +150,14 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String rolledBalance = '0.0';
     String balance = '0.0';
     // getTotalBalance(partyList, splittedAccountList);
     String payed = '0.0';
     // getTotalPayment(partyList, splittedAccountList);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      addTotalBalanceAmount(balance, ref);
-      addTotalPayedAmount(payed, ref);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    // });
     return BlocBuilder<LedgerBloc, LedgerState>(
       builder: (context, ledgerstate) {
         List<LedgerDTO> ledgerList = [];
@@ -172,6 +172,9 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
           }
           if (ledgerList[ledgerIndex].totalPayedAmount != null) {
             payed = ledgerList[ledgerIndex].totalPayedAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].rolledOutBalance != null) {
+            rolledBalance = ledgerList[ledgerIndex].rolledOutBalance.toString();
           }
         }
         return Motion(
@@ -192,8 +195,17 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   AmountNotifier(
+                      iconColor: LinqPeColors.kGreenColor,
+                      textSign: 'Total balance',
+                      amount: rolledBalance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
                       iconColor: LinqPeColors.kBlueColor,
-                      textSign: 'Your balance',
+                      textSign: 'Actual balance',
                       amount: balance),
                   Container(
                     width: size.width * 0.001,
@@ -202,7 +214,7 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
                   ),
                   AmountNotifier(
                       iconColor: LinqPeColors.kredColor,
-                      textSign: 'You payed',
+                      textSign: 'Total payed',
                       amount: payed)
                 ],
               ),
@@ -329,8 +341,13 @@ class SearchRow extends ConsumerWidget {
                     color: LinqPeColors.kBlackColor.withOpacity(0.4),
                   )),
               child: TextField(
+                onTap: (){
+                  addpageValue(ref.watch(tabValueProvider), ref);
+                },
                 onChanged: (value) {
                   homeSearch(value, ref);
+
+                  
                 },
                 // controller: searchController,
 
@@ -543,13 +560,14 @@ class AmountNotifier extends StatelessWidget {
             color: iconColor,
             borderRadius: BorderRadius.circular(100),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.currency_rupee,
             color: LinqPeColors.kWhiteColor,
+            size: size.width * 0.05,
           ),
         ),
         SizedBox(
-          width: size.width * 0.02,
+          width: size.width * 0.01,
         ),
         Column(
           children: [
@@ -558,7 +576,7 @@ class AmountNotifier extends StatelessWidget {
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   letterSpacing: .5,
-                  fontSize: size.width * 0.03,
+                  fontSize: size.width * 0.02,
                   color: LinqPeColors.kWhiteColor.withOpacity(0.9),
                   fontWeight: FontWeight.w500,
                 ),
@@ -569,7 +587,7 @@ class AmountNotifier extends StatelessWidget {
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   letterSpacing: .5,
-                  fontSize: size.width * 0.045,
+                  fontSize: size.width * 0.04,
                   color: LinqPeColors.kWhiteColor.withOpacity(0.9),
                   fontWeight: FontWeight.w700,
                 ),

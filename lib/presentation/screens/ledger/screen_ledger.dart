@@ -8,6 +8,7 @@ import 'package:linq_pe/application/ledger/ledger_bloc.dart';
 import 'package:linq_pe/application/view_dto/ledger/ledger.dart';
 import 'package:linq_pe/presentation/screens/home/screen_home.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
+import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
 import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/widgets/alert_box.dart';
 import 'package:linq_pe/utilities/colors.dart';
@@ -46,7 +47,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
         shadowColor: LinqPeColors.kBlackColor,
       ),
       floatingActionButton: Padding(
-        padding:  EdgeInsets.only(top: size.height*0.85),
+        padding: EdgeInsets.only(top: size.height * 0.85),
         child: Column(
           children: [
             FloatingAddButton(
@@ -56,8 +57,10 @@ class _LedgerScreenState extends State<LedgerScreen> {
               partyColor: LinqPeColors.kPinkColor,
               paddingHorizontal: size.width * 0.05,
             ),
-            SizedBox(height: size.height*0.01,),
-             FloatingAddButton(
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+            FloatingAddButton(
               buttonName: 'Roll Ledger',
               heroTag: 'heroTagRollLedger',
               partyType: 'Roll Ledger',
@@ -113,19 +116,40 @@ class LedgerListTileWidget extends ConsumerWidget {
         showPopupMenu(context, size, ledger.ledgerId);
       },
       onTap: () {
-        addCurrentLedger(ledger.ledgerId, ref);
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => HomeScreen(ledgerId: ledger.ledgerId),
-            ));
+        bool isToGoHome = false;
+
+        if (ledger.payBackLedgerList == null ||
+            ledger.payBackLedgerList!.isEmpty) {
+          isToGoHome = true;
+        } else {
+          if (ref.watch(showLedgerIdProvider) == ledger.ledgerId) {
+            isToGoHome = true;
+          }
+          addshowLedger(ledger.ledgerId, ref);
+        }
+
+        if (isToGoHome) {
+          addshowLedger('', ref);
+          addTotalBalanceAmount(ledger.totalBlanceAmount.toString(), ref);
+          addTotalPayedAmount(ledger.totalPayedAmount.toString(), ref);
+          addrolledOutBalanceAmount(ledger.rolledOutBalance.toString(), ref);
+          addCurrentLedger(ledger.ledgerId, ref);
+          addTabValue(0, ref);
+          addpageValue(0, ref);
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => HomeScreen(ledgerId: ledger.ledgerId),
+              ));
+        }
       },
       child: Container(
-        height: size.height * 0.08,
+        //height: size.height * 0.08,
         margin: EdgeInsets.only(
             left: size.width * 0.05,
             right: size.width * 0.05,
             top: size.width * 0.05),
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -136,15 +160,208 @@ class LedgerListTileWidget extends ConsumerWidget {
             ],
           ),
         ),
-        child: Text(ledger.ledgerName,
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                letterSpacing: .8,
-                fontSize: size.width * 0.05,
-                color: LinqPeColors.kWhiteColor,
-                fontWeight: FontWeight.w600,
-              ),
-            )),
+        child: Column(
+          children: [
+            Text(ledger.ledgerName,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    letterSpacing: .8,
+                    fontSize: size.width * 0.05,
+                    color: LinqPeColors.kWhiteColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )),SizedBox(height: size.height*0.01,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                LedgerAmountNotifier(
+                  size: size,
+                  amount: ledger.rolledOutBalance==null?'0.0':ledger.rolledOutBalance.toString(),
+                  fieldName: 'Total Balance',
+                ),
+                LedgerAmountNotifier(
+                  size: size,
+                  amount: ledger.totalBlanceAmount==null?'0.0':ledger.totalBlanceAmount.toString(),
+                  fieldName: 'Actual Balance',
+                ),
+                LedgerAmountNotifier(
+                  size: size,
+                  amount: ledger.totalPayedAmount==null?'0.0':ledger.totalPayedAmount.toString(),
+                  fieldName: 'Payed Amount',
+                ),
+              ],
+            ),
+            ref.watch(showLedgerIdProvider) == ledger.ledgerId
+                ? Column(
+                    children: [
+                      const Divider(
+                        color: LinqPeColors.kWhiteColor,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.4,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text('Rolled From',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      letterSpacing: .8,
+                                      fontSize: size.width * 0.035,
+                                      color: LinqPeColors.kWhiteColor
+                                          .withOpacity(0.9),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.4,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text('Amount',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      letterSpacing: .8,
+                                      fontSize: size.width * 0.035,
+                                      color: LinqPeColors.kWhiteColor
+                                          .withOpacity(0.9),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                          children: List.generate(
+                              ledger.payBackLedgerList == null
+                                  ? 0
+                                  : ledger.payBackLedgerList!.length, (index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: BlocBuilder<LedgerBloc, LedgerState>(
+                                builder: (context, ledgerstate) {
+                                  List<LedgerDTO> ledgerList = [];
+                                  String ledgerName = '';
+                                  if (ledgerstate is displayLedgers) {
+                                    ledgerList = ledgerstate.ledgerList;
+                                  }
+                                  final ledgerIndex = ledgerList.indexWhere(
+                                      (element) =>
+                                          ledger.payBackLedgerList![index]
+                                              .ledgerId ==
+                                          element.ledgerId);
+                                  if (ledgerIndex >= 0) {
+                                    ledgerName =
+                                        ledgerList[ledgerIndex].ledgerName;
+                                  }
+                                  return Align(
+                                    alignment: Alignment.center,
+                                    child: Text(ledgerName,
+                                        style: GoogleFonts.poppins(
+                                          textStyle: TextStyle(
+                                            letterSpacing: .8,
+                                            fontSize: size.width * 0.04,
+                                            color: LinqPeColors.kWhiteColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                    ledger
+                                        .payBackLedgerList![index].payBackAmount
+                                        .toString(),
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        letterSpacing: .8,
+                                        fontSize: size.width * 0.04,
+                                        color: LinqPeColors.kWhiteColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        );
+                      }))
+                    ],
+                  )
+                : const SizedBox()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LedgerAmountNotifier extends StatelessWidget {
+  const LedgerAmountNotifier({
+    super.key,
+    required this.size,
+    required this.amount,
+    required this.fieldName,
+  });
+
+  final Size size;
+  final String fieldName;
+
+  final String amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal:size.width * 0.005,vertical: size.height * 0.005),
+      decoration: BoxDecoration(
+          color: LinqPeColors.kWhiteColor,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: const [
+            BoxShadow(blurRadius: 1, color: LinqPeColors.kBlackColor)
+          ]),
+      child: Column(
+        children: [
+          SizedBox(
+            width: size.width * 0.26,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(fieldName,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      letterSpacing: .8,
+                      fontSize: size.width * 0.027,
+                      color: LinqPeColors.kPinkColor.withOpacity(0.9),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )),
+            ),
+          ),
+          SizedBox(
+            width: size.width * 0.2,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(amount,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      letterSpacing: .8,
+                      fontSize: size.width * 0.04,
+                      color: LinqPeColors.kPinkColor.withOpacity(0.9),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )),
+            ),
+          ),
+        ],
       ),
     );
   }

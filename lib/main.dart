@@ -13,6 +13,7 @@ import 'package:linq_pe/application/transactions/transactions_bloc.dart';
 
 import 'package:linq_pe/domain/models/contacts/contacts.dart';
 import 'package:linq_pe/domain/models/ledger/ledger.dart';
+import 'package:linq_pe/domain/models/ledger/pay_back_ledger.dart';
 import 'package:linq_pe/domain/models/party/Expense_account/expense_account.dart';
 import 'package:linq_pe/domain/models/party/customer/customer.dart';
 import 'package:linq_pe/domain/models/rolling/pay_back_account.dart';
@@ -64,10 +65,13 @@ void main() async {
   await Hive.openBox<RollingAccountsModel>('RollingAccountsModel');
   await RollingImplementation.instance.openRollingBox();
 
-
+  Hive.registerAdapter(PayBackLedgerModelAdapter());
+  await Hive.openBox<PayBackLedgerModel>('PayBackLedgerBox');
   Hive.registerAdapter(LedgerModelAdapter());
   await Hive.openBox<LedgerModel>('LedgerBox');
   await LedgerImplementation.instance.openLedgerBox();
+
+
 
   await Motion.instance.initialize();
   Motion.instance.setUpdateInterval(60.fps);

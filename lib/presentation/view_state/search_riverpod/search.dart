@@ -19,7 +19,7 @@ final splittedSearchProvider = StateProvider(
 );
 splittedSearch(String searching, WidgetRef ref) {
   log('search split riverpod');
-  ref.read(homeSearchProvider.notifier).state = searching;
+  ref.read(splittedSearchProvider.notifier).state = searching;
 }
 final rolledSearchProvider = StateProvider(
   (ref) {
@@ -28,7 +28,7 @@ final rolledSearchProvider = StateProvider(
 );
 rolledSearch(String searching, WidgetRef ref) {
   log('search rolled riverpod');
-  ref.read(homeSearchProvider.notifier).state = searching;
+  ref.read(rolledSearchProvider.notifier).state = searching;
 }
 
 

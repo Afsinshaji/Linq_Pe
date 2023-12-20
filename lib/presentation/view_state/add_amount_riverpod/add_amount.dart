@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linq_pe/domain/models/transactions/transaction_type.dart';
 
-enum ExpenseType{pay,roll}
+enum ExpenseType{pay,roll,empty}
 final expenseTypeProvider=StateProvider(
   (ref) {
     return ExpenseType.pay;

@@ -23,6 +23,7 @@ class DropDownSearchTextField extends ConsumerWidget {
   const DropDownSearchTextField(
       {super.key,
       required this.hintText,
+      required this.isFromExpense,
       required this.isFromField,
       this.isFromAddSplit = false,
       this.providerNum = -1,
@@ -36,6 +37,7 @@ class DropDownSearchTextField extends ConsumerWidget {
   final bool isRepay;
   final String rollingAccountId;
   final bool isLedgerRoll;
+  final bool isFromExpense;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,6 +94,7 @@ class DropDownSearchTextField extends ConsumerWidget {
                           }
                         } else if (ref.watch(expenseTypeProvider) ==
                                 ExpenseType.roll &&
+                            isFromExpense &&
                             isFromField == true &&
                             splitstate is displaySplittedAccounts) {
                           final listOfSplittedAccounts =
@@ -122,6 +125,7 @@ class DropDownSearchTextField extends ConsumerWidget {
                             initialContact.add(dataList[index]);
                           }
                         }
+
                         return SizedBox(
                           height: size.height * 0.08,
                           child: Material(
@@ -176,7 +180,7 @@ class DropDownSearchTextField extends ConsumerWidget {
                                               newValue.contactId);
                                         }
 
-                                        if (isFromField&&!isLedgerRoll) {
+                                        if (isFromField && !isLedgerRoll) {
                                           addfromContactId(
                                               newValue.contactId, ref);
 
@@ -197,7 +201,7 @@ class DropDownSearchTextField extends ConsumerWidget {
                                                 ref);
                                           }
                                         } else {
-                                          if (!isRepay&&!isLedgerRoll) {
+                                          if (!isRepay && !isLedgerRoll) {
                                             addToContactId(
                                                 newValue.contactId, ref);
                                           }

@@ -163,6 +163,7 @@ class _AddSplitAmountScreenState extends State<AddSplitAmountScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: size.width * 0.03),
                           child: const DropDownSearchTextField(
+                            isFromExpense: false,
                             isFromField: true,
                             hintText: 'Receipt From',
                           )),
@@ -679,6 +680,7 @@ class AddSplitEachFieldWidget extends ConsumerWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0.03),
                       child: DropDownSearchTextField(
+                        isFromExpense: false,
                         isFromField: false,
                         hintText: 'Split To',
                         isFromAddSplit: true,

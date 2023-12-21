@@ -30,12 +30,24 @@ class EachTransactionScreen extends StatelessWidget {
     required this.toName,
     this.isSecondaryParty = false,
     this.secondaryPartyName = '',
+    this.primaryAccountId,
+    this.rollingAccountId,
+    this.splittedAccountId,
+    required this.isFromRolling,
+    required this.isFromSplitting,
+  
   });
   final NestedSecondaryTransactionsDTO transaction;
   final ContactsDTO contact;
   final String toName;
   final bool isSecondaryParty;
   final String secondaryPartyName;
+  final bool isFromRolling;
+  final bool isFromSplitting;
+  final String? splittedAccountId;
+  final String? rollingAccountId;
+  final String? primaryAccountId;
+
 
   //Create an instance of ScreenshotController
   final ScreenshotController screenshotController = ScreenshotController();
@@ -340,26 +352,25 @@ class EachTransactionScreen extends StatelessWidget {
                   SizedBox(
                     height: size.height * 0.03,
                   ),
-                  Row(
+              transaction.id.contains('/-/')?const SizedBox():    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
                         onTap: () {
-
-
-  alertBox(context,'Delete Transaction',(){ 
- BlocProvider.of<TransactionsBloc>(context).add(
-                              TransactionsEvent.deleteTransactions(
-                                ledgerId: contact.ledgerId,
-                                  transactionRealId: transaction.id,
-                                  primaryContactId: contact.contactId));
-      Navigator.pop(context);
-       Navigator.pop(context);
-
-  },size);
-
-                         
-                    
+                          alertBox(context, 'Delete Transaction', () {
+                            BlocProvider.of<TransactionsBloc>(context).add(
+                                TransactionsEvent.deleteTransactions(
+                                    isFromRolling: isFromRolling,
+                                    isFromSplitting: isFromSplitting,
+                                    primaryAccountId: primaryAccountId,
+                                    rollingAccountId: rollingAccountId,
+                                    splittedAccountId: splittedAccountId,
+                                    ledgerId: contact.ledgerId,
+                                    transactionRealId: transaction.id,
+                                    primaryContactId: contact.contactId));
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }, size);
                         },
                         child: Container(
                           width: size.width * 0.43,
@@ -393,7 +404,12 @@ class EachTransactionScreen extends StatelessWidget {
                         ),
                       ),
                       TransactionEditButton(
-                        contactId: contact.contactId,
+                        primaryId: primaryAccountId,
+                        rollingAccountId: rollingAccountId??'',
+                        splittedId:splittedAccountId ,
+                          isFromRolling: isFromRolling,
+                          isFromSplitting: isFromSplitting,
+                          contactId: contact.contactId,
                           partyName: contact.displayName,
                           size: size,
                           transaction: transaction)
@@ -526,13 +542,20 @@ class TransactionEditButton extends ConsumerWidget {
       {super.key,
       required this.size,
       required this.transaction,
-      required this.partyName,required this.contactId,});
+      required this.partyName,
+      required this.contactId,
+      required this.isFromRolling,required this.splittedId,required this.primaryId,required this.rollingAccountId,
+      required this.isFromSplitting});
 
   final Size size;
   final NestedSecondaryTransactionsDTO transaction;
   final String partyName;
   final String contactId;
-
+  final bool isFromRolling;
+  final bool isFromSplitting;
+  final String? primaryId;
+  final String? splittedId;
+  final String rollingAccountId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
@@ -549,10 +572,15 @@ class TransactionEditButton extends ConsumerWidget {
             context,
             CupertinoPageRoute(
               builder: (context) => AddAmountScreen(
-                isRepay: false,
-                ledgerId: ref.watch(currentLedgerIdProvider),
-                transactionRealId: transaction.id,
-                primaryContactId: contactId,
+                  primaryId: primaryId,
+                  rollingAccountId: rollingAccountId,
+                  splittedId: splittedId,
+                  isFromRolling: isFromRolling,
+                  isFromSplitting: isFromRolling,
+                  isRepay: false,
+                  ledgerId: ref.watch(currentLedgerIdProvider),
+                  transactionRealId: transaction.id,
+                  primaryContactId: contactId,
                   editTransaction: transaction,
                   isEdit: true,
                   isPay: transaction.isPayed,

@@ -7,13 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
+import 'package:linq_pe/application/ledger/ledger_bloc.dart';
 
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
 import 'package:linq_pe/application/rolling/rolling_bloc.dart';
+import 'package:linq_pe/application/view_dto/ledger/ledger.dart';
 import 'package:linq_pe/application/view_dto/rolling/rolling.dart';
 import 'package:linq_pe/presentation/screens/view_rolling/screen_view_rolling.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
@@ -85,7 +88,7 @@ class _RolledTabViewState extends State<RolledTabView> {
         builder: (context, rollingstate) {
           List<RollingAccountsDTO> rollingAccountList = [];
           if (rollingstate is displayRollingAccounts) {
-          rollingAccountList=  rollingstate.rollingAccountList;
+            rollingAccountList = rollingstate.rollingAccountList;
           }
           return BlocBuilder<ContactsBloc, ContactsState>(
             builder: (context, state) {
@@ -117,8 +120,9 @@ class _RolledTabViewState extends State<RolledTabView> {
                           )
                         : Expanded(
                             child: HomePartyList(
-                              rollingAccountList: rollingAccountList,
-                                listOfParties: contactList, size: size),
+                                rollingAccountList: rollingAccountList,
+                                listOfParties: contactList,
+                                size: size),
                           )
                   ],
                 ),
@@ -161,49 +165,78 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Motion(
-      shadow: const ShadowConfiguration(
-        color: LinqPeColors.kPinkColor,
-        blurRadius: 0,
-      ),
-      child: Material(
-        shadowColor: LinqPeColors.kPinkColor,
-        elevation: 7,
-        color: LinqPeColors.kPinkColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(size.width * 0.01),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              AmountNotifier(
-                  iconColor: LinqPeColors.kGreenColor,
-                  textSign: 'Total balance',
-                  amount: ref.watch(rolledOutBalanceAmountProvider)),
-              Container(
-                width: size.width * 0.001,
-                height: size.width * 0.15,
-                color: LinqPeColors.kWhiteColor,
-              ),
-              AmountNotifier(
-                  iconColor: LinqPeColors.kBlueColor,
-                  textSign: 'Actual balance',
-                  amount: ref.watch(totalBalanceAmountProvider)),
-              Container(
-                width: size.width * 0.001,
-                height: size.width * 0.15,
-                color: LinqPeColors.kWhiteColor,
-              ),
-              AmountNotifier(
-                  iconColor: LinqPeColors.kredColor,
-                  textSign: 'Total payed',
-                  amount: ref.watch(totalPayedAmountProvider))
-            ],
+   String rolledBalance = '0.0';
+    String balance = '0.0';
+    // getTotalBalance(partyList, splittedAccountList);
+    String payed = '0.0';
+    // getTotalPayment(partyList, splittedAccountList);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    // });
+    return BlocBuilder<LedgerBloc, LedgerState>(
+      builder: (context, ledgerstate) {
+        List<LedgerDTO> ledgerList = [];
+        if (ledgerstate is displayLedgers) {
+          ledgerList = ledgerstate.ledgerList;
+        }
+        final ledgerIndex = ledgerList.indexWhere((element) =>
+            element.ledgerId == ref.watch(currentLedgerIdProvider));
+        if (ledgerIndex >= 0) {
+          if (ledgerList[ledgerIndex].totalBlanceAmount != null) {
+            balance = ledgerList[ledgerIndex].totalBlanceAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].totalPayedAmount != null) {
+            payed = ledgerList[ledgerIndex].totalPayedAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].rolledOutBalance != null) {
+            rolledBalance = ledgerList[ledgerIndex].rolledOutBalance.toString();
+          }
+        }
+        return Motion(
+          shadow: const ShadowConfiguration(
+            color: LinqPeColors.kPinkColor,
+            blurRadius: 0,
           ),
-        ),
-      ),
+          child: Material(
+            shadowColor: LinqPeColors.kPinkColor,
+            elevation: 7,
+            color: LinqPeColors.kPinkColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(size.width * 0.01),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                   AmountNotifier(
+                      iconColor: LinqPeColors.kGreenColor,
+                      textSign: 'Total balance',
+                      amount: rolledBalance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kBlueColor,
+                      textSign: 'Actual balance',
+                      amount: balance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kredColor,
+                      textSign: 'Total payed',
+                      amount: payed)
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -215,13 +248,12 @@ class HomePartyList extends ConsumerWidget {
     required this.size,
     required this.rollingAccountList,
   });
- final List<RollingAccountsDTO> rollingAccountList ;
+  final List<RollingAccountsDTO> rollingAccountList;
   final List<ContactsDTO> listOfParties;
   final Size size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   
     String search = ref.watch(rolledSearchProvider);
     List<ContactsDTO> partyList = [];
     // if (search.isNotEmpty) {
@@ -236,24 +268,24 @@ class HomePartyList extends ConsumerWidget {
     // sortingPartyList.sort(
     //     (a, b) => a.lastTimeOfTransaction!.compareTo(b.lastTimeOfTransaction!));
     // partyList = sortingPartyList.reversed.toList();
- for (var rolling in rollingAccountList) {
-          final partyIndex = listOfParties.indexWhere((element) =>
-              element.contactId == rolling.rollingAccountContactId);
-          if (partyIndex >= 0) {
-            partyList.add(listOfParties[partyIndex]);
-          }
-        }
-        partyList = partyList.reversed.toList();
-        if (search.isNotEmpty) {
-          partyList = partyList
-              .where((element) => element.displayName
-                  .toLowerCase()
-                  .contains(search.toLowerCase().trim()))
-              .toList();
-        }
+    for (var rolling in rollingAccountList) {
+      final partyIndex = listOfParties.indexWhere(
+          (element) => element.contactId == rolling.rollingAccountContactId);
+      if (partyIndex >= 0) {
+        partyList.add(listOfParties[partyIndex]);
+      }
+    }
+    partyList = partyList.reversed.toList();
+    if (search.isNotEmpty) {
+      partyList = partyList
+          .where((element) => element.displayName
+              .toLowerCase()
+              .contains(search.toLowerCase().trim()))
+          .toList();
+    }
     return ListView.separated(
       // shrinkWrap: true,
-       itemCount: partyList.length,
+      itemCount: partyList.length,
       itemBuilder: (context, index) {
         return EachListTile(
           ledgerId: partyList[index].ledgerId,
@@ -279,7 +311,7 @@ class HomePartyList extends ConsumerWidget {
           name: partyList[index].displayName,
         );
       },
-     
+
       separatorBuilder: (context, index) => Divider(
         color: LinqPeColors.kBlackColor,
         height: size.height * 0.001,
@@ -313,7 +345,7 @@ class SearchRow extends ConsumerWidget {
                     color: LinqPeColors.kBlackColor.withOpacity(0.4),
                   )),
               child: TextField(
-                 onTap: (){
+                onTap: () {
                   addpageValue(ref.watch(tabValueProvider), ref);
                 },
                 onChanged: (value) {

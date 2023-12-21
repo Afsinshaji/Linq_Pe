@@ -29,12 +29,12 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         transactionId: event.transactionId,
       );
 
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.fromContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.fromContactId));
     });
     on<addBalanceTransctions>((event, emit) async {
       await TransactionsImplementation.instance.addBalanceTransction(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
@@ -44,12 +44,13 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,contactId: event.toContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.toContactId));
     });
 
     on<addGiveTransactions>((event, emit) async {
       await TransactionsImplementation.instance.addGiveTransaction(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
@@ -59,14 +60,15 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,contactId: event.toContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.toContactId));
     });
 
     on<getTransactionsList>((event, emit) async {
       final transactionModel =
           TransactionsImplementation.instance.getAccountDetails(
         contactId: event.contactId,
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
       );
       // log('Hiii${transactionModel!.transactionList!.length}');
 
@@ -85,7 +87,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
 
     on<addSecondaryPartyPayment>((event, emit) async {
       await TransactionsImplementation.instance.secondaryPartyPayment(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         isSplittedPrimaryTransaction: event.isSplittedPrimaryTransaction,
         splittedTransactionId: event.splittedTransactionId,
         transactionRealId: event.transactionRealId,
@@ -99,13 +101,13 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
 
     on<splitAmounts>((event, emit) async {
       await TransactionsImplementation.instance.splitAmount(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         id: event.id,
         transactionDetails: event.transactionDetails,
         splitAmount: event.splitAmount,
@@ -117,12 +119,12 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         billImage: event.billImage,
         transactionId: event.transactionId,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
     on<splittingBalanceAmount>((event, emit) async {
       await TransactionsImplementation.instance.splitBalanceAmount(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         splitAmount: event.splitAmount,
         toContactId: event.toContactId,
@@ -132,13 +134,18 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         timeOfTrans: event.timeOfTrans,
         billImage: event.billImage,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
 
     on<editTransactions>((event, emit) async {
       await TransactionsImplementation.instance.editTransaction(
-         ledgerId: event.ledgerId,
+        isFromRolling: event.isFromRolling,
+        isFromSplitting: event.isFromSplitting,
+        primaryAccountId: event.primaryAccountId,
+        rollingAccountId: event.rollingAccountId,
+        splittedAccountId: event.splittedAccountId,
+        ledgerId: event.ledgerId,
         transactionDetails: event.transactionDetails,
         amount: event.amount,
         toId: event.toId,
@@ -148,20 +155,26 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         timeOfTrans: event.timeOfTrans,
         billImage: event.billImage,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
 
     on<deleteTransactions>((event, emit) async {
-      await TransactionsImplementation.instance.deleteTransaction( ledgerId: event.ledgerId,
+      await TransactionsImplementation.instance.deleteTransaction(
+        isFromRolling: event.isFromRolling,
+        isFromSplitting: event.isFromSplitting,
+        primaryAccountId: event.primaryAccountId,
+        rollingAccountId: event.rollingAccountId,
+        splittedAccountId: event.splittedAccountId,
+        ledgerId: event.ledgerId,
         transactionRealId: event.transactionRealId,
       );
-      add(TransactionsEvent.getTransactionsList( ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+      add(TransactionsEvent.getTransactionsList(
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
     on<splittingPayment>((event, emit) async {
       await TransactionsImplementation.instance.splittedPayment(
-         ledgerId: event.ledgerId,
+        ledgerId: event.ledgerId,
         fromContactId: event.fromContactId,
         toContactId: event.toContactId,
         amount: event.amount,
@@ -170,8 +183,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         timeOfTrans: event.timeOfTrans,
       );
       add(TransactionsEvent.getTransactionsList(
-         ledgerId: event.ledgerId,
-          contactId: event.primaryContactId));
+          ledgerId: event.ledgerId, contactId: event.primaryContactId));
     });
   }
 }

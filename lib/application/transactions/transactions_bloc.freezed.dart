@@ -96,6 +96,11 @@ mixin _$TransactionsEvent {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -107,7 +112,14 @@ mixin _$TransactionsEvent {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -201,6 +213,11 @@ mixin _$TransactionsEvent {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -212,7 +229,14 @@ mixin _$TransactionsEvent {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -306,6 +330,11 @@ mixin _$TransactionsEvent {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -317,7 +346,14 @@ mixin _$TransactionsEvent {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -674,6 +710,11 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -685,7 +726,14 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -792,6 +840,11 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -803,7 +856,14 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -910,6 +970,11 @@ class _$addGetTransctionsImpl implements addGetTransctions {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -921,7 +986,14 @@ class _$addGetTransctionsImpl implements addGetTransctions {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -1287,6 +1359,11 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1298,7 +1375,14 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -1404,6 +1488,11 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1415,7 +1504,14 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -1521,6 +1617,11 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1532,7 +1633,14 @@ class _$addBalanceTransctionsImpl implements addBalanceTransctions {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -1805,6 +1913,11 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1816,7 +1929,14 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -1913,6 +2033,11 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -1924,7 +2049,14 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -2021,6 +2153,11 @@ class _$getTransactionsListImpl implements getTransactionsList {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2032,7 +2169,14 @@ class _$getTransactionsListImpl implements getTransactionsList {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -2425,6 +2569,11 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2436,7 +2585,14 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -2546,6 +2702,11 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2557,7 +2718,14 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -2667,6 +2835,11 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -2678,7 +2851,14 @@ class _$addSecondaryPartyPaymentImpl implements addSecondaryPartyPayment {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -3076,6 +3256,11 @@ class _$splitAmountsImpl implements splitAmounts {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3087,7 +3272,14 @@ class _$splitAmountsImpl implements splitAmounts {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -3195,6 +3387,11 @@ class _$splitAmountsImpl implements splitAmounts {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3206,7 +3403,14 @@ class _$splitAmountsImpl implements splitAmounts {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -3314,6 +3518,11 @@ class _$splitAmountsImpl implements splitAmounts {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3325,7 +3534,14 @@ class _$splitAmountsImpl implements splitAmounts {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -3693,6 +3909,11 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3704,7 +3925,14 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -3810,6 +4038,11 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3821,7 +4054,14 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -3927,6 +4167,11 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -3938,7 +4183,14 @@ class _$addGiveTransactionsImpl implements addGiveTransactions {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -4303,6 +4555,11 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4314,7 +4571,14 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -4420,6 +4684,11 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4431,7 +4700,14 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -4537,6 +4813,11 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4548,7 +4829,14 @@ class _$splittingBalanceAmountImpl implements splittingBalanceAmount {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -4677,6 +4965,11 @@ abstract class _$$editTransactionsImplCopyWith<$Res>
   @useResult
   $Res call(
       {String ledgerId,
+      bool isFromRolling,
+      bool isFromSplitting,
+      String? rollingAccountId,
+      String? splittedAccountId,
+      String? primaryAccountId,
       String transactionRealId,
       String toId,
       double amount,
@@ -4700,6 +4993,11 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? ledgerId = null,
+    Object? isFromRolling = null,
+    Object? isFromSplitting = null,
+    Object? rollingAccountId = freezed,
+    Object? splittedAccountId = freezed,
+    Object? primaryAccountId = freezed,
     Object? transactionRealId = null,
     Object? toId = null,
     Object? amount = null,
@@ -4715,6 +5013,26 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
           ? _value.ledgerId
           : ledgerId // ignore: cast_nullable_to_non_nullable
               as String,
+      isFromRolling: null == isFromRolling
+          ? _value.isFromRolling
+          : isFromRolling // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFromSplitting: null == isFromSplitting
+          ? _value.isFromSplitting
+          : isFromSplitting // ignore: cast_nullable_to_non_nullable
+              as bool,
+      rollingAccountId: freezed == rollingAccountId
+          ? _value.rollingAccountId
+          : rollingAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      splittedAccountId: freezed == splittedAccountId
+          ? _value.splittedAccountId
+          : splittedAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryAccountId: freezed == primaryAccountId
+          ? _value.primaryAccountId
+          : primaryAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
       transactionRealId: null == transactionRealId
           ? _value.transactionRealId
           : transactionRealId // ignore: cast_nullable_to_non_nullable
@@ -4760,6 +5078,11 @@ class __$$editTransactionsImplCopyWithImpl<$Res>
 class _$editTransactionsImpl implements editTransactions {
   const _$editTransactionsImpl(
       {required this.ledgerId,
+      required this.isFromRolling,
+      required this.isFromSplitting,
+      required this.rollingAccountId,
+      required this.splittedAccountId,
+      required this.primaryAccountId,
       required this.transactionRealId,
       required this.toId,
       required this.amount,
@@ -4772,6 +5095,16 @@ class _$editTransactionsImpl implements editTransactions {
 
   @override
   final String ledgerId;
+  @override
+  final bool isFromRolling;
+  @override
+  final bool isFromSplitting;
+  @override
+  final String? rollingAccountId;
+  @override
+  final String? splittedAccountId;
+  @override
+  final String? primaryAccountId;
   @override
   final String transactionRealId;
   @override
@@ -4793,7 +5126,7 @@ class _$editTransactionsImpl implements editTransactions {
 
   @override
   String toString() {
-    return 'TransactionsEvent.editTransactions(ledgerId: $ledgerId, transactionRealId: $transactionRealId, toId: $toId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails, primaryContactId: $primaryContactId)';
+    return 'TransactionsEvent.editTransactions(ledgerId: $ledgerId, isFromRolling: $isFromRolling, isFromSplitting: $isFromSplitting, rollingAccountId: $rollingAccountId, splittedAccountId: $splittedAccountId, primaryAccountId: $primaryAccountId, transactionRealId: $transactionRealId, toId: $toId, amount: $amount, transactionType: $transactionType, timeOfTrans: $timeOfTrans, billImage: $billImage, transactionId: $transactionId, transactionDetails: $transactionDetails, primaryContactId: $primaryContactId)';
   }
 
   @override
@@ -4803,6 +5136,16 @@ class _$editTransactionsImpl implements editTransactions {
             other is _$editTransactionsImpl &&
             (identical(other.ledgerId, ledgerId) ||
                 other.ledgerId == ledgerId) &&
+            (identical(other.isFromRolling, isFromRolling) ||
+                other.isFromRolling == isFromRolling) &&
+            (identical(other.isFromSplitting, isFromSplitting) ||
+                other.isFromSplitting == isFromSplitting) &&
+            (identical(other.rollingAccountId, rollingAccountId) ||
+                other.rollingAccountId == rollingAccountId) &&
+            (identical(other.splittedAccountId, splittedAccountId) ||
+                other.splittedAccountId == splittedAccountId) &&
+            (identical(other.primaryAccountId, primaryAccountId) ||
+                other.primaryAccountId == primaryAccountId) &&
             (identical(other.transactionRealId, transactionRealId) ||
                 other.transactionRealId == transactionRealId) &&
             (identical(other.toId, toId) || other.toId == toId) &&
@@ -4825,6 +5168,11 @@ class _$editTransactionsImpl implements editTransactions {
   int get hashCode => Object.hash(
       runtimeType,
       ledgerId,
+      isFromRolling,
+      isFromSplitting,
+      rollingAccountId,
+      splittedAccountId,
+      primaryAccountId,
       transactionRealId,
       toId,
       amount,
@@ -4922,6 +5270,11 @@ class _$editTransactionsImpl implements editTransactions {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -4933,7 +5286,14 @@ class _$editTransactionsImpl implements editTransactions {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -4950,6 +5310,11 @@ class _$editTransactionsImpl implements editTransactions {
   }) {
     return editTransactions(
         ledgerId,
+        isFromRolling,
+        isFromSplitting,
+        rollingAccountId,
+        splittedAccountId,
+        primaryAccountId,
         transactionRealId,
         toId,
         amount,
@@ -5040,6 +5405,11 @@ class _$editTransactionsImpl implements editTransactions {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -5051,7 +5421,14 @@ class _$editTransactionsImpl implements editTransactions {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -5068,6 +5445,11 @@ class _$editTransactionsImpl implements editTransactions {
   }) {
     return editTransactions?.call(
         ledgerId,
+        isFromRolling,
+        isFromSplitting,
+        rollingAccountId,
+        splittedAccountId,
+        primaryAccountId,
         transactionRealId,
         toId,
         amount,
@@ -5158,6 +5540,11 @@ class _$editTransactionsImpl implements editTransactions {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -5169,7 +5556,14 @@ class _$editTransactionsImpl implements editTransactions {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -5188,6 +5582,11 @@ class _$editTransactionsImpl implements editTransactions {
     if (editTransactions != null) {
       return editTransactions(
           ledgerId,
+          isFromRolling,
+          isFromSplitting,
+          rollingAccountId,
+          splittedAccountId,
+          primaryAccountId,
           transactionRealId,
           toId,
           amount,
@@ -5263,6 +5662,11 @@ class _$editTransactionsImpl implements editTransactions {
 abstract class editTransactions implements TransactionsEvent {
   const factory editTransactions(
       {required final String ledgerId,
+      required final bool isFromRolling,
+      required final bool isFromSplitting,
+      required final String? rollingAccountId,
+      required final String? splittedAccountId,
+      required final String? primaryAccountId,
       required final String transactionRealId,
       required final String toId,
       required final double amount,
@@ -5275,6 +5679,11 @@ abstract class editTransactions implements TransactionsEvent {
 
   @override
   String get ledgerId;
+  bool get isFromRolling;
+  bool get isFromSplitting;
+  String? get rollingAccountId;
+  String? get splittedAccountId;
+  String? get primaryAccountId;
   String get transactionRealId;
   String get toId;
   double get amount;
@@ -5299,7 +5708,14 @@ abstract class _$$deleteTransactionsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String ledgerId, String transactionRealId, String primaryContactId});
+      {String ledgerId,
+      String transactionRealId,
+      String primaryContactId,
+      bool isFromRolling,
+      bool isFromSplitting,
+      String? rollingAccountId,
+      String? splittedAccountId,
+      String? primaryAccountId});
 }
 
 /// @nodoc
@@ -5316,6 +5732,11 @@ class __$$deleteTransactionsImplCopyWithImpl<$Res>
     Object? ledgerId = null,
     Object? transactionRealId = null,
     Object? primaryContactId = null,
+    Object? isFromRolling = null,
+    Object? isFromSplitting = null,
+    Object? rollingAccountId = freezed,
+    Object? splittedAccountId = freezed,
+    Object? primaryAccountId = freezed,
   }) {
     return _then(_$deleteTransactionsImpl(
       ledgerId: null == ledgerId
@@ -5330,6 +5751,26 @@ class __$$deleteTransactionsImplCopyWithImpl<$Res>
           ? _value.primaryContactId
           : primaryContactId // ignore: cast_nullable_to_non_nullable
               as String,
+      isFromRolling: null == isFromRolling
+          ? _value.isFromRolling
+          : isFromRolling // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFromSplitting: null == isFromSplitting
+          ? _value.isFromSplitting
+          : isFromSplitting // ignore: cast_nullable_to_non_nullable
+              as bool,
+      rollingAccountId: freezed == rollingAccountId
+          ? _value.rollingAccountId
+          : rollingAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      splittedAccountId: freezed == splittedAccountId
+          ? _value.splittedAccountId
+          : splittedAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      primaryAccountId: freezed == primaryAccountId
+          ? _value.primaryAccountId
+          : primaryAccountId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -5340,7 +5781,12 @@ class _$deleteTransactionsImpl implements deleteTransactions {
   const _$deleteTransactionsImpl(
       {required this.ledgerId,
       required this.transactionRealId,
-      required this.primaryContactId});
+      required this.primaryContactId,
+      required this.isFromRolling,
+      required this.isFromSplitting,
+      required this.rollingAccountId,
+      required this.splittedAccountId,
+      required this.primaryAccountId});
 
   @override
   final String ledgerId;
@@ -5348,10 +5794,20 @@ class _$deleteTransactionsImpl implements deleteTransactions {
   final String transactionRealId;
   @override
   final String primaryContactId;
+  @override
+  final bool isFromRolling;
+  @override
+  final bool isFromSplitting;
+  @override
+  final String? rollingAccountId;
+  @override
+  final String? splittedAccountId;
+  @override
+  final String? primaryAccountId;
 
   @override
   String toString() {
-    return 'TransactionsEvent.deleteTransactions(ledgerId: $ledgerId, transactionRealId: $transactionRealId, primaryContactId: $primaryContactId)';
+    return 'TransactionsEvent.deleteTransactions(ledgerId: $ledgerId, transactionRealId: $transactionRealId, primaryContactId: $primaryContactId, isFromRolling: $isFromRolling, isFromSplitting: $isFromSplitting, rollingAccountId: $rollingAccountId, splittedAccountId: $splittedAccountId, primaryAccountId: $primaryAccountId)';
   }
 
   @override
@@ -5364,12 +5820,30 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             (identical(other.transactionRealId, transactionRealId) ||
                 other.transactionRealId == transactionRealId) &&
             (identical(other.primaryContactId, primaryContactId) ||
-                other.primaryContactId == primaryContactId));
+                other.primaryContactId == primaryContactId) &&
+            (identical(other.isFromRolling, isFromRolling) ||
+                other.isFromRolling == isFromRolling) &&
+            (identical(other.isFromSplitting, isFromSplitting) ||
+                other.isFromSplitting == isFromSplitting) &&
+            (identical(other.rollingAccountId, rollingAccountId) ||
+                other.rollingAccountId == rollingAccountId) &&
+            (identical(other.splittedAccountId, splittedAccountId) ||
+                other.splittedAccountId == splittedAccountId) &&
+            (identical(other.primaryAccountId, primaryAccountId) ||
+                other.primaryAccountId == primaryAccountId));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, ledgerId, transactionRealId, primaryContactId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      ledgerId,
+      transactionRealId,
+      primaryContactId,
+      isFromRolling,
+      isFromSplitting,
+      rollingAccountId,
+      splittedAccountId,
+      primaryAccountId);
 
   @JsonKey(ignore: true)
   @override
@@ -5458,6 +5932,11 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -5469,7 +5948,14 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -5484,7 +5970,15 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String? transactionId)
         splittingPayment,
   }) {
-    return deleteTransactions(ledgerId, transactionRealId, primaryContactId);
+    return deleteTransactions(
+        ledgerId,
+        transactionRealId,
+        primaryContactId,
+        isFromRolling,
+        isFromSplitting,
+        rollingAccountId,
+        splittedAccountId,
+        primaryAccountId);
   }
 
   @override
@@ -5566,6 +6060,11 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -5577,7 +6076,14 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -5593,7 +6099,14 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splittingPayment,
   }) {
     return deleteTransactions?.call(
-        ledgerId, transactionRealId, primaryContactId);
+        ledgerId,
+        transactionRealId,
+        primaryContactId,
+        isFromRolling,
+        isFromSplitting,
+        rollingAccountId,
+        splittedAccountId,
+        primaryAccountId);
   }
 
   @override
@@ -5675,6 +6188,11 @@ class _$deleteTransactionsImpl implements deleteTransactions {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -5686,7 +6204,14 @@ class _$deleteTransactionsImpl implements deleteTransactions {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,
@@ -5703,7 +6228,15 @@ class _$deleteTransactionsImpl implements deleteTransactions {
     required TResult orElse(),
   }) {
     if (deleteTransactions != null) {
-      return deleteTransactions(ledgerId, transactionRealId, primaryContactId);
+      return deleteTransactions(
+          ledgerId,
+          transactionRealId,
+          primaryContactId,
+          isFromRolling,
+          isFromSplitting,
+          rollingAccountId,
+          splittedAccountId,
+          primaryAccountId);
     }
     return orElse();
   }
@@ -5771,12 +6304,22 @@ abstract class deleteTransactions implements TransactionsEvent {
   const factory deleteTransactions(
       {required final String ledgerId,
       required final String transactionRealId,
-      required final String primaryContactId}) = _$deleteTransactionsImpl;
+      required final String primaryContactId,
+      required final bool isFromRolling,
+      required final bool isFromSplitting,
+      required final String? rollingAccountId,
+      required final String? splittedAccountId,
+      required final String? primaryAccountId}) = _$deleteTransactionsImpl;
 
   @override
   String get ledgerId;
   String get transactionRealId;
   String get primaryContactId;
+  bool get isFromRolling;
+  bool get isFromSplitting;
+  String? get rollingAccountId;
+  String? get splittedAccountId;
+  String? get primaryAccountId;
   @override
   @JsonKey(ignore: true)
   _$$deleteTransactionsImplCopyWith<_$deleteTransactionsImpl> get copyWith =>
@@ -6039,6 +6582,11 @@ class _$splittingPaymentImpl implements splittingPayment {
         splittingBalanceAmount,
     required TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -6050,7 +6598,14 @@ class _$splittingPaymentImpl implements splittingPayment {
             String primaryContactId)
         editTransactions,
     required TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)
         deleteTransactions,
     required TResult Function(
             String fromContactId,
@@ -6157,6 +6712,11 @@ class _$splittingPaymentImpl implements splittingPayment {
         splittingBalanceAmount,
     TResult? Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -6168,7 +6728,14 @@ class _$splittingPaymentImpl implements splittingPayment {
             String primaryContactId)?
         editTransactions,
     TResult? Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult? Function(
             String fromContactId,
@@ -6275,6 +6842,11 @@ class _$splittingPaymentImpl implements splittingPayment {
         splittingBalanceAmount,
     TResult Function(
             String ledgerId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId,
             String transactionRealId,
             String toId,
             double amount,
@@ -6286,7 +6858,14 @@ class _$splittingPaymentImpl implements splittingPayment {
             String primaryContactId)?
         editTransactions,
     TResult Function(
-            String ledgerId, String transactionRealId, String primaryContactId)?
+            String ledgerId,
+            String transactionRealId,
+            String primaryContactId,
+            bool isFromRolling,
+            bool isFromSplitting,
+            String? rollingAccountId,
+            String? splittedAccountId,
+            String? primaryAccountId)?
         deleteTransactions,
     TResult Function(
             String fromContactId,

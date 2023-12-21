@@ -210,6 +210,8 @@ class _EachPrimaryAccountScreenState extends State<EachPrimaryAccountScreen> {
                 }
 
                 return EachTransactionContainer(
+                  primaryAccountId: widget.splittedAccount.primaryAccountContactId,
+                  splittedAccountId:widget.splittedAccount.splittedAccountContactId ,
                     isGive: transactionList[index].isGive,
                     toName: toName,
                     contact: widget.contact,
@@ -288,6 +290,7 @@ class EachTransactionContainer extends ConsumerWidget {
     required this.isGet,
     required this.contact,
     required this.isGive,
+    required this.primaryAccountId, required this.splittedAccountId,
   });
 
   final Size size;
@@ -302,6 +305,8 @@ class EachTransactionContainer extends ConsumerWidget {
   final ContactsDTO contact;
   final String toName;
   final bool isGive;
+  final String primaryAccountId;
+  final String splittedAccountId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -325,6 +330,10 @@ class EachTransactionContainer extends ConsumerWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => EachTransactionScreen(
+                      isFromSplitting: true,
+                      isFromRolling: false,
+                      primaryAccountId: primaryAccountId,
+                      splittedAccountId: splittedAccountId,
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),
@@ -421,6 +430,11 @@ class EachTransactionContainer extends ConsumerWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => EachTransactionScreen(
+                      isFromRolling: false,
+                      isFromSplitting: true,
+                      primaryAccountId: primaryAccountId,
+                      splittedAccountId: splittedAccountId,
+                      
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),

@@ -7,13 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:linq_pe/application/contacts/contacts_bloc.dart';
+import 'package:linq_pe/application/ledger/ledger_bloc.dart';
 
 import 'package:linq_pe/application/party/customer/customer_bloc.dart';
 import 'package:linq_pe/application/splitted/splitted_bloc.dart';
+import 'package:linq_pe/application/view_dto/ledger/ledger.dart';
 import 'package:linq_pe/application/view_dto/splitted/splitted.dart';
 import 'package:linq_pe/presentation/screens/view_splitted_accounts/screen_each_primary_account.dart';
 import 'package:linq_pe/presentation/view_state/add_amount_riverpod/add_amount.dart';
 import 'package:linq_pe/presentation/view_state/home_riverpod/home_riverpod.dart';
+import 'package:linq_pe/presentation/view_state/ledger/ledger.dart';
 import 'package:linq_pe/presentation/view_state/search_riverpod/search.dart';
 import 'package:linq_pe/application/view_dto/contact/contact_dto.dart';
 import 'package:linq_pe/presentation/screens/home/widgets/floating_add_button.dart';
@@ -163,49 +166,78 @@ class AmountNotifierRowMotionWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Motion(
-      shadow: const ShadowConfiguration(
-        color: LinqPeColors.kPinkColor,
-        blurRadius: 0,
-      ),
-      child: Material(
-        shadowColor: LinqPeColors.kPinkColor,
-        elevation: 7,
-        color: LinqPeColors.kPinkColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(size.width * 0.01),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-                   AmountNotifier(
-                  iconColor: LinqPeColors.kGreenColor,
-                  textSign: 'Total balance',
-                  amount: ref.watch(rolledOutBalanceAmountProvider)),
-              Container(
-                width: size.width * 0.001,
-                height: size.width * 0.15,
-                color: LinqPeColors.kWhiteColor,
-              ),
-              AmountNotifier(
-                  iconColor: LinqPeColors.kBlueColor,
-                  textSign: 'Actual balance',
-                  amount: ref.watch(totalBalanceAmountProvider)),
-              Container(
-                width: size.width * 0.001,
-                height: size.width * 0.15,
-                color: LinqPeColors.kWhiteColor,
-              ),
-              AmountNotifier(
-                  iconColor: LinqPeColors.kredColor,
-                  textSign: 'Total payed',
-                  amount: ref.watch(totalPayedAmountProvider))
-            ],
+    String rolledBalance = '0.0';
+    String balance = '0.0';
+    // getTotalBalance(partyList, splittedAccountList);
+    String payed = '0.0';
+    // getTotalPayment(partyList, splittedAccountList);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    // });
+    return BlocBuilder<LedgerBloc, LedgerState>(
+      builder: (context, ledgerstate) {
+        List<LedgerDTO> ledgerList = [];
+        if (ledgerstate is displayLedgers) {
+          ledgerList = ledgerstate.ledgerList;
+        }
+        final ledgerIndex = ledgerList.indexWhere((element) =>
+            element.ledgerId == ref.watch(currentLedgerIdProvider));
+        if (ledgerIndex >= 0) {
+          if (ledgerList[ledgerIndex].totalBlanceAmount != null) {
+            balance = ledgerList[ledgerIndex].totalBlanceAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].totalPayedAmount != null) {
+            payed = ledgerList[ledgerIndex].totalPayedAmount.toString();
+          }
+          if (ledgerList[ledgerIndex].rolledOutBalance != null) {
+            rolledBalance = ledgerList[ledgerIndex].rolledOutBalance.toString();
+          }
+        }
+        return Motion(
+          shadow: const ShadowConfiguration(
+            color: LinqPeColors.kPinkColor,
+            blurRadius: 0,
           ),
-        ),
-      ),
+          child: Material(
+            shadowColor: LinqPeColors.kPinkColor,
+            elevation: 7,
+            color: LinqPeColors.kPinkColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(size.width * 0.01),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                 AmountNotifier(
+                      iconColor: LinqPeColors.kGreenColor,
+                      textSign: 'Total balance',
+                      amount: rolledBalance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kBlueColor,
+                      textSign: 'Actual balance',
+                      amount: balance),
+                  Container(
+                    width: size.width * 0.001,
+                    height: size.width * 0.15,
+                    color: LinqPeColors.kWhiteColor,
+                  ),
+                  AmountNotifier(
+                      iconColor: LinqPeColors.kredColor,
+                      textSign: 'Total payed',
+                      amount: payed)
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -240,18 +272,21 @@ class HomePartyList extends ConsumerWidget {
     // partyList = sortingPartyList.reversed.toList();
     return BlocBuilder<SplittedBloc, SplittedState>(
       builder: (context, splitstate) {
-     
-        List<SplittedAccountsModelDTO> splittedAccountList = splittedAccountsList.reversed.toList();
-           if (search.isNotEmpty) {
-      splittedAccountList = splittedAccountsList
-          .where((element) =>listOfContacts.firstWhere((elements) => 
-          element.primaryAccountContactId==elements.contactId).displayName 
-              .toLowerCase()
-              .contains(search.toLowerCase().trim()))
-          .toList().reversed.toList();
-    }
-      
-      
+        List<SplittedAccountsModelDTO> splittedAccountList =
+            splittedAccountsList.reversed.toList();
+        if (search.isNotEmpty) {
+          splittedAccountList = splittedAccountsList
+              .where((element) => listOfContacts
+                  .firstWhere((elements) =>
+                      element.primaryAccountContactId == elements.contactId)
+                  .displayName
+                  .toLowerCase()
+                  .contains(search.toLowerCase().trim()))
+              .toList()
+              .reversed
+              .toList();
+        }
+
         return ListView.separated(
           // shrinkWrap: true,
           itemBuilder: (context, index) {
@@ -342,7 +377,7 @@ class SearchRow extends ConsumerWidget {
                     color: LinqPeColors.kBlackColor.withOpacity(0.4),
                   )),
               child: TextField(
-                 onTap: (){
+                onTap: () {
                   addpageValue(ref.watch(tabValueProvider), ref);
                 },
                 onChanged: (value) {

@@ -71,6 +71,11 @@ class TransactionsEvent with _$TransactionsEvent {
       required String? userTransactionId,
       required String? transactionDetails}) = splittingBalanceAmount;
   const factory TransactionsEvent.editTransactions({  required String ledgerId,
+    required bool isFromRolling,
+      required bool isFromSplitting,
+    required  String? rollingAccountId,
+  required    String? splittedAccountId,
+   required   String? primaryAccountId,
     required String transactionRealId,
     required String toId,
     required double amount,
@@ -85,6 +90,11 @@ class TransactionsEvent with _$TransactionsEvent {
   const factory TransactionsEvent.deleteTransactions({  required String ledgerId,
     required String transactionRealId,
     required String primaryContactId,
+        required bool isFromRolling,
+      required bool isFromSplitting,
+    required  String? rollingAccountId,
+  required    String? splittedAccountId,
+   required   String? primaryAccountId,
   }) = deleteTransactions;
   const factory TransactionsEvent.splittingPayment(
       {required String fromContactId,  required String ledgerId,

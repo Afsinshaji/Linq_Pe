@@ -118,4 +118,125 @@ class SplittingImplementation extends SplittingRepository {
         .toList();
     return listOfSplittedAccountsList;
   }
+
+  Future editOrDeleteSplittingTrasaction(
+      {required String splittedAccountId,
+      required String transactionId,
+      required String primaryAccountId,
+      required double? amountSplitted,
+      required TransactionType? transactionType,
+      required DateTime? timeOfTrans,
+      required String ledgerId,
+      required bool isEdit,
+      required bool isDelete,
+      required File? billImage,
+      required String? userTransactionId,
+      required String? transactionDetails}) async {
+    final splittedAccountsList = splittingBox.values.toList();
+    final splittedIndex = splittedAccountsList.indexWhere((element) =>
+        element.primaryAccountContactId == primaryAccountId &&
+        element.splittedAccountContactId == splittedAccountId &&
+        element.ledgerId == ledgerId);
+    if (splittedIndex < 0) {
+      return;
+    }
+    final allTransactionList =
+        TransactionsImplementation.instance.transactionBox.values.toList();
+    final transactionIndex =
+        allTransactionList.indexWhere((element) => element.id == transactionId);
+    if (transactionIndex < 0) {
+      return;
+    }
+    double received = 0.0;
+    double balance = 0.0;
+    double payed = 0.0;
+    final splittedAccount = splittedAccountsList[splittedIndex];
+    final transaction = allTransactionList[transactionIndex];
+    if (transaction.isSplit) {
+      if (isEdit) {
+        received =
+            splittedAccount.recievedAmt - transaction.givenAmt + amountSplitted!;
+        balance =
+            splittedAccount.balanceAmt - transaction.givenAmt + amountSplitted;
+        payed = splittedAccount.payedAmt;
+           await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: amountSplitted-transaction.givenAmt, payedAmt: 0.0, ledgerId: ledgerId);
+      }
+      if (isDelete) {
+        received = splittedAccount.recievedAmt - transaction.givenAmt;
+        balance = splittedAccount.balanceAmt - transaction.givenAmt;
+        payed = splittedAccount.payedAmt;
+           await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt:-transaction.givenAmt, payedAmt: 0.0, ledgerId: ledgerId);
+      }
+    } else if (transaction.isPayed) {
+      if (isEdit) {
+        received = splittedAccount.recievedAmt;
+        balance =
+            splittedAccount.balanceAmt + transaction.givenAmt - amountSplitted!;
+        payed =
+            splittedAccount.payedAmt - transaction.givenAmt + amountSplitted;
+               await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt:transaction.givenAmt- amountSplitted, 
+        payedAmt: -transaction.givenAmt+amountSplitted, ledgerId: ledgerId);
+          
+      }
+      if (isDelete) {
+        received = splittedAccount.recievedAmt;
+        balance = splittedAccount.balanceAmt + transaction.givenAmt;
+        payed = splittedAccount.payedAmt - transaction.givenAmt;
+           await LedgerImplementation.instance.addLedgerAmounts(
+        blanceAmt: transaction.givenAmt, payedAmt:  -transaction.givenAmt, ledgerId: ledgerId);
+      }
+    await  TransactionsImplementation.instance.editOrDeleteExpenseTransaction(
+          transactionDetails: transactionDetails,
+          amount: amountSplitted,
+          transactionType: transactionType,
+          timeOfTrans: timeOfTrans,
+     
+          expenseContactId: transaction.toContactId,
+       
+          ledgerId: ledgerId,
+          previousAmount: transaction.givenAmt,
+          expenseFromId: splittedAccount.splittedAccountContactId,
+          isEdit: isEdit,
+          isDelete: isDelete,
+          billImage: billImage,
+          userTransactionId: userTransactionId);
+    }
+    await splittingBox.putAt(
+        splittedIndex,
+        SplittedAccountsModel(
+          ledgerId: splittedAccount.ledgerId,
+          primaryAccountContactId: splittedAccount.primaryAccountContactId,
+          splittedAccountContactId: splittedAccount.splittedAccountContactId,
+          recievedAmt: received,
+          payedAmt: payed,
+          balanceAmt: balance,
+          transactionList: splittedAccount.transactionList,
+        ));
+    await TransactionsImplementation.instance.transactionBox.putAt(
+        transactionIndex,
+        SecondaryTransactionsModel(
+            billImage: await convertToUni8List(billImage),
+            transactionDetails: transactionDetails,
+            transactionId: userTransactionId,
+            isExpense: transaction.isExpense,
+            isSecondaryPay: transaction.isSecondaryPay,
+            primaryAccountId: transaction.primaryAccountId,
+            isGive: transaction.isGive,
+            isGet: transaction.isGet,
+            isAddBalance: transaction.isAddBalance,
+            isSplit: transaction.isSplit,
+            id: transaction.id,
+            transactionType: transactionType!,
+            timeOfTrans: timeOfTrans!,
+            toContactId: transaction.toContactId,
+            payedAmt: amountSplitted!,
+            balanceAmt: amountSplitted,
+            isPayed: transaction.isPayed,
+            givenAmt: amountSplitted,
+            fromContactId: transaction.fromContactId));
+           
+  }
 }

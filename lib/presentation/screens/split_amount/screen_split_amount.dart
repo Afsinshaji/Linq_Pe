@@ -22,8 +22,12 @@ import 'package:linq_pe/utilities/colors.dart';
 import 'package:linq_pe/utilities/list.dart';
 
 class SplitAmountScreen extends ConsumerWidget {
-  const SplitAmountScreen( 
-      {super.key, required this.transaction, required this.displayName,required this.contact,});
+  const SplitAmountScreen({
+    super.key,
+    required this.transaction,
+    required this.displayName,
+    required this.contact,
+  });
   final NestedSecondaryTransactionsDTO transaction;
   final String displayName;
   final ContactsDTO contact;
@@ -137,8 +141,9 @@ class SplitAmountScreen extends ConsumerWidget {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => AddAmountScreen(
-                                  isRepay: false,
-                                   ledgerId: ref.watch(currentLedgerIdProvider),
+                                    isRepay: false,
+                                    ledgerId:
+                                        ref.watch(currentLedgerIdProvider),
                                     isGive: false,
                                     transactionRealId: transaction.id,
                                     splitAmount:
@@ -210,6 +215,8 @@ class SplitAmountScreen extends ConsumerWidget {
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => EachTransactionScreen(
+                                    isFromRolling: false,
+                                    isFromSplitting: false,
                                     toName: toName,
                                     transaction: transactionList[index],
                                     contact: contact),

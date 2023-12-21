@@ -51,11 +51,11 @@ class RollingImplementation extends RollingRepository {
       return;
     }
     final splitAccount = splittedList[splitIndex];
-    final rolledTransactionId =
-        '${DateTime.now().millisecondsSinceEpoch.toString()}--$rollingAccountId';
+    final timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+    final rolledTransactionId = '$timeStamp-$rollingAccountId';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
-              billImage: await convertToUni8List(billImage),
+            billImage: await convertToUni8List(billImage),
             transactionDetails: transactionDetails,
             transactionId: userTransactionId,
             isExpense: false,
@@ -71,7 +71,6 @@ class RollingImplementation extends RollingRepository {
             toContactId: rollingAccountId,
             payedAmt: 0,
             balanceAmt: amountRolled,
-          
             isPayed: false,
             givenAmt: amountRolled,
             fromContactId: splittingAccountId));
@@ -134,10 +133,10 @@ class RollingImplementation extends RollingRepository {
     }
 
     final splittedPaymentId =
-        '${DateTime.now().millisecondsSinceEpoch.toString()}-${splitAccount.splittedAccountContactId}';
+        '$timeStamp/-/${splitAccount.splittedAccountContactId}';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
-              billImage: await convertToUni8List(billImage),
+            billImage: await convertToUni8List(billImage),
             transactionDetails: transactionDetails,
             transactionId: userTransactionId,
             isExpense: false,
@@ -182,7 +181,8 @@ class RollingImplementation extends RollingRepository {
         .where((element) => element.ledgerId == ledgerId)
         .toList();
   }
-@override
+
+  @override
   Future<void> rollingRepayment(
       {required String rollingAccountId,
       required String splittingAccountId,
@@ -208,18 +208,18 @@ class RollingImplementation extends RollingRepository {
       return;
     }
     final splitAccount = splittedList[splitIndex];
-    final rolledTransactionId =
-        '${DateTime.now().millisecondsSinceEpoch.toString()}--$rollingAccountId';
+    final timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+    final rolledTransactionId = '$timeStamp-$rollingAccountId';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
-              billImage: await convertToUni8List(billImage),
+            billImage: await convertToUni8List(billImage),
             transactionDetails: transactionDetails,
             transactionId: userTransactionId,
             isExpense: false,
             isSecondaryPay: false,
             primaryAccountId: splittingPrimaryAccountId,
             isGive: false,
-            isGet: true,
+            isGet: false,
             isAddBalance: false,
             isSplit: false,
             id: rolledTransactionId,
@@ -228,7 +228,6 @@ class RollingImplementation extends RollingRepository {
             toContactId: splittingAccountId,
             payedAmt: 0,
             balanceAmt: amountRepaying,
-  
             isPayed: true,
             givenAmt: amountRepaying,
             fromContactId: rollingAccountId));
@@ -275,10 +274,10 @@ class RollingImplementation extends RollingRepository {
     }
 
     final splittedReceivedId =
-        '${DateTime.now().millisecondsSinceEpoch.toString()}-${splitAccount.splittedAccountContactId}';
+        '$timeStamp/-/${splitAccount.splittedAccountContactId}';
     await TransactionsImplementation.instance.transactionBox.add(
         SecondaryTransactionsModel(
-              billImage: await convertToUni8List(billImage),
+            billImage: await convertToUni8List(billImage),
             transactionDetails: transactionDetails,
             transactionId: userTransactionId,
             isExpense: false,
@@ -296,13 +295,13 @@ class RollingImplementation extends RollingRepository {
             balanceAmt: splitAccount.balanceAmt + amountRepaying,
             isPayed: false,
             givenAmt: amountRepaying,
-            fromContactId:rollingAccountId ));
+            fromContactId: rollingAccountId));
     List<TransactionModel> transactionList = [];
     if (splitAccount.transactionList != null) {
       transactionList = splitAccount.transactionList!;
     }
-    transactionList.add(
-        TransactionModel(transactionId: splittedReceivedId, ledgerId: ledgerId));
+    transactionList.add(TransactionModel(
+        transactionId: splittedReceivedId, ledgerId: ledgerId));
 
     await SplittingImplementation.instance.splittingBox.putAt(
         splitIndex,
@@ -310,9 +309,192 @@ class RollingImplementation extends RollingRepository {
             ledgerId: splitAccount.ledgerId,
             primaryAccountContactId: splitAccount.primaryAccountContactId,
             splittedAccountContactId: splitAccount.splittedAccountContactId,
-            recievedAmt: splitAccount.recievedAmt+amountRepaying,
+            recievedAmt: splitAccount.recievedAmt + amountRepaying,
             payedAmt: splitAccount.payedAmt,
             balanceAmt: splitAccount.balanceAmt + amountRepaying,
             transactionList: transactionList));
+  }
+
+ Future editOrDeleteRollingTransaction(
+      {required String rollingAccountId,
+      required String transactionId,
+      required double? amount,
+      required TransactionType? transactionType,
+      required DateTime? timeOfTrans,
+      required bool isEdit,
+      required bool isDelete,
+      required File? billImage,
+      required String? userTransactionId,
+      required String? transactionDetails,
+      required String ledgerId}) async {
+    final rollingAccountsList = rollingBox.values.toList();
+    final allTransactionList =
+        TransactionsImplementation.instance.transactionBox.values.toList();
+    final transactionIndex =
+        allTransactionList.indexWhere((element) => element.id == transactionId);
+    if (transactionIndex < 0) {
+      return;
+    }
+    final rollingIndex = rollingAccountsList.indexWhere((element) =>
+        element.rollingAccountContactId == rollingAccountId &&
+        element.ledgerId == ledgerId);
+
+    if (rollingIndex < 0) {
+      return;
+    }
+    final rollingAccount = rollingAccountsList[rollingIndex];
+    final transaction = allTransactionList[transactionIndex];
+    double received = 0.0;
+    double balance = 0.0;
+    double payed = 0.0;
+    if (transaction.isGet) {
+      if (isEdit) {
+        received =
+            rollingAccount.recievedRollingAmt - transaction.givenAmt + amount!;
+        balance =
+            rollingAccount.balanceToPayAmt - transaction.givenAmt + amount;
+        payed = rollingAccount.payedBackAmt;
+        await TransactionsImplementation.instance.transactionBox.putAt(
+            transactionIndex,
+            SecondaryTransactionsModel(
+                billImage: await convertToUni8List(billImage),
+                transactionDetails: transactionDetails,
+                transactionId: userTransactionId,
+                isExpense: transaction.isExpense,
+                isSecondaryPay: transaction.isSecondaryPay,
+                primaryAccountId: transaction.primaryAccountId,
+                isGive: transaction.isGive,
+                isGet: transaction.isGet,
+                isAddBalance: transaction.isAddBalance,
+                isSplit: transaction.isSplit,
+                id: transaction.id,
+                transactionType: transactionType!,
+                timeOfTrans: timeOfTrans!,
+                toContactId: transaction.toContactId,
+                payedAmt: 0,
+                balanceAmt: amount,
+                isPayed: transaction.isPayed,
+                givenAmt: amount,
+                fromContactId: transaction.fromContactId));
+      }
+      if (isDelete) {
+        received = rollingAccount.recievedRollingAmt - transaction.givenAmt;
+        balance = rollingAccount.balanceToPayAmt - transaction.givenAmt;
+        payed = rollingAccount.payedBackAmt;
+      }
+
+      rollingBox.putAt(
+          rollingIndex,
+          RollingAccountsModel(
+            ledgerId: rollingAccount.ledgerId,
+            payBackAccountList: rollingAccount.payBackAccountList,
+            rollingAccountContactId: rollingAccount.rollingAccountContactId,
+            recievedRollingAmt: received,
+            payedBackAmt: payed,
+            balanceToPayAmt: balance,
+            transactionList: rollingAccount.transactionList,
+          ));
+    } else if (transaction.isPayed) {
+      if (isEdit) {
+        received = rollingAccount.recievedRollingAmt;
+        balance =
+            rollingAccount.balanceToPayAmt + transaction.givenAmt - amount!;
+        payed = rollingAccount.payedBackAmt - transaction.givenAmt + amount;
+        await TransactionsImplementation.instance.transactionBox.putAt(
+            transactionIndex,
+            SecondaryTransactionsModel(
+                billImage: await convertToUni8List(billImage),
+                transactionDetails: transactionDetails,
+                transactionId: userTransactionId,
+                isExpense: transaction.isExpense,
+                isSecondaryPay: transaction.isSecondaryPay,
+                primaryAccountId: transaction.primaryAccountId,
+                isGive: transaction.isGive,
+                isGet: transaction.isGet,
+                isAddBalance: transaction.isAddBalance,
+                isSplit: transaction.isSplit,
+                id: transaction.id,
+                transactionType: transactionType!,
+                timeOfTrans: timeOfTrans!,
+                toContactId: transaction.toContactId,
+                payedAmt: amount,
+                balanceAmt: amount,
+                isPayed: transaction.isPayed,
+                givenAmt: amount,
+                fromContactId: transaction.fromContactId));
+      } else if (isDelete) {
+        received = rollingAccount.recievedRollingAmt;
+        balance = rollingAccount.balanceToPayAmt + transaction.givenAmt;
+        payed = rollingAccount.payedBackAmt - transaction.givenAmt;
+      }
+      List<PayBackAccountModel> payBackList = rollingAccount.payBackAccountList;
+      final payBackIndex = payBackList.indexWhere(
+          (element) => element.splittingAccountId == transaction.toContactId);
+      if (payBackIndex >= 0) {
+        final payBack = payBackList[payBackIndex];
+        if (isEdit) {
+          payBackList[payBackIndex] = PayBackAccountModel(
+              payBackAmount:
+                  payBack.payBackAmount - transaction.givenAmt + amount!,
+              splittingAccountId: payBack.splittingAccountId,
+              splittedPrimaryAccountId: payBack.splittedPrimaryAccountId);
+        }
+        if (isDelete) {
+          payBackList[payBackIndex] = PayBackAccountModel(
+              payBackAmount: payBack.payBackAmount - transaction.givenAmt,
+              splittingAccountId: payBack.splittingAccountId,
+              splittedPrimaryAccountId: payBack.splittedPrimaryAccountId);
+        }
+      }
+      await rollingBox.putAt(
+          rollingIndex,
+          RollingAccountsModel(
+            ledgerId: rollingAccount.ledgerId,
+            payBackAccountList: payBackList,
+            rollingAccountContactId: rollingAccount.rollingAccountContactId,
+            recievedRollingAmt: received,
+            payedBackAmt: payed,
+            balanceToPayAmt: balance,
+            transactionList: rollingAccount.transactionList,
+          ));
+    }
+    if (isDelete) {
+      await TransactionsImplementation.instance.transactionBox
+          .deleteAt(transactionIndex);
+    }
+
+    List<String> parts = transaction.id.split(' - ');
+
+    String timestamp = parts[0];
+    final splittedTransactionIndex = allTransactionList.indexWhere((element) =>
+        element.id.contains(timestamp) && element.id != transaction.id);
+    String splittedAccountId = '';
+    String primaryAccountId = '';
+    if (splittedTransactionIndex >= 0) {
+      if (transaction.isGet) {
+        splittedAccountId =
+            allTransactionList[splittedTransactionIndex].fromContactId;
+      } else {
+        splittedAccountId =
+            allTransactionList[splittedTransactionIndex].toContactId;
+      }
+      primaryAccountId =
+          allTransactionList[splittedTransactionIndex].primaryAccountId;
+    }
+
+ await   SplittingImplementation.instance.editOrDeleteSplittingTrasaction(
+      splittedAccountId: splittedAccountId,
+      transactionId: transactionId,
+      primaryAccountId: primaryAccountId,
+      amountSplitted: amount,
+      transactionType: transactionType,
+      timeOfTrans: timeOfTrans,
+      ledgerId: ledgerId,
+      isEdit: isEdit,
+      isDelete: isDelete,
+      billImage: billImage,
+      userTransactionId: userTransactionId,
+      transactionDetails: transactionDetails,
+    );
   }
 }

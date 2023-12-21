@@ -647,6 +647,8 @@ class EachTransactionContainer extends ConsumerWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => EachTransactionScreen(
+                      isFromRolling: false,
+                      isFromSplitting: false,
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),
@@ -742,7 +744,8 @@ class EachTransactionContainer extends ConsumerWidget {
               Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => EachTransactionScreen(
+                    builder: (context) => EachTransactionScreen(isFromRolling: false,
+                      isFromSplitting: false,
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),

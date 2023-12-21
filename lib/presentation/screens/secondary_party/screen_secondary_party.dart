@@ -259,6 +259,8 @@ class SecondaryPartyScreen extends ConsumerWidget {
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => EachTransactionScreen(
+                                  isFromRolling: false,
+                      isFromSplitting: false,
                                     toName: toName,
                                     transaction: transactionList[index],
                                     isSecondaryParty: true,

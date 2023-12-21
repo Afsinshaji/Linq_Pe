@@ -130,9 +130,9 @@ class LedgerListTileWidget extends ConsumerWidget {
 
         if (isToGoHome) {
           addshowLedger('', ref);
-          addTotalBalanceAmount(ledger.totalBlanceAmount.toString(), ref);
-          addTotalPayedAmount(ledger.totalPayedAmount.toString(), ref);
-          addrolledOutBalanceAmount(ledger.rolledOutBalance.toString(), ref);
+          addTotalBalanceAmount(ledger.totalBlanceAmount==null?'0.0':ledger.totalBlanceAmount.toString(), ref);
+          addTotalPayedAmount(ledger.totalPayedAmount==null?'0.0':ledger.totalPayedAmount.toString(), ref);
+          addrolledOutBalanceAmount(ledger.rolledOutBalance==null?'0.0':ledger.rolledOutBalance.toString(), ref);
           addCurrentLedger(ledger.ledgerId, ref);
           addTabValue(0, ref);
           addpageValue(0, ref);
@@ -170,23 +170,32 @@ class LedgerListTileWidget extends ConsumerWidget {
                     color: LinqPeColors.kWhiteColor,
                     fontWeight: FontWeight.w600,
                   ),
-                )),SizedBox(height: size.height*0.01,),
+                )),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 LedgerAmountNotifier(
                   size: size,
-                  amount: ledger.rolledOutBalance==null?'0.0':ledger.rolledOutBalance.toString(),
+                  amount: ledger.rolledOutBalance == null
+                      ? '0.0'
+                      : ledger.rolledOutBalance.toString(),
                   fieldName: 'Total Balance',
                 ),
                 LedgerAmountNotifier(
                   size: size,
-                  amount: ledger.totalBlanceAmount==null?'0.0':ledger.totalBlanceAmount.toString(),
+                  amount: ledger.totalBlanceAmount == null
+                      ? '0.0'
+                      : ledger.totalBlanceAmount.toString(),
                   fieldName: 'Actual Balance',
                 ),
                 LedgerAmountNotifier(
                   size: size,
-                  amount: ledger.totalPayedAmount==null?'0.0':ledger.totalPayedAmount.toString(),
+                  amount: ledger.totalPayedAmount == null
+                      ? '0.0'
+                      : ledger.totalPayedAmount.toString(),
                   fieldName: 'Payed Amount',
                 ),
               ],
@@ -322,7 +331,8 @@ class LedgerAmountNotifier extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal:size.width * 0.005,vertical: size.height * 0.005),
+      padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.005, vertical: size.height * 0.005),
       decoration: BoxDecoration(
           color: LinqPeColors.kWhiteColor,
           borderRadius: BorderRadius.circular(5),

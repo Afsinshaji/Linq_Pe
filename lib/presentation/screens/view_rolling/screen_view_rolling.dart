@@ -56,9 +56,10 @@ class _ViewRollingScreenState extends State<ViewRollingScreen> {
     String balance = widget.rollingAccount.balanceToPayAmt.toString();
     String payed = widget.rollingAccount.payedBackAmt.toString();
     return Scaffold(
-      bottomSheet: RepayButton(size: size, 
-      displayName: widget.contact.displayName,
-      rollingAccountId: widget.rollingAccount.rollingAccountContactId,
+      bottomSheet: RepayButton(
+        size: size,
+        displayName: widget.contact.displayName,
+        rollingAccountId: widget.rollingAccount.rollingAccountContactId,
       ),
       appBar: PreferredSize(
         preferredSize: size * 0.2,
@@ -220,6 +221,7 @@ class _ViewRollingScreenState extends State<ViewRollingScreen> {
                 }
 
                 return EachTransactionContainer(
+                  rollingAccountId: widget.rollingAccount.rollingAccountContactId,
                     isGive: transactionList[index].isGive,
                     toName: toName,
                     contact: widget.contact,
@@ -244,13 +246,14 @@ class _ViewRollingScreenState extends State<ViewRollingScreen> {
 class RepayButton extends ConsumerWidget {
   const RepayButton({
     super.key,
-    required this.size,required this.displayName,
+    required this.size,
+    required this.displayName,
     required this.rollingAccountId,
   });
 
   final Size size;
   final String displayName;
-  final String rollingAccountId ;
+  final String rollingAccountId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -264,7 +267,7 @@ class RepayButton extends ConsumerWidget {
                 isGive: false,
                 isSplit: false,
                 isSecondaryPay: false,
-                rollingAccountId:rollingAccountId ,
+                rollingAccountId: rollingAccountId,
                 isPay: false,
                 isRepay: true,
                 isAddBalance: false,
@@ -338,6 +341,7 @@ class EachTransactionContainer extends ConsumerWidget {
     required this.isGet,
     required this.contact,
     required this.isGive,
+     required this.rollingAccountId
   });
 
   final Size size;
@@ -352,6 +356,7 @@ class EachTransactionContainer extends ConsumerWidget {
   final ContactsDTO contact;
   final String toName;
   final bool isGive;
+  final String rollingAccountId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -375,6 +380,9 @@ class EachTransactionContainer extends ConsumerWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => EachTransactionScreen(
+                        isFromRolling: true,
+                        isFromSplitting: false,
+                        rollingAccountId: rollingAccountId,
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),
@@ -471,6 +479,9 @@ class EachTransactionContainer extends ConsumerWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => EachTransactionScreen(
+                          isFromRolling: true,
+                        isFromSplitting: false,
+                        rollingAccountId: rollingAccountId,
                         toName: toName,
                         transaction: transactionList[index],
                         contact: contact),
